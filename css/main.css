@@ -1,0 +1,121 @@
+/*
+#ffcf56 
+#e83f6f #d72839
+#1dd1b6 
+#212842 #bbc2dd
+#487df9
+*/
+
+#tonic_selector {
+    height: 10vh;
+    width: 96%;
+    background-color: #212842;
+    display: inline-flex;
+    padding-left: 2%;
+    padding-right: 2%;
+    padding-top: 1%;
+    
+}
+
+app {
+    margin: auto;
+    padding: 2px;
+    width: 153vh;
+    height: 94vh;
+    min-height: 500px;
+    max-height: 100%;
+    max-width: 100%;
+    background-color: #212842;
+    display: inline-block;
+    border-radius: 2px ;
+    box-shadow: 0 0 2px 3px #212842 ;
+    font-family: Impact, Charcoal, sans-serif;
+    color: white;
+    
+}
+
+#mode_selector {
+    height: 30vh;
+    width: 96%;
+    background-color: #212842;
+    padding-left: 2%;
+    padding-right: 2%;
+    margin-left: : 2%;
+    margin-right: 2%;
+}
+
+
+synth {
+    height: 50vh;
+    width: 48%;
+    background-color: #212842;
+    margin-left: 2%;
+    border: 2px solid red;
+}
+
+fx {
+    height: 50vh;
+    width: 48%;
+    background-color: #212842;
+    margin-right: 2%;
+}
+
+.t_btn {
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #487df9;
+    height: 80%;
+    width: 8%;
+    float:left;
+    
+    
+}
+
+.m_btn {
+    margin-left:auto;
+    margin-right: auto;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 20px;
+    background-color: #e83f6f;
+    height: 80px;
+    width: 16%;
+    float:left;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    font-variant: small-caps;
+    
+    
+}
+
+.mode {
+    background-color: #d72839;
+}
+
+.special {
+    background-color: #D68C3C ;  
+}
+
+#foot {
+    color: white;
+    font-size: 10px;
+    text-align: center;
+    border: none;
+    font-variant: small-caps;
+}
+
+    .txt-default {
+    color:white;
+    font-size: 12px;
+    font-variant: small-caps;
+}

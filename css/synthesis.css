@@ -1,0 +1,117 @@
+canvasAnalyser{
+  display: block;
+  margin-left: 20%;
+  margin-right: 20%;
+}
+
+#canvas{
+  position: relative;
+  left: -5px;
+  height: 30%;
+  width: 100%;
+  background-color: #bbc2dd;
+  border: 5px  #ffcf56 ; 
+  border-style:groove;
+  margin-bottom: 5%;
+}
+#canvasFrequency{
+  height: 30%;
+  width: 60%;
+  background-color: #bbc2dd;
+  border: 5px  #ffcf56 ; 
+  border-style:groove;
+  margin-bottom: 5%;
+}
+
+/*#box{
+  display:inline-grid;
+  position:relative;
+  bottom:150px;
+  translate:(-50%);
+  border: 5px  solid grey; 
+  border-top-style:groove;
+}
+*/
+
+select {
+    background-color: #487df9;
+    color: white;
+    font-size: 12px;
+    font-variant: small-caps;
+    text-align: center;
+    border: 1px solid #bbc2dd;
+}
+#detuneFilter { 
+  border: 2px ;
+  border-radius: 50%;
+  display: block;
+  background-color: #487df9;
+  border: 1px solid #1dd1b6;
+  height: 30px;
+  width: 30px;
+  margin:auto;
+  margin-top: 2px;
+}
+
+.tick {
+    position: relative;
+    left: 50%;
+    transform: translate(-1px);
+    width: 2px;
+    height: 40%;
+    border-radius: 0 0 2px 2px;
+    background: #1dd1b6;
+}
+
+
+
+#detune {
+    display:block;
+    height: 100%;
+    width: 50%;
+    text-align: center;
+    border: 2px solid blue;
+    padding-top: 50px;
+    font-size: 14px;
+
+}
+
+waveform {
+    display:block;
+    height: 100%;
+    width: 50%;
+    text-align: center;
+    border: 2px solid blue;
+    padding-top: 50px;
+}
+
+
+space {
+    height: 100%;
+}
+
+wave {
+    height: 60%;
+    width: 50%;
+    border: 2px solid green;
+    display:inline-flex;
+    overflow:hidden;
+}
+
+flt {
+    width: 50%;
+    height: 60%;
+    border: 2px solid green;
+    display:inline-flex;
+    overflow:hidden;
+    
+    
+}
+
+cutoff {
+    border: 2px solid green;
+}
+
+gainF {
+    border: 2px solid green;
+}
