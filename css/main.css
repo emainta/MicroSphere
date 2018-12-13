@@ -1,1 +1,107 @@
+/*
+#ffcf56
+#e83f6f #d72839
+#1dd1b6
+#212842 #bbc2dd
+#487df9
+*/
 
+body {
+  background-color: black;
+  font-family: Impact, Charcoal, sans-serif;
+  color: white;
+  display: flex;
+}
+ 
+app {
+    margin: auto;
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 2px ;
+ /* border: 2px solid green;*/
+}
+
+#myCanvas {
+    height: auto;
+    width: 80%;
+    margin: auto;
+    margin-left: 10%;
+    border: 1px solid darkgray;
+}
+
+bottom {
+    position: relative;
+    left: 40%;
+    /*border: 3px solid green;*/
+    text-align: center;
+    color: white;
+    font-size: 25px;
+    font-variant: small-caps;
+    
+}
+
+dam {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: auto;
+    /*border: 1px solid red;*/
+    
+}
+
+ctrl {
+    width: 100vw;
+    height: 100px;
+    /*border: 3px solid green;*/
+    display: block;
+}
+
+#controlli {
+    width: 80%;
+    margin: auto;
+    padding: 10px;
+    background-color: darkslategray;
+    font-variant: small-caps;
+}
+
+#midi_in {
+    float: left;
+    height: 100%;
+    width: 100px;
+    text-align: center;
+    display: grid;
+    font-size: 20px;
+    
+}
+
+#led {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid white;
+    margin: auto;
+    position: relative;
+    transform: translate(0,-100%);
+    
+}
+
+.led_off {
+    background-color: darkred;
+}
+.led_on {
+    background-color: red;
+}
+
+button {
+    height: 40px;
+    width: 140px;
+    font-size: 20px;
+    background-color: purple;
+    color: white;
+    margin: 20px;
+    display: inline-grid;
+    float: left;
+    position: relative;
+    transform: translate(0,10px);
+}
