@@ -1,130 +1,133 @@
-<html>
-<head>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
     <title>MicroSphere</title>
-    
-    <link rel="stylesheet" href="css/main.css">    
-    <link rel="stylesheet" href="css/synthesis.css">
-    <link rel="stylesheet" href="css/sliderbelli.css">
-</head>
-    
-<body style="display:flex">
 
-<app>
-    
-    <div id="tonic_selector">
-        <input type="button" class="t_btn" value="C">
-        <input type="button" class="t_btn" value="C#">
-        <input type="button" class="t_btn" value="D">
-        <input type="button" class="t_btn" value="D#">
-        <input type="button" class="t_btn" value="E">
-        <input type="button" class="t_btn" value="F">
-        <input type="button" class="t_btn" value="F#">
-        <input type="button" class="t_btn" value="G">
-        <input type="button" class="t_btn" value="G#">
-        <input type="button" class="t_btn" value="A">
-        <input type="button" class="t_btn" value="A#">
-        <input type="button" class="t_btn" value="B">
-    
-        
-    </div>
-    
-    <div style="display:block" id="mode_selector" >
-        <div style="display:flex;  padding-bottom: 2.5%; ">
-            <input type="button" class="m_btn mode" value="Min">
-            <input type="button" class="m_btn" value="Dorian">
-            <input type="button" class="m_btn" value="Pentatonic">
-            <input type="button" class="m_btn" value="Blues">
-            <input type="button" class="m_btn" value="Min7">
-            <input type="button" class="m_btn special" value="Chromatic">
-        </div>
-        
-        <div style="display:flex;padding-bottom: 5%;">
-            <input type="button" class="m_btn mode" value="Maj">
-            <input type="button" class="m_btn" value="Myxo">
-            <input type="button" class="m_btn" value="Pentatonic">
-            <input type="button" class="m_btn" value="Maj7">
-            <input type="button" class="m_btn" value="Maj7+">
-            <input type="button" class="m_btn special" value="Exa">
-        </div>
-        
-        
-    </div>
-    
-    <synth style="display:block">
-        
-        <canvasAnalyser class="canvasBox">
-            <canvas id="canvas"></canvas>
-            <!-- <canvas id="canvasFrequency"></canvas> -->
-        </canvasAnalyser>
-        
-        <div style="display:flex; overflow: hidden;">
-        <wave>
-        <waveform class="txt-default">
-            <div style="font-size: 14px; margin-bottom: 5px;">Waveform:</div>
-            <div>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/keyboard.css">
+  </head>
+  <body>
+      <app>
+      <canvas id="myCanvas">
+      
+      
+      </canvas>
+      
+      <dam>
+        <ctrl id="controlli">
+          <div id="midi_in"> Midi In
+           <div id="led" class="led_off"></div>
+          </div>
             
-                <select name="waveform">
-                    <option value="sine"selected>Sine</option>
-                    <option value="square">Square</option>
-                    <option value="sawtooth">Sawtooth</option>
-                    <option value="triangle">Triangle</option>
-                    <option value="custom">Custom</option>
-        </select>
-        </div>
-        </waveform>
+          <div>
+          </div>   
             
-        <div id="detune" class="txt-default">Detune
-            <dial id="detuneFilter" min="10" max="8000" step="1" >
-                <div class="tick"></div>
-            </dial>
-        </div>
-        
-        </wave>
-        
-        <flt class="txt-default" style="font-size: 14px;text-align: center;">
-       
-        <div><cutoff>
-        <input type="range" id="freqFilter" class='topcoat-range-input--vertical' min="50" max="10000" step="1" >
-        <div id="frequency">Cutoff Frequency </div>
-        </cutoff>
+          <button >Reset
+          </button>
+            
+          <button id="fs_btn">Fullscreen
+          </button>
+        </ctrl>
+      
 
-        <gainF>
-        <input type="range" id="gainFilter" class='topcoat-range-input--vertical' min="25" max="100" step="1" >
-        <div id="gainF"> gainF </div>
-        </gainF>
-        </div>
-            
-        </flt>
-        </div>
-        </synth>
+        <keyboard>
+            <div style="display: flex; margin:auto;">
+    <li class="white" data-key="24"></li>
+    <li class="black" data-key="25"></li> 
+    <li class="white" data-key="26"></li>
+    <li class="black" data-key="27"></li>
+    <li class="white" data-key="28"></li>
+    <li class="white" data-key="29"></li>
+    <li class="black" data-key="30"></li>
+    <li class="white" data-key="31"></li>
+    <li class="black" data-key="32"></li>
+    <li class="white" data-key="33"></li>
+    <li class="black" data-key="34"></li>
+    <li class="white" data-key="35"></li>
+    <li class="white" data-key="36"></li>
+    <li class="black" data-key="37"></li>
+    <li class="white" data-key="38"></li>
+    <li class="black" data-key="39"></li>
+    <li class="white" data-key="40"></li>
+    <li class="white" data-key="41"></li>
+    <li class="black" data-key="42"></li>
+    <li class="white" data-key="43"></li>
+    <li class="black" data-key="44"></li>
+    <li class="white" data-key="45"></li>
+    <li class="black" data-key="46"></li>
+    <li class="white" data-key="47"></li> 
+    <li class="white" data-key="48"></li>
+    <li class="black" data-key="49"></li>
+    <li class="white" data-key="50"></li>
+    <li class="black" data-key="51"></li>
+    <li class="white" data-key="52"></li>
+    <li class="white" data-key="53"></li>
+    <li class="black" data-key="54"></li>
+    <li class="white" data-key="55"></li>
+    <li class="black" data-key="56"></li>
+    <li class="white" data-key="57"></li>
+    <li class="black" data-key="58"></li>
+    <li class="white" data-key="59"></li>
+    <li class="white" data-key="60"></li> 
+    <li class="black" data-key="61"></li>
+    <li class="white" data-key="62"></li>
+    <li class="black" data-key="63"></li>
+    <li class="white" data-key="64"></li>
+    <li class="white" data-key="65"></li>
+    <li class="black" data-key="66"></li>
+    <li class="white" data-key="67"></li>
+    <li class="black" data-key="68"></li>
+    <li class="white" data-key="69"></li>
+    <li class="black" data-key="70"></li>
+    <li class="white" data-key="71"></li>
+    <li class="white" data-key="72"></li>  
+    <li class="black" data-key="73"></li>
+    <li class="white" data-key="74"></li>
+    <li class="black" data-key="75"></li>
+    <li class="white" data-key="76"></li>
+    <li class="white" data-key="77"></li>
+    <li class="black" data-key="78"></li>
+    <li class="white" data-key="79"></li>
+    <li class="black" data-key="80"></li>
+    <li class="white" data-key="81"></li>
+    <li class="black" data-key="82"></li>
+    <li class="white" data-key="83"></li> 
+    <li class="white" data-key="84"></li>
+    <li class="black" data-key="85"></li>
+    <li class="white" data-key="86"></li>
+    <li class="black" data-key="87"></li>
+    <li class="white" data-key="88"></li>
+    <li class="white" data-key="89"></li>
+    <li class="black" data-key="90"></li>
+    <li class="white" data-key="91"></li>
+    <li class="black" data-key="92"></li>
+    <li class="white" data-key="93"></li>
+    <li class="black" data-key="94"></li>
+    <li class="white" data-key="95"></li>
+    <li class="white" data-key="96"></li>
+    <li class="black" data-key="97"></li>
+    <li class="white" data-key="98"></li>
+    <li class="black" data-key="99"></li>
+    <li class="white" data-key="100"></li>
+    <li class="white" data-key="101"></li>
+    <li class="black" data-key="102"></li>
+    <li class="white" data-key="103"></li>
+    <li class="black" data-key="104"></li>
+    <li class="white" data-key="105"></li>
+    <li class="black" data-key="106"></li>
+    <li class="white" data-key="107"></li>
+
+</div>
+       </keyboard>
     
-
-<!--
-        <fx class="txt-default">
-        
-             <input type="range" id="timeDelay" value = "0" min="0" max="1" step="0.01" >
-             <div id="delay">Delay Time</div>
-             
-
-             <input type="range" id="gDelay" value="0" min="0" max="1" step="0.01" >
-             <div id="gainDelay">Delay Gain</div>
-             
-        
-             <input type="range" id="distortion" value ="0" min="0" max="900" step="1" >
-             <div id="distortionF">Distortion</div>
           
+        <bottom>
+        Progetto di Jacopo, Nico e Ema
+        </bottom>
     
-             <input type="range" id="masterGain" min="0" max="1" step="0.001">
-             <div id="master">Master </div>
-            
-    
-        </fx>
--->    
-    <div id="foot">Progetto bello bello di Nico, Ema e Jacopo</div>
-   
-</app>
-    
-     <script src="js/script.js"></script>
-     <script src="js/synth.js"></script>
-</body>
+      </dam>
+  </app>
+  </body>
+  <script src="js/script.js"></script>
 </html>
