@@ -1,3 +1,3 @@
 # MicroSphere
 
-Da finire Synth e Fx
+Versione 2
