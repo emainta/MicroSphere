@@ -1,13 +1,15 @@
 # MicroSphere
 
-Versione 2
+Un controller midi bluetooth, basato su micro:bit, per il controllo di un sintetizzatore monofonico con interfaccia HTML/CSS/JS.
 
-<b>DONE</b>
-Fullscreen
-Reset Canvas (Button)
-Midi in (led)
+*[Versione 2]*
 
-TO DO
-Canvas
-  Canvas Background
-  Canvas general
+**DONE**
+- Fullscreen
+- Reset Canvas (Button)
+- Midi in (led)
+
+**TO DO**
+- Canvas
+  - Canvas Background
+  - Canvas general
