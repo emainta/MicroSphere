@@ -2,9 +2,8 @@
 var elem = document.documentElement;
 
 var fs = false;
+
 document.getElementById('fs_btn').onclick = fullScreen;
-
-
 
 /* View in fullscreen */
 function openFullscreen() {
@@ -42,3 +41,9 @@ function fullScreen() {
 
   else closeFullscreen();
 }
+
+function toggleButton(data) {
+    data.target.toggleClass(btn_on);
+}
+
+document.querySelector("button").onclick = toggleButton;
