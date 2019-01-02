@@ -9,32 +9,38 @@
   </head>
   <body>
       <app>
-      <canvas id="myCanvas">
-      
-      
-      </canvas>
-      
+
+       <div id="aWrapper">
+       <canvas id="backgroundCanvas"></canvas>
+       <canvas id="potatoCanvas"></canvas>
+      </div>
+
       <dam>
         <ctrl id="controlli">
-          <div id="midi_in"> Midi In
+          <div id="midi_in">Midi In
            <div id="led" class="led_off"></div>
           </div>
-            
+
           <div>
-          </div>   
-            
-          <button >Reset
+          </div>
+
+          <button id="searchButton">Search Device
           </button>
-            
+          <button id="startButton">Start
+          </button>
+
+          <button id="resetButton" >Reset
+          </button>
+
           <button id="fs_btn">Fullscreen
           </button>
         </ctrl>
-      
+
 
         <keyboard>
-            <div style="display: flex; margin:auto;">
+            <div style="display: flex; height: 120px;">
     <li class="white" data-key="24"></li>
-    <li class="black" data-key="25"></li> 
+    <li class="black" data-key="25"></li>
     <li class="white" data-key="26"></li>
     <li class="black" data-key="27"></li>
     <li class="white" data-key="28"></li>
@@ -56,7 +62,7 @@
     <li class="black" data-key="44"></li>
     <li class="white" data-key="45"></li>
     <li class="black" data-key="46"></li>
-    <li class="white" data-key="47"></li> 
+    <li class="white" data-key="47"></li>
     <li class="white" data-key="48"></li>
     <li class="black" data-key="49"></li>
     <li class="white" data-key="50"></li>
@@ -69,7 +75,7 @@
     <li class="white" data-key="57"></li>
     <li class="black" data-key="58"></li>
     <li class="white" data-key="59"></li>
-    <li class="white" data-key="60"></li> 
+    <li class="white" data-key="60"></li>
     <li class="black" data-key="61"></li>
     <li class="white" data-key="62"></li>
     <li class="black" data-key="63"></li>
@@ -81,7 +87,7 @@
     <li class="white" data-key="69"></li>
     <li class="black" data-key="70"></li>
     <li class="white" data-key="71"></li>
-    <li class="white" data-key="72"></li>  
+    <li class="white" data-key="72"></li>
     <li class="black" data-key="73"></li>
     <li class="white" data-key="74"></li>
     <li class="black" data-key="75"></li>
@@ -92,7 +98,7 @@
     <li class="black" data-key="80"></li>
     <li class="white" data-key="81"></li>
     <li class="black" data-key="82"></li>
-    <li class="white" data-key="83"></li> 
+    <li class="white" data-key="83"></li>
     <li class="white" data-key="84"></li>
     <li class="black" data-key="85"></li>
     <li class="white" data-key="86"></li>
@@ -120,14 +126,15 @@
 
 </div>
        </keyboard>
-    
-          
+
+
         <bottom>
         Progetto di Jacopo, Nico e Ema
         </bottom>
-    
+
       </dam>
   </app>
   </body>
   <script src="js/script.js"></script>
+  <script src="js/vis.js"></script>
 </html>
