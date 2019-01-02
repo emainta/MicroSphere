@@ -8,11 +8,12 @@
 
 body {
   background-color: black;
-  font-family: Impact, Charcoal, sans-serif;
+  font-family: Helvetica;
   color: white;
   display: flex;
+  /*overflow: hidden;*/
 }
- 
+
 app {
     margin: auto;
     width: 100%;
@@ -21,13 +22,38 @@ app {
     border-radius: 2px ;
  /* border: 2px solid green;*/
 }
-
-#myCanvas {
-    height: auto;
-    width: 80%;
+#ball{
+  width:100px;
+height:100px;
+background-color:red;
+border-radius:50%;
+z-index: 3;
+}
+#aWrapper {
+    /*Horizontally centers the canvas*/
+    /*margin: 0 auto;*/
+    /*height: 500px;
+    width: 80%;*/
     margin: auto;
-    margin-left: 10%;
-    border: 1px solid darkgray;
+    margin-bottom: 5px;
+    margin-top: 10px;
+    border: 1px solid #212842;
+    display: flex;
+}
+
+#backgroundCanvas {
+    height: inherit;
+    width: inherit;
+    position: absolute;
+    z-index:0;
+}
+
+#potatoCanvas {
+    height: 100%;
+    width: 100%;
+    transition: 2s;
+    z-index:1;
+    opacity:0;
 }
 
 bottom {
@@ -36,9 +62,9 @@ bottom {
     /*border: 3px solid green;*/
     text-align: center;
     color: white;
-    font-size: 25px;
+    font-size: 15px;
     font-variant: small-caps;
-    
+    top:22px;
 }
 
 dam {
@@ -46,13 +72,13 @@ dam {
     height: auto;
     display: block;
     margin: auto;
-    /*border: 1px solid red;*/
-    
+    /*border: 1px solid red*/
+
 }
 
 ctrl {
     width: 100vw;
-    height: 100px;
+    height: 60px;
     /*border: 3px solid green;*/
     display: block;
 }
@@ -61,29 +87,29 @@ ctrl {
     width: 80%;
     margin: auto;
     padding: 10px;
-    background-color: darkslategray;
+    background-color: #212842;
     font-variant: small-caps;
 }
 
 #midi_in {
     float: left;
     height: 100%;
-    width: 100px;
+    width: 80px;
     text-align: center;
     display: grid;
-    font-size: 20px;
-    
+    font-size: 15px;
+
 }
 
 #led {
-    width: 20px;
-    height: 20px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     border: 2px solid white;
     margin: auto;
     position: relative;
     transform: translate(0,-100%);
-    
+
 }
 
 .led_off {
@@ -94,14 +120,38 @@ ctrl {
 }
 
 button {
-    height: 40px;
-    width: 140px;
-    font-size: 20px;
-    background-color: purple;
+    height: 20px;
+    width: 100px;
+    font-size: 12px;
+    background-color: #e83f6f;
     color: white;
-    margin: 20px;
+    margin: 8px;
     display: inline-grid;
+    border: none;
     float: left;
     position: relative;
-    transform: translate(0,10px);
+    transform: translate(0,12px);
+}
+
+button:active {
+     box-shadow: 0 0 8px #ffcf56 ;
+     border: 1px solid #ffcf56;
+     color: #ffcfff;
+     background-color: #e83f73;
+}
+.btn_on {
+    box-shadow: 0 0 5px white ;
+    border: 1px solid yellow;
+    /*box-shadow: none|h-offset v-offset blur spread color |inset|initial|inherit;*/
+}
+
+#searchButton {
+  height: 30px;
+  vertical-align: middle;
+  top:-5px;
+
+}
+
+#startButton {
+
 }

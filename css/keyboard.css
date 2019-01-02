@@ -1,20 +1,22 @@
-keyboard { 
-  /*position:relative;*/
+keyboard {
+  position:relative;
 
+  transform: scale(0.67);
   height: auto;
   width:80%;
-  margin-left: 10%;
+  margin-left: 8%;
   cursor: pointer;
   list-style-type: none;
   display:flex;
-    /*border: 2px solid blue;*/
+  /*border: 2px solid blue;*/
 
 }
 
-li { 
-    position: relative; 
-    float: left; 
-    margin: 0; 
+li {
+
+    position: relative;
+    float: left;
+    margin: 0;
     padding: 0;
     border-radius: 2px 2px 5px 5px;
 }
