@@ -12,15 +12,15 @@ var clearHp=0;
 /*DATI DA Jacopo
 verticalStep: i-th step / n' step
 */
-var iStep = 1;
-var nStep = 15;
-var verticalStep = ;
+var iStep = van - 12; // da -12 a +12
+var nStep = 25;
+var verticalStep = (iStep +1 ) / nStep;
 
 //Trasparenza iniziale
 canvas.style.opacity = 0;
 canvas.style.transition = "opacity 2s";
 
-//changing the Pixel Ratio will make the canvas blurry in some devices
+//changing the Pixel Ratio will make the canvas blurry in some devices, yeee
 //with this section you force the 1:1 pixel ratio
 function setCanvasScalingFactor() {
    return window.devicePixelRatio || 1;
