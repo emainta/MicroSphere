@@ -84,25 +84,6 @@ function playIfyouCan(){
     noteOn(currentMidiNote);}
 }
 
-/*
-//oscillatore da sostituire con il synth
-function oscillatorStart(){
-  var note =  ROOTNOTE + CURRENTNOTE + 60;//midi
-  console.log(note);
-  var c = new AudioContext();
-  o = c.createOscillator();
-  g = c.createGain();
-  g.connect(c.destination);
-  o.connect(g);
-  now = c.currentTime;
-  g.gain.setValueAtTime(0,now);
-  g.gain.linearRampToValueAtTime(1,now+0.1);
-  g.gain.linearRampToValueAtTime(0,now+0.5);
-  note =  262 * Math.pow(2,(note-60)/12);//frequenza
-  o.frequency.value = note;
-  o.start();
-}*/
-
 //questa funzione raccoglie tutte le note midi proveniente dall'accordo
 function acquireNote(note){
   currentAcquiredNotes.add(note);
@@ -215,7 +196,6 @@ function compareScale(tmpScale, rec){
     console.log("ECCOTI LE SCALE ORDINATE di Scaleto play " + k + " e' : " +  SCALESTOPLAY[k]);
   }
 
-
   console.log("Le playable Scale sono  : " + SCALESTOPLAY.length);
   if(size < 1){
     console.log("there are no scale for this chord")}
@@ -251,46 +231,43 @@ function onMIDISuccess(midiAccess) {
 
 //FINE CODICE CONTOLLER
 
-// <<<<<<<<<< INIZIO COIDCE SYNTH >>>>>>>>>>>>>>>>
+
+// <<<<<<<<<<< CODICE DI MICROBIT >>>>>>>>>>>>>>>
+
+
+
+//<<<<<<<<<<< FINE CODICE MICROBIT >>>>>>>>>>>>>
+
 
 var c = new AudioContext();
 
 //All the oscillators active now
 var activeOscillators = new Array();
 
-
-var currentModFrequency = 2.1; // Hz * 10 = 2.1
-var currentModOsc1 = 1.5;
-
-
+var filterGain = 100;
+var currentModFrequency;  // fa vibrare l'oscillatore, capire come si puo automatizzare la frazione
 var currentOsc1Detune = 0;
-var currentOsc1Mix = 50.0;
 
-var currentFilterCutoff= 8;
+var filterCutOff = 500;
+var filterQ = 20;
+var filterEnvelope= 56;
 
-var currentFilterQ = 7;
-var currentFilterMod = 21;
-var currentFilterEnv = 56;
+var envAttack = 2;
+var envDecay = 15;
+var envSustain = 68;
+var envRelease= 5;
 
-//valori dell'envelope di oscillatori + filtro
-var currentEnvA = 2;
-var currentEnvD = 15;
-var currentEnvS = 68;
-var currentEnvR = 5;
+var filterEnvAtt = 5;
+var filterEnvD = 6;
+var filterEnvSus = 5;
+var filterEnvR = 7;
 
-// valori dell'envelope del filtro
-var currentFilterEnvA = 5;
-var currentFilterEnvD = 6;
-var currentFilterEnvS = 5;
-var currentFilterEnvR = 7;
-
-//mix di riverbero e distorsione tra due gain
-var currentRev = 0;
+var dryWetRev = 0;
 var currentDist = 0;
 
 var currentDelay = 0.0;
 var currentGainDelay = 5;
-var currentDistortion = 0;// è il valore curve di distortion
+var distCurve = 0;
 
 
 var effectChain;
@@ -304,18 +281,18 @@ var compressor;
 var delay;
 var gainDelay;
 var preDelayGain;
-var analyser;
+var impulseBuffer;
 
+var analyser = c.createAnalyser();
+analyser.ffsize=1024;
 
-initAudio2();
+initAudio();
 
 //tutti i tasti
 var allKeys = document.getElementsByTagName("li");
 var wavePicker = document.querySelector("select[name='waveform']");
 var modwavePicker = document.querySelector("select[name='modwaveform']");
-var sineTerms = new Float32Array([0, 0, 1, 0, 1]);
-var cosineTerms = new Float32Array(sineTerms.length);
-var customWaveform ;
+var filterPicker = document.querySelector("select[name='filterType']");
 
 //When playing a note
 function noteOn( note, velocity ) {
@@ -349,19 +326,25 @@ function filterFrequencyFromCutoff( pitch, cutoff ) {
 
 //change MIDI in frequency
 function frequencyFromNoteNumber( note ) {
-	return  65 * Math.pow(2,(note-36)/12);//frequenza
+	return 440 * Math.pow(2,(note-69)/12);
 }
 
 //choose the type of wave
 function chooseOscillatorType(){
-  let type1 = wavePicker.options[wavePicker.selectedIndex].value;
-  return type1;
+  return wavePicker.options[wavePicker.selectedIndex].value;
 }
 function chooseModType(){
-  let type2 = modwavePicker.options[wavePicker.selectedIndex].value;
-  return type2;
+   return modwavePicker.options[modwavePicker.selectedIndex].value;
 }
-
+function createPeriodicWave(){
+  var sineTerms = new Float32Array([0, 0, 1, 0, 1]);
+  var cosineTerms = new Float32Array(sineTerms.length);
+  var customWaveform = c.createPeriodicWave(cosineTerms, sineTerms);
+  return customWaveform;
+}
+function chooseFilterType(){
+ return filterPicker.options[filterPicker.selectedIndex].value;
+}
 
 //FUNZIONE PRINCIPALE_: crea gli oscillatori, i modulatori, i filtri e li collega
 function playNote(note, v){
@@ -371,104 +354,79 @@ function playNote(note, v){
    this.oscillator1.frequency.value = frequencyFromNoteNumber( note );
 
   //tipo di wave
-  let type =  chooseOscillatorType();
+  let type = chooseOscillatorType();
   if (type == "custom") {
-    customWaveform = c.createPeriodicWave(cosineTerms, sineTerms);
-    this.oscillator1.setPeriodicWave(customWaveform);}
-  else {
-    this.oscillator1.type = type;
-    }
-
+    this.oscillator1.setPeriodicWave(createPeriodicWave());}
+   else this.oscillator1.type = type;
   //gain a cui collego l'oscillatore
    this.osc1Gain = c.createGain();
- 	 this.osc1Gain.gain.value = 0.005 * currentOsc1Mix;
- //this.osc1Gain.gain.value = 0.05 + (0.33 * velocity);
+ 	 this.osc1Gain.gain.value = 1;
 	 this.oscillator1.connect( this.osc1Gain);
 
 
   // creo un secondo oscillatore, in funzione di modulatore, a cui do una frequenza iniziale
 	this.modOsc = c.createOscillator();
 	this.modOsc.type = chooseModType();
+  currentModFrequency = this.oscillator1.frequency.value - 2*Math.pow(this.oscillator1.frequency.value, 1/12) // (this.oscillator1.frequency.value*29 / 30); //vibrato
 	this.modOsc.frequency.value = currentModFrequency ;
   //collego il modulatore a un gain e collego il modulatore al primo oscillatore così che varia il suo gain in base alla frequenza
 	this.modOsc1Gain = c.createGain();
 	this.modOsc.connect( this.modOsc1Gain );
-	this.modOsc1Gain.gain.value = currentModOsc1;
+	this.modOsc1Gain.gain.value = 5;
 	this.modOsc1Gain.connect( this.oscillator1.frequency );
 
-
-  // creo due filtri biquadro con parametri tipo, q factor, frequenza,
-	this.filter1 = c.createBiquadFilter();
-	this.filter1.type = "peaking";
-	this.filter1.Q.value = currentFilterQ;
-	this.filter1.frequency.value = Math.pow(2, currentFilterCutoff);
-	//filterFrequencyFromCutoff( this.originalFrequency, currentFilterCutoff );
-  //console.log( "filter frequency: " + this.filter1.frequency.value);
-	this.filter2 = c.createBiquadFilter();
-	this.filter2.type = "lowpass";
-	this.filter2.Q.value = currentFilterQ;
-	this.filter2.frequency.value = Math.pow(2, currentFilterCutoff);
-
-
-
-	this.osc1Gain.connect( this.filter2 );
-  this.filter1.connect( this.filter2 );
+	this.filter = c.createBiquadFilter(); // se metto l'high pass devo abbassare il modfilter gain
+	this.filter.type = chooseFilterType();
+	this.filter.Q.value = filterQ; // da 0 a 20
+	this.filter.frequency.value = filterCutOff;  // da 50 a 1000
+	this.osc1Gain.connect( this.filter );
 
 	// per collegare il modulatore al filtro creo un altro gain , gli collego il modulatore e lo collego a entrmbi i filtri
 	this.modFilterGain = c.createGain();
-	this.modOsc.connect( this.modFilterGain );
-	this.modFilterGain.gain.value = currentFilterMod*24;
-//	console.log("modFilterGain=" + currentFilterMod*24);
-  this.modFilterGain.connect( this.filter1.detune );	// filter vibrato
-	this.modFilterGain.connect( this.filter2.detune );	// filter vibrato
+  this.modOsc.connect( this.modFilterGain );
+  this.modFilterGain.gain.value =filterGain*24; // mettere una variabile da regolare per il mix del filtro 2 da 100 a 300
+	this.modFilterGain.connect( this.filter.detune );	// filter vibrato
 
 	// crepo l'envelope dell'attacco all'oscillatore
 	this.envelope = c.createGain();
-	this.filter2.connect( this.envelope );
-	this.envelope.connect( effectChain );
+	this.filter.connect( this.envelope );
+	this.envelope.connect(effectChain);
 
 	// set up the volume and filter envelopes
 	var now = c.currentTime;
-	var envAttackEnd = now + (currentEnvA/20.0);
+	var envAttackEnd = now + (envAttack/20.0);
 
 	this.envelope.gain.value = 0.0;
 	this.envelope.gain.setValueAtTime( 0.0, now );
 	this.envelope.gain.linearRampToValueAtTime( 1.0, envAttackEnd );
-	this.envelope.gain.setTargetAtTime( (currentEnvS/100.0), envAttackEnd, (currentEnvD/100.0)+0.001 );
+	this.envelope.gain.setTargetAtTime( (envSustain/100.0), envAttackEnd, (envDecay/100.0)+0.001 );
 
-
-	var filterAttackLevel = currentFilterEnv*72;  // Range: 0-7200: 6-octave range
-	var filterSustainLevel = filterAttackLevel* currentFilterEnvS / 100.0; // range: 0-7200
-	var filterAttackEnd = (currentFilterEnvA/20.0);
+	var filterAttackLevel = filterEnvelope*72;  // Range: 0-7200: 6-octave range
+	var filterSustainLevel = filterAttackLevel* filterEnvSus / 100.0; // range: 0-7200
+	var filterAttackEnd = (filterEnvAtt/20.0);
 	if (!filterAttackEnd)
-				filterAttackEnd=0.05;
-	this.filter1.detune.setValueAtTime( 0, now );
-	this.filter1.detune.linearRampToValueAtTime( filterAttackLevel, now+filterAttackEnd );
-	this.filter2.detune.setValueAtTime( 0, now );
-	this.filter2.detune.linearRampToValueAtTime( filterAttackLevel, now+filterAttackEnd );
-	this.filter1.detune.setTargetAtTime( filterSustainLevel, now+filterAttackEnd, (currentFilterEnvD/100.0) );
-	this.filter2.detune.setTargetAtTime( filterSustainLevel, now+filterAttackEnd, (currentFilterEnvD/100.0) );
-
+				filterAttackEnd=0.05; // tweak to get target decay to work properly
+	this.filter.detune.setValueAtTime( 0, now );
+	this.filter.detune.linearRampToValueAtTime( filterAttackLevel, now+filterAttackEnd );
+	this.filter.detune.setTargetAtTime( filterSustainLevel, now+filterAttackEnd, (filterEnvD/100.0) );
+   // fa un attacco carino
 	this.oscillator1.start(0);
 	this.modOsc.start(0);
 }
+
 function stopNote(note){
   var now =  c.currentTime;
-	var release = now + (currentEnvR/10.0);
-  var initFilter = filterFrequencyFromCutoff( this.originalFrequency, currentFilterCutoff/100 * (1.0-(currentFilterEnv/100.0)) );
+	var release = now + (envRelease/10.0);
+  var initFilter = filterFrequencyFromCutoff( this.originalFrequency, filterCutOff/100 * (1.0-(filterEnvelope/100.0)) );
 
   activeOscillators[note].envelope.gain.cancelScheduledValues(now);
-  activeOscillators[note].envelope.gain.setValueAtTime( activeOscillators[note].envelope.gain.value, now );  // this is necessary because of the linear ramp
-  activeOscillators[note].envelope.gain.setTargetAtTime(0.0, now, (currentEnvR/100));
-
-  activeOscillators[note].filter1.detune.cancelScheduledValues(now);
-  activeOscillators[note].filter1.detune.setTargetAtTime( 0, now, (currentFilterEnvR/100.0) );
-  activeOscillators[note].filter2.detune.cancelScheduledValues(now);
-  activeOscillators[note].filter2.detune.setTargetAtTime( 0, now, (currentFilterEnvR/100.0) );
-
-  delay.delayTime.cancelScheduledValues(now);
-  delay.delayTime.setTargetAtTime(0, now, currentDelay );
- // activeOscillators[note].stop();
+  activeOscillators[note].envelope.gain.setValueAtTime( activeOscillators[note].envelope.gain.value, now );
+  activeOscillators[note].envelope.gain.setTargetAtTime(0.0, now, (envRelease/100));
+  activeOscillators[note].filter.detune.cancelScheduledValues(now);
+  activeOscillators[note].filter.detune.setTargetAtTime( 0, now, (filterEnvR/100.0) );
+  activeOscillators[note].filter.Q.cancelScheduledValues(now);
+  activeOscillators[note].filter.Q.setTargetAtTime( 0, now, (filterEnvR/100.0) );
+  activeOscillators[note].oscillator1.stop(release);
 
 }
 
@@ -486,22 +444,11 @@ function makeDistortionCurve(value) {
     x = i * 2 / n_samples - 1;
     curve[i] = ( 3 + k ) * x * 20 * deg / ( Math.PI + k * Math.abs(x) );
   }
-  currentDistortion= curve;
+  distCurve= curve;
   return curve;
-};
-
-//funzione che cambia i valori della dist
-var mixDist = function( value ) {
-	// equal-power crossfade
-	var gain1 = Math.cos(value * 0.5*Math.PI);
-	var gain2 = Math.cos((1.0-value) * 0.5*Math.PI);
-	preDelayGain.gain.value = gain1;
-	distortionGain.gain.value = gain2;
 }
-
 //funzione che cambia i valori del riverbero sui gain
 var mixRev = function( value ) {
-	// equal-power crossfade
 	var gain1 = Math.cos(value * 0.5*Math.PI);
 	var gain2 = Math.cos((1.0-value) * 0.5*Math.PI);
 	revDryGain.gain.value = gain1;
@@ -511,155 +458,165 @@ var mixRev = function( value ) {
 //chiamato ogni volta che viene modificato il riverbero
 function changeValue(string){
   var value = parseFloat(string) / 100.0;
-  currentRev = value;
+  dryWetRev = value;
 	mixRev(value);
 }
 
-function changeDist(string){
-   var value = parseFloat(string) / 100.0;
-   currentDist = value;
-   mixDist(value)
-}
-
-
-//master
 document.querySelector("#masterGain").oninput = function(){
-  currentVol = this.value;
-  masterGain.gain.value = currentVol;
+  masterGain.gain.value = this.value;
 }
 
-//time delay
 document.querySelector("#timeDelay").oninput = function(){
-  currentDelay = this.value;
-  delay.delayTime.value = currentDelay;
+  delay.delayTime.value = this.value;
 }
 
-//gain of delay
 document.querySelector("#gDelay").oninput = function(){
-  currentGainDelay = this.value;
-  gainDelay.gain.value = currentGainDelay;
+  gainDelay.gain.value = this.value;
 }
 
-//distortion curve
 document.querySelector("#distortionCurve").oninput = function(){
     var value = parseInt(this.value) * 5;
-    currentDistortion = makeDistortionCurve(value);
-    distortion.curve = currentDistortion;
-  }
-
+    distortion.curve = makeDistortionCurve(value);
+}
 function oversample(type){
   distortion.oversample = type;
 }
 
 
+
 //set filters Q value
 playNote.prototype.setFilterQ = function( value ) {
-  currentFilterQ  = value;
-	this.filter1.Q.value = value;
-	this.filter2.Q.value = value;
+	this.filter.Q.value = value;
 }
 document.querySelector("#qFactor").oninput = function(){
-    currentFilterQ = this.value;
+    filterQ = this.value;
 	  for (var i=0; i<255; i++) {
 		if (activeOscillators[i] != null) {
-			activeOscillators[i].setFilterQ( currentFilterQ );
+			activeOscillators[i].setFilterQ(filterQ);
       }
     }
  }
 
-//set filter cuffOff
+//volume del filtro
+playNote.prototype.setFilterGain = function( value ) {
+	this.modFilterGain.gain.value = value;
+}
+document.querySelector("#filterGain").oninput = function(){
+    filterGain = this.value;
+	  for (var i=0; i<255; i++) {
+		if (activeOscillators[i] != null) {
+			activeOscillators[i].setFilterGain( filterGain );
+      }
+    }
+ }
+
+//valore del cutoff
 playNote.prototype.setFilterCutoff = function( value ) {
-	this.filter1.frequency.value = value;
-	this.filter2.frequency.value = value;
+	this.filter.frequency.value = value;
 }
 document.querySelector("#cutOffFilter").oninput = function(){
-    var filterCutoff = Math.pow(2, this.value);
+    filterCutOff = this.value ;
     for (var i=0; i<255; i++) {
 		if (activeOscillators[i] != null) {
-			activeOscillators[i].setFilterCutoff( filterCutoff );
+			activeOscillators[i].setFilterCutoff(filterCutOff);
       }
     }
   }
-
-//set modulator frequency
-playNote.prototype.updateModOsc1 = function( value ) {
-	this.modOsc.frequency.value = value/10;
+  //detune oscillator
+playNote.prototype.setDetune = function( value ) {
+	this.oscillator1.detune.value = value;
 }
-document.querySelector("#freqMod").oninput = function(){
-    currentModFrequency = this.value;
+document.querySelector("#detune").oninput = function(){
+    detune= this.value;
     for (var i=0; i<255; i++) {
 		if (activeOscillators[i] != null) {
-			activeOscillators[i].updateModOsc1( currentModFrequency );
+			activeOscillators[i].setDetune( detune );
       }
    }
 }
 
-/*
-playNote.prototype.updateOsc1Mix = function( value ) {
-
-	this.osc1Gain.gain.value = 0.005 * value;
-
+//set modulator frequency
+playNote.prototype.setModFreq = function( value ) {
+	this.modOsc.frequency.value = value;
 }
-*/
 
-/*
-playNote.prototype.setFilterMod = function( value ) {
-
-	this.modFilterGain.gain.value = currentFilterMod*24;
-
-//	console.log( "filterMod.gain=" + currentFilterMod*24);
-
-}*/
-function getImpulse(impulseUrl) {
-  ajaxRequest = new XMLHttpRequest();
-  ajaxRequest.open('GET', impulseUrl, true);
-  ajaxRequest.responseType = 'arraybuffer';
-
-  ajaxRequest.onload = function() {
-    var impulseData = ajaxRequest.response;
-
-    context.decodeAudioData(impulseData, function(buffer) {
-        myImpulseBuffer = buffer;
-        convolver.buffer = myImpulseBuffer;
-        convolver.loop = true;
-	      convolver.normalize = true;
-      },
-      function(e){"Error with decoding audio data" + e.err});
-  }
-  ajaxRequest.send();
+document.querySelector("#envA").oninput = function (value){
+envAttack = this.value;
 }
+
+document.querySelector("#envD").oninput = function (value){
+envDecay = this.value;
+}
+
+document.querySelector("#envS").oninput = function (value){
+envSustain = this.value;
+}
+
+document.querySelector("#envR").oninput = function (value){
+envRelease= this.value;
+}
+
+document.querySelector("#filterEnvA").oninput = function (value){
+  filterEnvAtt = this.value;
+}
+
+document.querySelector("#filterEnvD").oninput = function (value){
+  filterEnvD = this.value;
+}
+
+document.querySelector("#filterEnvS").oninput = function (value){
+  filterEnvSus = this.value;
+}
+
+document.querySelector("#filterEnvR").oninput = function (value){
+  filterEnvR = this.value;
+}
+
+document.querySelector("#compA").oninput = function (value){
+  compressor.attack.value = this.value;
+}
+
+document.querySelector("#compR").oninput = function (value){
+  compressor.release.value = this.value;
+}
+
+document.querySelector("#compK").oninput = function (value){
+  compressor.knee.value = this.value;
+}
+
+document.querySelector("#compRatio").oninput = function (value){
+ compressor.ratio.value = this.value;
+}
+
+document.querySelector("#compT").oninput = function (value){
+  compressor.threshold.value = - this.value;
+}
+
 
 
 // crea effectChain, delay, distortion, convolver, masterGain, compressor
-function initAudio2() {
+function initAudio() {
 
-  analyser = c.createAnalyser();
-  analyser.ffsize=1024;
-
-	// effetti
+	// set up the master effects chain for all voices to connect to.
 	effectChain = c.createGain();
 	distortion =  c.createWaveShaper();
   distortion.curve = makeDistortionCurve(0);
   distortion.oversample = "none";
 
-  distortionGain = c.createGain();
-  distortionGain.gain.value = 0.3;
-
   //delay
   delay = c.createDelay();
-  preDelayGain = c.createGain();
   gainDelay = c.createGain();
   delay.delayTime.value= 0.0;
   gainDelay.gain.value = 0.0;
-  preDelayGain.gain.value = 0.5
 
-  //riverbero che non funge
+  //Convolver for concert hall reverb
   convolver = c.createConvolver();
   revWetGain = c.createGain();
 	revDryGain = c.createGain();
   revWetGain.gain.value = 0.0;
   revDryGain.gain.value = 1.57;
-  getImpulse(' https://crossorigin.me/https://www.dropbox.com/s/5lk5wxavxfoev0x/02-6%20Hall%201-00.wav?dl=0');
+
+  getImpulse('https://dl.dropboxusercontent.com/s/5lk5wxavxfoev0x/02-6%20Hall%201-00.wav?dl=0');
 
 
   masterGain = c.createGain();
@@ -672,11 +629,8 @@ function initAudio2() {
   compressor.release.setValueAtTime(0.25, c.currentTime);
 
   //connessioni
-  effectChain.connect( distortion);
-  effectChain.connect(preDelayGain);
-  distortion.connect( distortionGain);
-  distortionGain.connect(delay);
-  preDelayGain.connect(delay);
+  effectChain.connect(distortion);
+  distortion.connect(delay);
   delay.connect(gainDelay);
   gainDelay.connect(delay);
   delay.connect( convolver );
@@ -689,13 +643,82 @@ function initAudio2() {
   compressor.connect(	c .destination );
 }
 
-document.getElementById('startButton').addEventListener('click', function() {
-  c.resume().then(() => {
-    console.log('Playback resumed successfully');
-  });
-});
+function getImpulse(impulseUrl) {
+  ajaxRequest = new XMLHttpRequest();
+  ajaxRequest.open('GET', impulseUrl, true);
+  ajaxRequest.responseType = 'arraybuffer';
 
-/*
+  ajaxRequest.onload = function() {
+    var impulseData = ajaxRequest.response;
+
+    c.decodeAudioData(impulseData, function(buffer) {
+        myImpulseBuffer = buffer;
+        convolver.buffer = myImpulseBuffer;
+        convolver.loop = true;
+	      convolver.normalize = true;
+      },
+      function(e){"Error with decoding audio data" + e.err});
+  }
+  ajaxRequest.send();
+}
+
+//CANVAS
+var bufferLength = analyser.frequencyBinCount;
+console.log(bufferLength);
+var dataArray = new Uint8Array(bufferLength);
+
+var canvas = document.querySelector("#canvas");
+var ctx = canvas.getContext("2d");
+
+var canvasFrequency = document.querySelector("#canvasFrequency");
+var ctxF = canvasFrequency.getContext("2d");
+
+function drawSamples(phase){
+   analyser.getByteTimeDomainData(dataArray);
+   ctx.clearRect(0,0,canvas.width,canvas.height) ;
+   ctx.beginPath();
+   for(var i=0; i<canvas.width; i++){
+    ctx.lineTo(i, dataArray[i]);
+    var gradient=ctx.createLinearGradient(0,0,180,0);
+    gradient.addColorStop("0","magenta");
+    gradient.addColorStop("0.5","blue");
+    gradient.addColorStop("1.0","red");
+    ctx.fillStyle= gradient;
+    ctx.strokeStyle= gradient;
+  }
+  ctx.stroke();
+  requestAnimationFrame(drawSamples);
+}
+
+function drawSamplesFrequency(phase){
+ analyser.getByteFrequencyData(dataArray);
+ ctxF.clearRect(0,0,canvasFrequency.width,canvasFrequency.height) ;
+ ctxF.beginPath();
+  let x=0;
+ for(let i=0; i<canvasFrequency.width; i++){
+ ctxF.fillRect(i, canvasFrequency.height-dataArray[i],1, canvasFrequency.height);
+   //i*10 è la distanza tra una riga e l'altra, 2 è la larghezza della riga in pixel
+// Create gradient
+var gradient=ctxF.createLinearGradient(0,0,canvasFrequency.width,0);
+gradient.addColorStop("0","magenta");
+gradient.addColorStop("0.5","blue");
+gradient.addColorStop("1.0","red");
+ctxF.strokeStyle=gradient;
+ctxF.fillStyle= gradient;
+ }
+  ctxF.stroke();
+  requestAnimationFrame(drawSamplesFrequency);
+ }
+
+drawSamplesFrequency();
+drawSamples();
+var ph=0;
+function animate(){
+  drawSine(ph);
+  ph+=1;
+}
+
+
 //PLAY WITH CLICK
 document.querySelectorAll(" .white ").forEach(function(key){ key.onmousedown = function(key){ notes = Number(key.target.getAttribute("data-key"));
     playNote(notes);}});
@@ -894,4 +917,4 @@ document.onkeyup = function (keyPressed){
           break;
         }
   }
-}*/
+}
