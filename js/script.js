@@ -42,8 +42,10 @@ function fullScreen() {
   else closeFullscreen();
 }
 
+/*
 function toggleButton(data) {
-    data.target.toggleClass(btn_on);
+    data.target.toggleClass(btn_acceso);
 }
 
 document.querySelector("button").onclick = toggleButton;
+*/
