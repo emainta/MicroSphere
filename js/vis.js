@@ -12,7 +12,7 @@ var clearHp=0;
 /*DATI DA Jacopo
 verticalStep: i-th step / n' step
 */
-var iStep = van - 12; // da -12 a +12
+var iStep = 12 - 12; // da -12 a +12
 var nStep = 25;
 var verticalStep = (iStep +1 ) / nStep;
 

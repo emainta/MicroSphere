@@ -215,6 +215,7 @@ function compareScale(tmpScale, rec){
     console.log("ECCOTI LE SCALE ORDINATE di Scaleto play " + k + " e' : " +  SCALESTOPLAY[k]);
   }
 
+
   console.log("Le playable Scale sono  : " + SCALESTOPLAY.length);
   if(size < 1){
     console.log("there are no scale for this chord")}
@@ -688,6 +689,11 @@ function initAudio2() {
   compressor.connect(	c .destination );
 }
 
+document.getElementById('startButton').addEventListener('click', function() {
+  c.resume().then(() => {
+    console.log('Playback resumed successfully');
+  });
+});
 
 /*
 //PLAY WITH CLICK

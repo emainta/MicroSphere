@@ -244,11 +244,11 @@ var acZ = 0;
 
 
 microBit.onBleNotify(function(){
-
+/*
   document.getElementById("acc_X").innerHTML=microBit.getAccelerometer().x;
   document.getElementById("acc_Y").innerHTML=microBit.getAccelerometer().y;
   document.getElementById("acc_Z").innerHTML=microBit.getAccelerometer().z;
-
+*/
   acX = microBit.getAccelerometer().x;
   acY = microBit.getAccelerometer().y;
   acZ = microBit.getAccelerometer().z;
@@ -280,7 +280,7 @@ microBit.onBleNotify(function(){
 //c3 a E4
      if( acZ<0 && acX>=-1024 && acX<-931 ){
          van = 0;
-         
+
          con = van - ctr;
          ctr = van;}
     else if( acZ<0 && acX>=-931 && acX<-846 ){
