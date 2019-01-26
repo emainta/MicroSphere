@@ -12,9 +12,9 @@ var clearHp=0;
 /*DATI DA Jacopo
 verticalStep: i-th step / n' step
 */
-var iStep = 12 - 12; // da -12 a +12
+var iStep = van - 12; // da -12 a +12
 var nStep = 25;
-var verticalStep = (iStep +1 ) / nStep;
+var verticalStep = - (iStep +1 ) / nStep;
 
 //Trasparenza iniziale
 canvas.style.opacity = 0;
@@ -146,7 +146,10 @@ function startCanvas() {
 //---------------------------------------
 
 function drawPotato() {
-  yp = clearHp * verticalStep; //scaling factor by jacopo
+  iStep = van - 12; // da -12 a +12
+  verticalStep = - (iStep +1 ) / nStep;
+  
+  yp =  clearHp * verticalStep; //scaling factor by jacopo
   ctxP.clear(true);
   ctxP.translate(x0,y0);
   ctxP.beginPath(); //This line gave me a major headache.
