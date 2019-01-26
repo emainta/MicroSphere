@@ -6,9 +6,9 @@ var ACCEL_PERIOD = 'e95dfb24-251d-470a-a062-fa1922dfa9a8'
 var BTN_SRV = 'e95d9882-251d-470a-a062-fa1922dfa9a8'
 var BTN_A_STATE = 'e95dda90-251d-470a-a062-fa1922dfa9a8'
 var BTN_B_STATE = 'e95dda91-251d-470a-a062-fa1922dfa9a8'
-var pol = 1; //posizione del polso
-var van = 0; //valore nota
-var con; //contour melodico
+//var pol = 1; //posizione del polso
+//var van = 0; //valore nota
+//var con; //contour melodico
 var ctr = 0; //un semplice counter
 var SAF = 9;
 
