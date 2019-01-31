@@ -6,6 +6,12 @@ var ACCEL_PERIOD = 'e95dfb24-251d-470a-a062-fa1922dfa9a8'
 var BTN_SRV = 'e95d9882-251d-470a-a062-fa1922dfa9a8'
 var BTN_A_STATE = 'e95dda90-251d-470a-a062-fa1922dfa9a8'
 var BTN_B_STATE = 'e95dda91-251d-470a-a062-fa1922dfa9a8'
+var IO_PIN_SRV = 'e95d127b-251d-470a-a062-fa1922dfa9a8'
+var IO_PIN_DATA = 'e95d8d00-251d-470a-a062-fa1922dfa9a8'
+var IO_AD_CONFIG = 'e95d5899-251d-470a-a062-fa1922dfa9a8'
+var IO_PIN_CONFIG = 'e95db9fe-251d-470a-a062-fa1922dfa9a8'
+var IO_PIN_PWM = 'e95dd822-251d-470a-a062-fa1922dfa9a8'
+
 //var pol = 1; //posizione del polso
 //var van = 0; //valore nota
 //var con; //contour melodico
@@ -35,6 +41,13 @@ class uBit {
     this.onDisconnectCallback=function(){};
 
     this.onBLENotifyCallback=function(){};
+
+    this.characteristic = {
+      IO_PIN_DATA: {},
+      IO_AD_CONFIG: {},
+      IO_PIN_CONFIG: {},
+      IO_PIN_PWM: {},
+    }
   }
 
 //SERIE DI FUNZIONI
@@ -80,6 +93,15 @@ class uBit {
     this.buttonBCallBack();
   }
 
+  writePin(pin) {
+    //qui dovrebbe funzionare ma bisogna fare qualcosa tipo
+    //this.characteristic.IO_PIN_DATA.writeValue(data);
+  }
+
+  readPin(pin) {
+
+  }
+
 
   characteristic_updated(event) {
 
@@ -111,11 +133,13 @@ class uBit {
   searchDevice() {
     filters: []
     var options = {};
-    options.acceptAllDevices = true;
+    /*options.acceptAllDevices = true;
     options.optionalServices = [ACCEL_SRV];
     options.service = [BTN_SRV];
     options.service = [BTN_A_STATE];
-    options.service= [BTN_B_STATE];
+    options.service= [BTN_B_STATE];*/
+    options.acceptAllDevices = true;
+    options.optionalServices = [ACCEL_SRV, IO_PIN_SRV];
 
     console.log('Requesting Bluetooth Device...');
     console.log('with ' + JSON.stringify(options));
@@ -145,6 +169,25 @@ class uBit {
           characteristics.forEach(characteristic => {
             console.log('>> Characteristic: ' + characteristic.uuid + ' ' +
               getSupportedProperties(characteristic));
+
+              //devo storare tutte le caratteristiche che voglio scrivere per accederci dopo
+              switch (characteristic.uuid) {
+                case IO_PIN_DATA:
+                  this.characteristic.IO_PIN_DATA = characteristic;
+                  break;
+
+                case IO_AD_CONFIG:
+                  this.characteristic.IO_AD_CONFIG = characteristic;
+                  break;
+
+                case IO_PIN_CONFIG:
+                  this.characteristic.IO_PIN_CONFIG = characteristic;
+                  break;
+
+                case IO_PIN_PWM:
+                  this.characteristic.IO_PIN_PWM = characteristic;
+                  break;
+
             if (getSupportedProperties(characteristic).includes('NOTIFY')) {
               characteristic.startNotifications().catch(err => console.log('startNotifications', err));
               characteristic.addEventListener('characteristicvaluechanged',
@@ -238,7 +281,6 @@ function searchDevice(){
   microBit.searchDevice();
 };
 
-var changed; //totalmente inutile, ma al momento
 
 microBit.onBleNotify(function(){
 /*
@@ -253,7 +295,7 @@ microBit.onBleNotify(function(){
   if( acZ<0 && acY<=1024 && acY>330 ){
      pol = 1;
      scaleToPlay[0]!=null ?
-        (scaleToPlay != currentScale ?
+        (scaleToPlay != currentScal ?
           (currentScale = scaleToPlay[0])
           :changed = false)
      :changed = false}//console.log(" su polso :" + pol + " non ci sono scale" )}
