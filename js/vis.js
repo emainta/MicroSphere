@@ -9,6 +9,12 @@ var ctxP = canvasPotato.getContext("2d");
 var clearWp=0;
 var clearHp=0;
 
+var hue_val = [0, 15, 45, 135, 180, 240, 330];
+
+
+var rnd = Math.round( Math.random() *255 );
+/*Math.random() * (max - min) + min;
+
 /*DATI DA Jacopo
 verticalStep: i-th step / n' step
 */
@@ -63,7 +69,7 @@ resizeCanvas();
 //New Origin Point
 x0=Math.round(0.2*canvas.width) +0.5;
 y0=Math.round(0.5*canvas.height) +0.5;
-var radius = 20;
+var radius =12 +4*pol;
 
 
 var start = document.getElementById("startButton");
@@ -146,15 +152,21 @@ function startCanvas() {
 //---------------------------------------
 
 function drawPotato() {
+  radius = 12 +4*pol;
   iStep = van - 12; // da -12 a +12
   verticalStep = - (iStep +1 ) / nStep;
-  
+
   yp =  clearHp * verticalStep; //scaling factor by jacopo
   ctxP.clear(true);
   ctxP.translate(x0,y0);
   ctxP.beginPath(); //This line gave me a major headache.
   ctxP.arc(xp, yp, radius, 0 , 2 * Math.PI);
-  ctxP.fillStyle = "white";
+  if(pol==2){
+    ctxP.fillStyle = "white";
+  }
+  else {
+    ctxP.fillStyle = hsl(hue_val[mode[pol]], 90%,75%);
+  }
   ctxP.fill();
   ctxP.translate(-x0,-y0);
   requestAnimationFrame(drawPotato);
