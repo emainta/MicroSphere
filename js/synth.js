@@ -17,8 +17,6 @@ var currentAcquiredNotes;
 var lastAcquiredNotes; //last of 30 sec
 //Tiene conto di quante acquisizioni di note ho fatto
 var numberOfRec;
-//IMPORTANTISSIMA , MI SERVE PER CAMBIARE TONALITà
-var currentDiff;
 //Valore attualmente suonata in valore midi
 var currentMidiNote;
 
@@ -80,8 +78,22 @@ function playIfyouCan(){
    //suona note dal C3 al C5
   if(noteIsOnScale()){
     currentMidiNote =  ROOTNOTE + CURRENTNOTE + 36;//midi
-    console.log("I play note : " + currentMidiNote);
     noteOn(currentMidiNote);}
+}
+
+//oscillatore per la tastiera midi!!!!
+function oscillatorStart(note){
+  var note =  440 * Math.pow(2,(note-69)/12);
+  o1 = c.createOscillator();
+  gain = c.createGain();
+  gain.connect(c.destination);
+  o1.connect(gain);
+  now = c.currentTime;
+  gain.gain.setValueAtTime(0,now);
+  gain.gain.linearRampToValueAtTime(1,now+0.1);
+  gain.gain.linearRampToValueAtTime(0,now+0.5);
+  o1.frequency.value = note;
+  o1.start();
 }
 
 //questa funzione raccoglie tutte le note midi proveniente dall'accordo
@@ -110,15 +122,18 @@ function startNewRec(tmp){
 //MI SALVA currentDiff
 function findRootNote(){
   var lowest = 0;
+  let n = false;
   currentAcquiredNotes.forEach(function(note){
-    lowest == 0 ? lowest = note
-    :( note<lowest ? lowest=note
-         :lowest=lowest)})
+    if(n){
+      note<lowest
+      ? lowest=note : lowest=lowest}
+    else{
+      lowest = note; n = true;}
+  })
+
   currentAcquiredNotes.clear();
   lowest = findNote(lowest); //trova il modulo
-  lowest!=ROOTNOTE ? currentDiff= ROOTNOTE-lowest :currentDiff = 0
   ROOTNOTE = lowest;
-  console.log("LA ROOT  E' :" + ROOTNOTE + "La CURRENT DIFF E' " + currentDiff);
 }
 
 //trova l'ottava della nota
@@ -144,62 +159,47 @@ function findNote(note){
 }
 //CAMBIA UNA SCALA QUANDO VIENE CHIAMATA //verificare se è giusto X*D
 function setTonality(currentScale){
-    var scale = new Set();
+    var newScale = new Set();
     let newNote
     for(let i of currentScale){
-          newNote = i+currentDiff;
-          newNote >= 0 & newNote < 12 ? scale.add(newNote)
-          : newNote<0 ? scale.add(newNote+11) : scale.add(newNote-11)
+          newNote = i + ROOTNOTE;
+          if(newNote<0){newNote = newNote+12;}
+          if (newNote>=12) {newNote = newNote-12}
+          newScale.add(newNote);
           }
-   return scale;
+   return newScale;
 }
 
 
 //METTE SU SCALESTOPLAY LE SCALE CAMBIATE DI TONALITA'
 //viene chiamata da setRec()per trovare la migliore scala per quella rec di note
 function compareScale(tmpScale, rec){
-  var sugScales = new Array(); // MI SERVE SOLO PER TENERE TRACCIA DEL MODO, POI è INUTILE
+
+  var sugScales = new Array(6).fill(0); // MI SERVE SOLO PER TENERE TRACCIA DEL MODO, POI è INUTILE
   var setScale = new Set();
-  tmpScale.forEach(function (el){console.log("valori di tmp  "  +  el)});
+  let position = 6; // ci sono 7 scale in totale
   for (const [mode, scale] of MAJORMODESCALE){
     setScale  = setTonality(scale);
-    //for(let v of setScale ){
-    //console.log("note della scala : " + mode + " dopo set tonaliy :" + v);}
     var comNotes = new Set(tmpScale.filter(x => setScale .has(x)));
-    //comNotes.forEach(function (el){console.log("valori di comNotes" +  el)});
 
     //aggiunge tutte le scale con più di tre note in comune con l'accordo midi
-  console.log("NUMERO INTERSEZIONI : " + comNotes.size + " CON LA SCALA :" + mode)
+    console.log(comNotes.size + " INTERSEZIONI CON LA SCALA : " + mode)
     if(comNotes.size>3){
-      // compatibilità più alte stanno in posizioni più alte
-      if(sugScales[comNotes.size-4] == null){
-          sugScales[comNotes.size-4] = mode; SCALESTOPLAY[comNotes.size-4] = setScale;
-          console.log("IMPOSTO LA SCALA : " + sugScales[comNotes.size-4] + " nella posizione " +  comNotes.size-4);
-          console.log("SCALESTOPLAY è un set : " + SCALESTOPLAY[comNotes.size-4])}
-      else{
-           var br1 = BRIGHTNESS.get(mode);
-           var br2 = BRIGHTNESS.get(sugScales[comNotes.size-4]);
-           console.log("BRIGHTNESS di  " + mode + " e' : "  + br1 + " BRIGHTNESS di "+ sugScales[comNotes.size-4]+ " e' " + br2)
-           let j=0; var move =false;
-           while(sugScales[comNotes.size-4+j]!=null){j++; move=true};
-           if(move){while(j>0){console.log("devo spostare la scala : " + sugScales[comNotes.size-4+j]);
-                              sugScales[comNotes.size-4+j+1] = sugScales[comNotes.size+j-4]; j--}};
-           br1<br2 ?  (sugScales[comNotes.size-4] = sugScales[comNotes.size-4+1],
-                        sugScales[comNotes.size-4+1] = mode, SCALESTOPLAY[comNotes.size-4+1]= setScale) // le più scure nelle posizioni più prossime allo 0
-                   :  (sugScales[comNotes.size-4] = mode , SCALESTOPLAY[comNotes.size-4]= setScale )}
-    }//fine primo if
-  }//fine for
-  //console.log di verifica, si possono cancellare
-  var size = sugScales.length;
-  for(let k=0 ; k < size; k++){
-    console.log("ECCOTI LE SCALE ORDINATE di sugg " + k + " e' : " +  sugScales[k]);
-    console.log("ECCOTI LE SCALE ORDINATE di Scaleto play " + k + " e' : " +  SCALESTOPLAY[k]);
-  }
+      sugScales[position] = mode; SCALESTOPLAY[position] = setScale;
+      console.log("IMPOSTO LA SCALA : " + sugScales[position] + " nella posizione " +  position);
+      position--;
+      }
+    }
+  //prendo solo le più scure
+  let i = 0;
+  while(sugScales[i]==0){i++}
+  console.log(i);
+  sugScales[0]= sugScales[i];
+  sugScales[1]= sugScales[i+1];
+  SCALESTOPLAY[0]= SCALESTOPLAY[i];
+  SCALESTOPLAY[1]= SCALESTOPLAY[i+1];
 
-  console.log("Le playable Scale sono  : " + SCALESTOPLAY.length);
-  if(size < 1){
-    console.log("there are no scale for this chord")}
-  return sugScales //sono i modi delle scale suonabili ordinate su un array in base alle note in comune
+  console.log("Le playable Scale sono  : " + sugScales[0] + " e " +sugScales[1]);
 }
 
 
@@ -217,12 +217,12 @@ function getMIDIMessage(message) {
     switch (command) {
         case 144: // noteOn
             if (velocity > 0) {
-              console.log("acquired");
               acquireNote(note);
+              oscillatorStart(note);}
             break;
       }
   }
-}
+
 function onMIDISuccess(midiAccess) {
     for (var input of midiAccess.inputs.values())
         input.onmidimessage = getMIDIMessage;
@@ -295,26 +295,28 @@ var modwavePicker = document.querySelector("select[name='modwaveform']");
 var filterPicker = document.querySelector("select[name='filterType']");
 
 //When playing a note
+//When playing a note
 function noteOn( note, velocity ) {
 	if (activeOscillators[note] == null) {
 		 activeOscillators[note] = new playNote(note, velocity/127.0);}
-/*
- //visualizzare la nota che stai suonando
-document.querySelectorAll(" .white ").forEach(function(key){ if(key){allKeys.item(note).classList.add("whiteActive");}});
-    document.querySelectorAll(" .black ").forEach(function(key){ if(key){allKeys.item(note).classList.add("blackActive");}});*/
+  var key = note-48;
+  console.log(key)
+  if( key == 0 || key == 2 || key == 4 || key == 5 || key == 7 || key == 9 || key == 11 || key == 12 || key == 14 || key == 16 || key == 17 || key == 19 || key == 21 || key == 23|| key == 25){
+  allKeys.item(key).classList.add("whiteActive");}
+  else{
+  allKeys.item(key).classList.add("blackActive");}
 	}
 function noteOff( note ) {
 	if (activeOscillators[note] != null) {
 		// Shut off the note playing and clear it
 		stopNote(note);
-		activeOscillators[note] = null;}
- /*
-    //visulizzare la nota che stai suonando
-    document.querySelectorAll(" .white ").forEach(function(key){ if(key){allKeys.item(note).classList.remove("whiteActive");}});
-    document.querySelectorAll(" .black ").forEach(function(key){ if(key){allKeys.item(note).classList.remove("blackActive");}});
-  }*/
-}
+		activeOscillators[note] = null;
+   var key = note-48
+   if( key == 0 || key == 2 || key == 4 || key == 5 || key == 7 || key == 9 || key == 11 || key == 12 || key == 14 || key == 16 || key == 17 || key == 19 || key == 21 || key == 23|| key == 25){
+    allKeys.item(key).classList.remove("whiteActive")}
+    else{ allKeys.item(key).classList.remove("blackActive")}}
 
+}
 
 function filterFrequencyFromCutoff( pitch, cutoff ) {
     var nyquist = 0.5 * c.sampleRate;
@@ -661,7 +663,7 @@ function getImpulse(impulseUrl) {
   }
   ajaxRequest.send();
 }
-
+/*
 //PLAY WITH CLICK
 document.querySelectorAll(" .white ").forEach(function(key){ key.onmousedown = function(key){ notes = Number(key.target.getAttribute("data-key"));
     playNote(notes);}});
@@ -670,7 +672,7 @@ document.querySelectorAll(" .black ").forEach(function(key){ key.onmousedown = f
 document.querySelectorAll(" .white ").forEach(function(key){ key.onmouseup = function(key){ notes = Number(key.target.getAttribute("data-key"));
     stopNote(notes);}});
 document.querySelectorAll(" .black ").forEach(function(key){ key.onmouseup = function(key){ notes = Number(key.target.getAttribute("data-key"));
-    stopNote(notes);}});
+    stopNote(notes);}});*/
 
 //PLAY FROM COMPUTER KEYBOARD
 document.onkeypress = function (keyPressed){
