@@ -165,7 +165,7 @@ function drawPotato() {
   }
   else {
     ctxP.fillStyle = 'hsl(' + myHue[pol] + ',90%, 75%)'
-    console.log(ctxP.fillStyle);
+    //console.log(ctxP.fillStyle);
   }
   ctxP.fill();
   ctxP.translate(-x0,-y0);

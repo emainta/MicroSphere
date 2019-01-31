@@ -174,6 +174,7 @@ class uBit {
               switch (characteristic.uuid) {
                 case IO_PIN_DATA:
                   this.characteristic.IO_PIN_DATA = characteristic;
+                  console.log(' dimmi che entri: ' + characteristic.IO_PIN_DATA )
                   break;
 
                 case IO_AD_CONFIG:
@@ -187,6 +188,8 @@ class uBit {
                 case IO_PIN_PWM:
                   this.characteristic.IO_PIN_PWM = characteristic;
                   break;
+
+                }
 
             if (getSupportedProperties(characteristic).includes('NOTIFY')) {
               characteristic.startNotifications().catch(err => console.log('startNotifications', err));
