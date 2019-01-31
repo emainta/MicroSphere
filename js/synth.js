@@ -2,15 +2,15 @@
 //variabili
 
 //La nota più bassa registrata dall'accordo, va da 0 a 12
-var ROOTNOTE;
+var rootNote;
 //la scala scelta dall'inclinazione del polso tra quelle suggerite dall'applicazione
-var CURRENTSCALE;
+var currentScale;
 //Ultima nota suonata: HA VALORI DA 0 A 20 per il momento
-var CURRENTNOTE;
+var currentNote;
 //le scale che vengono valutate per esserre proposte
 var MAJORMODESCALE;
 //Le tre scale che si possono suoanre
-var SCALESTOPLAY; // array
+var scaleToPlay; // array
 //variabili per acquisire e memorizzare gli accordi
 var currentAcquiredNotes;
 //capire se mi può servire realmente
@@ -26,8 +26,9 @@ function initialValues(){
 
   MAJORMODESCALE = new Map();
   BRIGHTNESS = new Map();
-  CURRENTSCALE = new Set();
-  SCALESTOPLAY = new Array();
+  currentScale = new Set();
+  scaleToPlay = new Array();
+  mode = new Array(3).fill(0);
   currentAcquiredNotes = new Set();
   lastAcquiredNotes = {}
 
@@ -58,26 +59,26 @@ function initialValues(){
 
   numberOfRec = 0;
   currentRec = 0;
-  CURRENTSCALE = ion;
-  SCALESTOPLAY = CURRENTSCALE;
-  ROOTNOTE = 0; //Corrisponde a un do
-  CURRENTNOTE = 0; //nessuna nota suonata ancora
+  currentScale = ion;
+  scaleToPlay = currentScale;
+  rootNote = 0; //Corrisponde a un do
+  currentNote = 0; //nessuna nota suonata ancora
 }
 
 initialValues();
 
 
 //questa funzione viene  chiamata da microbit quando si deve suonare una nota!
-//se currentnote appartiene a currentscale ritorna true
+//se currentNote appartiene a currentScale ritorna true
 function noteIsOnScale(){
-  if(CURRENTSCALE.has(findNote(CURRENTNOTE))){
+  if(currentScale.has(findNote(currentNote))){
     return true;}}
 
 //suona la nota se noteIsOnScale
 function playIfyouCan(){
    //suona note dal C3 al C5
   if(noteIsOnScale()){
-    currentMidiNote =  ROOTNOTE + CURRENTNOTE + 36;//midi
+    currentMidiNote =  rootNote + currentNote + 36;//midi
     noteOn(currentMidiNote);}
 }
 
@@ -112,15 +113,15 @@ function acquireNote(note){
 //tmp ha il modulo 12 delle note acuisite alla rec numberOfRec
 function startNewRec(tmp){
   numberOfRec++;
-  findRootNote(); // trova la root e le cancella l'ultima rec
+  findrootNote(); // trova la root e le cancella l'ultima rec
   lastAcquiredNotes = {numberOfRec:tmp}
   tmp = compareScale(tmp, numberOfRec)} // confronta le note acquisite con le scale e cancella il set
 
 //prende la nota più bassa dell'accordo e la fa diventare ROOT
-//LA ROOTNOTE HA VA DA 0 A 12
+//LA rootNote HA VA DA 0 A 12
 //quindi quando acquisisco le note non posso fare subito module 12 perchè mi serve sapere chi è la più bassa
 //MI SALVA currentDiff
-function findRootNote(){
+function findrootNote(){
   var lowest = 0;
   let n = false;
   currentAcquiredNotes.forEach(function(note){
@@ -133,7 +134,7 @@ function findRootNote(){
 
   currentAcquiredNotes.clear();
   lowest = findNote(lowest); //trova il modulo
-  ROOTNOTE = lowest;
+  rootNote = lowest;
 }
 
 //trova l'ottava della nota
@@ -162,7 +163,7 @@ function setTonality(currentScale){
     var newScale = new Set();
     let newNote
     for(let i of currentScale){
-          newNote = i + ROOTNOTE;
+          newNote = i + rootNote;
           if(newNote<0){newNote = newNote+12;}
           if (newNote>=12) {newNote = newNote-12}
           newScale.add(newNote);
@@ -171,11 +172,11 @@ function setTonality(currentScale){
 }
 
 
-//METTE SU SCALESTOPLAY LE SCALE CAMBIATE DI TONALITA'
+//METTE SU scaleToPlay LE SCALE CAMBIATE DI TONALITA'
 //viene chiamata da setRec()per trovare la migliore scala per quella rec di note
 function compareScale(tmpScale, rec){
 
-  var sugScales = new Array(6).fill(0); // MI SERVE SOLO PER TENERE TRACCIA DEL MODO, POI è INUTILE
+  var modeScales = new Array(6).fill(0); // MI SERVE SOLO PER TENERE TRACCIA DEL MODO, POI è INUTILE
   var setScale = new Set();
   let position = 6; // ci sono 7 scale in totale
   for (const [mode, scale] of MAJORMODESCALE){
@@ -185,21 +186,24 @@ function compareScale(tmpScale, rec){
     //aggiunge tutte le scale con più di tre note in comune con l'accordo midi
     console.log(comNotes.size + " INTERSEZIONI CON LA SCALA : " + mode)
     if(comNotes.size>3){
-      sugScales[position] = mode; SCALESTOPLAY[position] = setScale;
-      console.log("IMPOSTO LA SCALA : " + sugScales[position] + " nella posizione " +  position);
+      modeScales[position] = mode; scaleToPlay[position] = setScale;
+      console.log("IMPOSTO LA SCALA : " + modeScales[position] + " nella posizione " +  position);
       position--;
       }
     }
   //prendo solo le più scure
   let i = 0;
-  while(sugScales[i]==0){i++}
+  while(modeScales[i]==0){i++}
   console.log(i);
-  sugScales[0]= sugScales[i];
-  sugScales[1]= sugScales[i+1];
-  SCALESTOPLAY[0]= SCALESTOPLAY[i];
-  SCALESTOPLAY[1]= SCALESTOPLAY[i+1];
+  modeScales[0]= modeScales[i];
+  modeScales[1]= modeScales[i+1];
+  scaleToPlay[0]= scaleToPlay[i];
+  scaleToPlay[1]= scaleToPlay[i+1];
+  mode[0] = BRIGHTNESS.get(modeScales[0]);
+  mode[1] = 0;
+  mode[2] = BRIGHTNESS.get(modeScales[1]);
+  console.log("Le playable Scale sono  : " + modeScales[0] + " e " + modeScales[1]);
 
-  console.log("Le playable Scale sono  : " + sugScales[0] + " e " +sugScales[1]);
 }
 
 
@@ -262,6 +266,7 @@ var filterEnvD = 6;
 var filterEnvSus = 5;
 var filterEnvR = 7;
 
+var valueRev=0;
 var dryWetRev = 0;
 var currentDist = 0;
 
@@ -292,7 +297,7 @@ initAudio();
 var allKeys = document.getElementsByTagName("li");
 var wavePicker = document.querySelector("select[name='waveform']");
 var modwavePicker = document.querySelector("select[name='modwaveform']");
-var filterPicker = document.querySelector("select[name='filterType']");
+//var filterPicker = document.querySelector("select[name='filterType']");
 
 //When playing a note
 //When playing a note
@@ -344,8 +349,15 @@ function createPeriodicWave(){
   var customWaveform = c.createPeriodicWave(cosineTerms, sineTerms);
   return customWaveform;
 }
+
+//cambia il filtro in base al polso
 function chooseFilterType(){
- return filterPicker.options[filterPicker.selectedIndex].value;
+  if(pol==3 || pol ==2){return "highpass"}
+  else {
+    return "lowpass"
+  }
+
+ //return filterPicker.options[filterPicker.selectedIndex].value;
 }
 
 //FUNZIONE PRINCIPALE_: crea gli oscillatori, i modulatori, i filtri e li collega
@@ -420,7 +432,6 @@ function stopNote(note){
   var now =  c.currentTime;
 	var release = now + (envRelease/10.0);
   var initFilter = filterFrequencyFromCutoff( this.originalFrequency, filterCutOff/100 * (1.0-(filterEnvelope/100.0)) );
-
   activeOscillators[note].envelope.gain.cancelScheduledValues(now);
   activeOscillators[note].envelope.gain.setValueAtTime( activeOscillators[note].envelope.gain.value, now );
   activeOscillators[note].envelope.gain.setTargetAtTime(0.0, now, (envRelease/100));
@@ -429,7 +440,6 @@ function stopNote(note){
   activeOscillators[note].filter.Q.cancelScheduledValues(now);
   activeOscillators[note].filter.Q.setTargetAtTime( 0, now, (filterEnvR/100.0) );
   activeOscillators[note].oscillator1.stop(release);
-
 }
 
 
@@ -449,6 +459,13 @@ function makeDistortionCurve(value) {
   distCurve= curve;
   return curve;
 }
+
+
+//cambia i valori del riverbero dal polso
+valueRev= 100/1024*acY;
+changeValue(valueRev);
+
+
 //funzione che cambia i valori del riverbero sui gain
 var mixRev = function( value ) {
 	var gain1 = Math.cos(value * 0.5*Math.PI);
@@ -458,10 +475,10 @@ var mixRev = function( value ) {
 }
 
 //chiamato ogni volta che viene modificato il riverbero
-function changeValue(string){
-  var value = parseFloat(string) / 100.0;
-  dryWetRev = value;
-	mixRev(value);
+function changeValue(valueR){
+  if(valueR<0){valueR=0;}
+  dryWetRev = parseFloat(valueR) / 100.0;
+	mixRev(dryWetRev);
 }
 
 document.querySelector("#masterGain").oninput = function(){
@@ -574,6 +591,8 @@ document.querySelector("#filterEnvR").oninput = function (value){
   filterEnvR = this.value;
 }
 
+
+//valori del compressore
 document.querySelector("#compA").oninput = function (value){
   compressor.attack.value = this.value;
 }
@@ -663,16 +682,7 @@ function getImpulse(impulseUrl) {
   }
   ajaxRequest.send();
 }
-/*
-//PLAY WITH CLICK
-document.querySelectorAll(" .white ").forEach(function(key){ key.onmousedown = function(key){ notes = Number(key.target.getAttribute("data-key"));
-    playNote(notes);}});
-document.querySelectorAll(" .black ").forEach(function(key){ key.onmousedown = function(key){ notes = Number(key.target.getAttribute("data-key"));
-    playNote(notes);}});
-document.querySelectorAll(" .white ").forEach(function(key){ key.onmouseup = function(key){ notes = Number(key.target.getAttribute("data-key"));
-    stopNote(notes);}});
-document.querySelectorAll(" .black ").forEach(function(key){ key.onmouseup = function(key){ notes = Number(key.target.getAttribute("data-key"));
-    stopNote(notes);}});*/
+
 
 //PLAY FROM COMPUTER KEYBOARD
 document.onkeypress = function (keyPressed){

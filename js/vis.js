@@ -11,8 +11,7 @@ var clearHp=0;
 
 var hue_val = [0, 15, 45, 135, 180, 240, 330];
 
-
-var rnd = Math.round( Math.random() *255 );
+/*var rnd = Math.round( Math.random() *255 );
 /*Math.random() * (max - min) + min;
 
 /*DATI DA Jacopo
@@ -165,7 +164,7 @@ function drawPotato() {
     ctxP.fillStyle = "white";
   }
   else {
-    ctxP.fillStyle = hsl(hue_val[mode[pol]], 90%,75%);
+    ctxP.fillStyle = 'hsl(hue_val[mode[pol]], 90% , 75%)';
   }
   ctxP.fill();
   ctxP.translate(-x0,-y0);

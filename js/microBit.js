@@ -239,10 +239,6 @@ function searchDevice(){
 };
 
 var changed; //totalmente inutile, ma al momento
-var acX = 0;
-var acY = 0;
-var acZ = 0;
-
 
 microBit.onBleNotify(function(){
 /*
