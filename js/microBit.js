@@ -252,22 +252,22 @@ microBit.onBleNotify(function(){
 
   if( acZ<0 && acY<=1024 && acY>330 ){
      pol = 1;
-     SCALESTOPLAY[0]!=null ?
-        (SCALESTOPLAY != CURRENTSCALE ?
-          (CURRENTSCALE = SCALESTOPLAY[0])
+     scaleToPlay[0]!=null ?
+        (scaleToPlay != currentScale ?
+          (currentScale = scaleToPlay[0])
           :changed = false)
      :changed = false}//console.log(" su polso :" + pol + " non ci sono scale" )}
 
   if( acZ<0 && acY<=330 && acY>=-360){
      pol = 2;
-     CURRENTSCALE = new Set([0,0,0,0,0,0,0]);
+     currentScale = new Set([0,0,0,0,0,0,0]);
    }
 
   if( acZ<0 && acY<-360 && acY>=-1024){
      pol = 3;
-     SCALESTOPLAY[1]!=null ?
-        (SCALESTOPLAY != CURRENTSCALE ?
-          (CURRENTSCALE = SCALESTOPLAY[1])
+     scaleToPlay[1]!=null ?
+        (scaleToPlay != currentScale ?
+          (currentScale = scaleToPlay[1])
           :changed = false)
      : changed = false}
 
@@ -365,6 +365,6 @@ microBit.onBleNotify(function(){
          con = van - ctr;
          ctr = van;}
 
-    van!=CURRENTNOTE ? (noteOff(currentMidiNote), CURRENTNOTE = van, playIfyouCan())
+    van!=currentNote ? (noteOff(currentMidiNote), currentNote = van, playIfyouCan())
                 :changed = false;
 })

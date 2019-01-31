@@ -461,11 +461,6 @@ function makeDistortionCurve(value) {
 }
 
 
-//cambia i valori del riverbero dal polso
-valueRev= 100/1024*acY;
-changeValue(valueRev);
-
-
 //funzione che cambia i valori del riverbero sui gain
 var mixRev = function( value ) {
 	var gain1 = Math.cos(value * 0.5*Math.PI);

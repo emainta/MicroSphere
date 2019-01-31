@@ -9,7 +9,7 @@ var ctxP = canvasPotato.getContext("2d");
 var clearWp=0;
 var clearHp=0;
 
-var hue_val = [0, 15, 45, 135, 180, 240, 330];
+var myHue = [0, 15, 45, 135, 180, 240, 330];
 
 /*var rnd = Math.round( Math.random() *255 );
 /*Math.random() * (max - min) + min;
@@ -164,7 +164,8 @@ function drawPotato() {
     ctxP.fillStyle = "white";
   }
   else {
-    ctxP.fillStyle = 'hsl(hue_val[mode[pol]], 90% , 75%)';
+    ctxP.fillStyle = 'hsl(' + myHue[pol] + ',90%, 75%)'
+    console.log(ctxP.fillStyle);
   }
   ctxP.fill();
   ctxP.translate(-x0,-y0);
