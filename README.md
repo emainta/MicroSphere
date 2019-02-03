@@ -9,6 +9,9 @@ Un controller midi bluetooth, basato su micro:bit, per il controllo di un sintet
 - Synth Interface 
 - Midi In Led (On/Off)
 - Display Notes on keyboard
+- Check MB's PIN services
+- Relative Buttons
+- Slides and video presentation
 
 
 
