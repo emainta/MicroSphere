@@ -157,22 +157,21 @@ function startCanvas() {
 
 
 //---------------------------------------
-var xm = xp;
-var motionTrailLength = Math.round(canvasMel.width/200);
-var positions = [];
+var motionTrailLength = 50;
+var positions_x = [];
+var positions_y = [];
 
-function storeLastPosition(xPos, yPos) {
-  // push an item
-  positions.push({
-    x: xPos,
-    y: yPos
-  });
-
-  //get rid of first item
-  if (positions.length > motionTrailLength) {
-    positions.shift();
+function makeArr(startValue, stopValue, cardinality) {
+  var arr = [];
+  var currValue = startValue;
+  var step = (stopValue - startValue) / (cardinality - 1);
+  for (var i = 0; i < cardinality; i++) {
+    arr.push(currValue + (step * i));
   }
+  return arr;
 }
+
+positions_x  = makeArr(xp, canvasMel.width , motionTrailLength);
 
 
 function drawPotato() {
@@ -183,7 +182,7 @@ function drawPotato() {
   yp =  clearHp * verticalStep; //scaling factor by jacopo
 
   ctxP.clear(true);
-  //ctxM.clear(true);
+  ctxM.clear(true);
 
   ctxP.translate(x0,y0);
   ctxM.translate(x0,y0);
@@ -192,11 +191,10 @@ function drawPotato() {
 
   ctxP.arc(xp, yp, radius, 0 , 2 * Math.PI);
 
-  storeLastPosition(xm, yp)
 
-  for (var i = 0; i < positions.length; i++) {
+  for (var i = 0; i < positions_x.length; i++) {
     ctxM.beginPath();
-    ctxM.arc(position[i].x, position[i].y, 0.3*radius, 0 , 2 * Math.PI);
+    ctxM.arc(positions_x[i], positions_y[i], 0.3*radius, 0 , 2 * Math.PI);
 
     if(pol==2){
       ctxM.fillStyle = "white";
@@ -207,9 +205,7 @@ function drawPotato() {
     ctxM.fill();
   }
 
-
-  xm += 0.2*speed;
-
+  storeLastPosition(yp);
 
   if(pol==2){
     ctxP.fillStyle = "white";
@@ -225,6 +221,20 @@ function drawPotato() {
 
   requestAnimationFrame(drawPotato);
 }
+
+function storeLastPosition(yPos) {
+  // push an item
+  positions_y.unshift(yPos);
+
+  //get rid of first item
+
+  if (positions_y.length > motionTrailLength) {
+    positions_y.pop();
+  }
+}
+
+//END -----
+
 
 function dissolvenzaCanvas() {
     canvas.style.opacity = 1;
