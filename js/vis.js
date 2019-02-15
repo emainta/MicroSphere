@@ -195,7 +195,7 @@ function drawPotato() {
 
   for (var i = 0; i < positions_x.length; i++) {
     ctxM.beginPath();
-    ctxM.arc(positions_x[i], positions_y[i], 0.3*positions_rad[i], 0 , 2 * Math.PI);
+    ctxM.arc(positions_x[i], positions_y[i], 0.2*positions_rad[i], 0 , 2 * Math.PI);
 
     if(positions_col[i]==2){
       ctxM.fillStyle = "black";
