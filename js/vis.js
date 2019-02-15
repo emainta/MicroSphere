@@ -6,6 +6,9 @@ var aWrapper = document.getElementById("aWrapper");
 var canvasPotato = document.getElementById("potatoCanvas");
 var ctxP = canvasPotato.getContext("2d");
 
+var canvasMel = document.getElementById("canvasMel");
+var ctxM = canvasMel.getContext("2d");
+
 var clearWp=0;
 var clearHp=0;
 
@@ -58,6 +61,9 @@ function resizeCanvas() {
 
     canvasPotato.width = width * pixelRatio;
     canvasPotato.height = height * pixelRatio;
+
+    canvasMel.width = width * pixelRatio;
+    canvasMel.height = height * pixelRatio;
 
     clearWp=canvasPotato.width;
     clearHp=canvasPotato.height;
@@ -175,12 +181,14 @@ function drawPotato() {
 function dissolvenzaCanvas() {
     canvas.style.opacity = 1;
     canvasPotato.style.opacity = 1;
+    canvasMel.style.opacity = 1;
 }
 
 function resetCanvas(){
   clearInterval(idCan);
   canvas.style.opacity = 0;
   canvasPotato.style.opacity = 0;
+  canvasMel.style.opacity = 0;
 }
 
 CanvasRenderingContext2D.prototype.clear =
