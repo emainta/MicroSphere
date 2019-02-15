@@ -161,6 +161,7 @@ var motionTrailLength = 500;
 var positions_x = [];
 var positions_y = [];
 var positions_col = [];
+var positions_rad = [];
 
 function makeArr(startValue, stopValue, cardinality) {
   var arr = [];
@@ -194,7 +195,7 @@ function drawPotato() {
 
   for (var i = 0; i < positions_x.length; i++) {
     ctxM.beginPath();
-    ctxM.arc(positions_x[i], positions_y[i], 0.3*radius, 0 , 2 * Math.PI);
+    ctxM.arc(positions_x[i], positions_y[i], 0.3*positions_rad[i], 0 , 2 * Math.PI);
 
     if(positions_col[i]==2){
       ctxM.fillStyle = "black";
@@ -205,7 +206,7 @@ function drawPotato() {
     ctxM.fill();
   }
 
-  storeLastPosition(yp,pol);
+  storeLastPosition(yp,pol,radius);
 
   if(pol==2){
     ctxP.fillStyle = "white";
@@ -222,16 +223,18 @@ function drawPotato() {
   requestAnimationFrame(drawPotato);
 }
 
-function storeLastPosition(yPos, polly) {
+function storeLastPosition(yPos, polly,raggio) {
   // push an item
   positions_y.unshift(yPos);
   positions_col.unshift(polly);
+  positions_rad.unshift(raggio);
 
   //get rid of first item
 
   if (positions_y.length > motionTrailLength) {
     positions_y.pop();
     positions_col.pop();
+    positions_rad.pop();
   }
 }
 
