@@ -200,7 +200,7 @@ function drawPotato() {
       ctxM.fillStyle = "black";
     }
     else {
-      ctxM.fillStyle = 'hsl(' + myHue[pol] + ',70%, 65%)'
+      ctxM.fillStyle = 'hsl(' + myHue[positions_col] + ',70%, 65%)'
     }
     ctxM.fill();
   }
