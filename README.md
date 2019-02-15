@@ -5,17 +5,32 @@ Un controller midi bluetooth, basato su micro:bit, per il controllo di un sintet
 *[Versione 2]*
 
 ### TO DO
-[ ] Melodic Contour
-[ ] Synth Interface
-[ ] Midi In Led (On/Off)
-[ ] Display Notes on keyboard
-[ ] Check MB's PIN services
-[ ] Relative Buttons
-[ ] Slides and video presentation
+- [x] Melodic Contour
 
+- [ ] Synth Interface
 
+- [x] Midi In Led (On/Off)
 
+- [ ] Display Active Note on keyboard
+
+- [ ] ~~Check MB's PIN services~~
+
+- [ ] ~~Relative Buttons~~
+
+## CM Presentation
+
+- [ ] Slides
+
+- [ ] DEMO 
+
+- [ ] Read me + descrizione breve
+
+- [ ] Manuale
+
+- [ ] CM obiettivi / ACTM competenze utilizzate
+
+- [ ] Repo
 
 
 ## Maybe
-[ ] Canvas Transitions w/ d3 API
+- [ ] ~~Canvas Transitions w/ d3 API~~
