@@ -59,8 +59,9 @@ function initialValues(){
 
   numberOfRec = 0;
   currentRec = 0;
-  currentScale = ion;
-  scaleToPlay = currentScale;
+  scaleToPlay[0] = ion;
+  scaleToPlay[1] = loc;
+  currentScale = scaleToPlay[0];
   rootNote = 0; //Corrisponde a un do
   currentNote = 0; //nessuna nota suonata ancora
 }
@@ -77,8 +78,10 @@ function noteIsOnScale(){
 //suona la nota se noteIsOnScale
 function playIfyouCan(){
    //suona note dal C3 al C5
+   console.log("il valore di van " + currentNote)
   if(noteIsOnScale()){
     currentMidiNote =  rootNote + currentNote + 36;//midi
+    console.log("nota midi " + currentMidiNote)
     noteOn(currentMidiNote);}
 }
 
@@ -100,6 +103,11 @@ function oscillatorStart(note){
 //questa funzione raccoglie tutte le note midi proveniente dall'accordo
 function acquireNote(note){
   currentAcquiredNotes.add(note);
+  var myVar;
+  function ghandi(){document.querySelector("#led").classList.remove("led_on")};
+  myVar = setTimeout(ghandi, 900);
+  document.querySelector("#led").classList.add("led_on");
+
   if(currentAcquiredNotes.size>3){
     //currentAcquiredNotes.forEach(function(el){console.log("notes acquired : " + el )})
     var tmp = new Array();
@@ -156,8 +164,10 @@ function findOctave(note){
 function findNote(note){
   var octave = findOctave(note);
   var module12Note = note-octave*12;
+
   return module12Note;
 }
+
 //CAMBIA UNA SCALA QUANDO VIENE CHIAMATA //verificare se è giusto X*D
 function setTonality(currentScale){
     var newScale = new Set();
@@ -299,24 +309,25 @@ var wavePicker = document.querySelector("select[name='waveform']");
 var modwavePicker = document.querySelector("select[name='modwaveform']");
 //var filterPicker = document.querySelector("select[name='filterType']");
 
-//When playing a note
+
 //When playing a note
 function noteOn( note, velocity ) {
 	if (activeOscillators[note] == null) {
 		 activeOscillators[note] = new playNote(note, velocity/127.0);}
-  var key = note-48;
+  var key = note-36;
   console.log(key)
   if( key == 0 || key == 2 || key == 4 || key == 5 || key == 7 || key == 9 || key == 11 || key == 12 || key == 14 || key == 16 || key == 17 || key == 19 || key == 21 || key == 23|| key == 25){
   allKeys.item(key).classList.add("whiteActive");}
   else{
   allKeys.item(key).classList.add("blackActive");}
 	}
+
 function noteOff( note ) {
 	if (activeOscillators[note] != null) {
 		// Shut off the note playing and clear it
 		stopNote(note);
 		activeOscillators[note] = null;
-   var key = note-48
+   var key = note-36
    if( key == 0 || key == 2 || key == 4 || key == 5 || key == 7 || key == 9 || key == 11 || key == 12 || key == 14 || key == 16 || key == 17 || key == 19 || key == 21 || key == 23|| key == 25){
     allKeys.item(key).classList.remove("whiteActive")}
     else{ allKeys.item(key).classList.remove("blackActive")}}
@@ -356,7 +367,6 @@ function chooseFilterType(){
   else {
     return "lowpass"
   }
-
  //return filterPicker.options[filterPicker.selectedIndex].value;
 }
 
@@ -429,6 +439,7 @@ function playNote(note, v){
 }
 
 function stopNote(note){
+  document.querySelector("#led").classList.remove("led_on");
   var now =  c.currentTime;
 	var release = now + (envRelease/10.0);
   var initFilter = filterFrequencyFromCutoff( this.originalFrequency, filterCutOff/100 * (1.0-(filterEnvelope/100.0)) );
@@ -459,7 +470,6 @@ function makeDistortionCurve(value) {
   distCurve= curve;
   return curve;
 }
-
 
 //funzione che cambia i valori del riverbero sui gain
 var mixRev = function( value ) {
@@ -502,8 +512,13 @@ function oversample(type){
 playNote.prototype.setFilterQ = function( value ) {
 	this.filter.Q.value = value;
 }
-document.querySelector("#qFactor").oninput = function(){
-    filterQ = this.value;
+//document.querySelector("#qFactor").oninput = function(){
+  //  filterQ = this.value;
+function setQ(){
+  if (pol == 1){
+    filterQ = 0;
+  }
+  else filterQ = 15;
 	  for (var i=0; i<255; i++) {
 		if (activeOscillators[i] != null) {
 			activeOscillators[i].setFilterQ(filterQ);
@@ -515,8 +530,13 @@ document.querySelector("#qFactor").oninput = function(){
 playNote.prototype.setFilterGain = function( value ) {
 	this.modFilterGain.gain.value = value;
 }
-document.querySelector("#filterGain").oninput = function(){
-    filterGain = this.value;
+//document.querySelector("#filterGain").oninput = function(){
+   //filterGain = this.value;
+function changeFilterGain(){
+   if (pol == 1){
+    filterGain = 100;
+   }
+   else filterGain = 120 ;
 	  for (var i=0; i<255; i++) {
 		if (activeOscillators[i] != null) {
 			activeOscillators[i].setFilterGain( filterGain );
@@ -528,14 +548,20 @@ document.querySelector("#filterGain").oninput = function(){
 playNote.prototype.setFilterCutoff = function( value ) {
 	this.filter.frequency.value = value;
 }
-document.querySelector("#cutOffFilter").oninput = function(){
-    filterCutOff = this.value ;
+//document.querySelector("#cutOffFilter").oninput = function(){
+  //  filterCutOff = this.value ;
+function changeFilterCutOff(){
+  if (pol == 1){
+    filterCutOff = 50;
+  }
+  else filterCutOff = 500;
     for (var i=0; i<255; i++) {
 		if (activeOscillators[i] != null) {
 			activeOscillators[i].setFilterCutoff(filterCutOff);
       }
     }
   }
+
   //detune oscillator
 playNote.prototype.setDetune = function( value ) {
 	this.oscillator1.detune.value = value;
@@ -554,7 +580,7 @@ playNote.prototype.setModFreq = function( value ) {
 	this.modOsc.frequency.value = value;
 }
 
-document.querySelector("#envA").oninput = function (value){
+/*document.querySelector("#envA").oninput = function (value){
 envAttack = this.value;
 }
 
@@ -564,12 +590,13 @@ envDecay = this.value;
 
 document.querySelector("#envS").oninput = function (value){
 envSustain = this.value;
-}
+}*/
 
 document.querySelector("#envR").oninput = function (value){
 envRelease= this.value;
 }
 
+/*
 document.querySelector("#filterEnvA").oninput = function (value){
   filterEnvAtt = this.value;
 }
@@ -580,7 +607,7 @@ document.querySelector("#filterEnvD").oninput = function (value){
 
 document.querySelector("#filterEnvS").oninput = function (value){
   filterEnvSus = this.value;
-}
+}*/
 
 document.querySelector("#filterEnvR").oninput = function (value){
   filterEnvR = this.value;
