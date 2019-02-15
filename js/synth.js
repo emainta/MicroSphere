@@ -107,7 +107,6 @@ function acquireNote(note){
   function ghandi(){document.querySelector("#led").classList.remove("led_on")};
   myVar = setTimeout(ghandi, 900);
   document.querySelector("#led").classList.add("led_on");
-
   if(currentAcquiredNotes.size>3){
     //currentAcquiredNotes.forEach(function(el){console.log("notes acquired : " + el )})
     var tmp = new Array();
@@ -164,7 +163,6 @@ function findOctave(note){
 function findNote(note){
   var octave = findOctave(note);
   var module12Note = note-octave*12;
-
   return module12Note;
 }
 
@@ -439,7 +437,6 @@ function playNote(note, v){
 }
 
 function stopNote(note){
-  document.querySelector("#led").classList.remove("led_on");
   var now =  c.currentTime;
 	var release = now + (envRelease/10.0);
   var initFilter = filterFrequencyFromCutoff( this.originalFrequency, filterCutOff/100 * (1.0-(filterEnvelope/100.0)) );
