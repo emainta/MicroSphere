@@ -157,7 +157,7 @@ function startCanvas() {
 
 
 //---------------------------------------
-var motionTrailLength = 500;
+var motionTrailLength = 700;
 var positions_x = [];
 var positions_y = [];
 var positions_col = [];
@@ -201,7 +201,7 @@ function drawPotato() {
       ctxM.fillStyle = "black";
     }
     else {
-      ctxM.fillStyle = 'hsl(' + myHue[positions_col[i]] + ',70%, 65%)'
+      ctxM.fillStyle = 'hsl(' + myHue[positions_col[i]] + ',60%, 75%)'
     }
     ctxM.fill();
   }
