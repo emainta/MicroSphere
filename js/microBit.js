@@ -298,7 +298,7 @@ microBit.onBleNotify(function(){
   if( acZ<0 && acY<=1024 && acY>330 ){
      pol = 1;
      scaleToPlay[0]!=null ?
-        (scaleToPlay != currentScal ?
+        (scaleToPlay != currentScale ?
           (currentScale = scaleToPlay[0])
           :changed = false)
      :changed = false}//console.log(" su polso :" + pol + " non ci sono scale" )}
