@@ -157,9 +157,10 @@ function startCanvas() {
 
 
 //---------------------------------------
-var motionTrailLength = 50;
+var motionTrailLength = 500;
 var positions_x = [];
 var positions_y = [];
+var positions_col = [];
 
 function makeArr(startValue, stopValue, cardinality) {
   var arr = [];
@@ -172,7 +173,6 @@ function makeArr(startValue, stopValue, cardinality) {
 }
 
 positions_x  = makeArr(xp, canvasMel.width , motionTrailLength);
-
 
 function drawPotato() {
   radius = 12 + 4*pol;
@@ -196,8 +196,8 @@ function drawPotato() {
     ctxM.beginPath();
     ctxM.arc(positions_x[i], positions_y[i], 0.3*radius, 0 , 2 * Math.PI);
 
-    if(pol==2){
-      ctxM.fillStyle = "white";
+    if(positions_col[i]==2){
+      ctxM.fillStyle = "black";
     }
     else {
       ctxM.fillStyle = 'hsl(' + myHue[pol] + ',70%, 65%)'
@@ -205,7 +205,7 @@ function drawPotato() {
     ctxM.fill();
   }
 
-  storeLastPosition(yp);
+  storeLastPosition(yp,pol);
 
   if(pol==2){
     ctxP.fillStyle = "white";
@@ -222,14 +222,16 @@ function drawPotato() {
   requestAnimationFrame(drawPotato);
 }
 
-function storeLastPosition(yPos) {
+function storeLastPosition(yPos, polly) {
   // push an item
   positions_y.unshift(yPos);
+  positions_col.unshift(polly);
 
   //get rid of first item
 
   if (positions_y.length > motionTrailLength) {
     positions_y.pop();
+    positions_col.pop();
   }
 }
 
@@ -239,7 +241,7 @@ function storeLastPosition(yPos) {
 function dissolvenzaCanvas() {
     canvas.style.opacity = 1;
     canvasPotato.style.opacity = 1;
-    canvasMel.style.opacity = 1;
+    canvasMel.style.opacity = 0.65;
 }
 
 function resetCanvas(){
@@ -262,59 +264,3 @@ CanvasRenderingContext2D.prototype.clear =
       this.restore();
     }
 };
-
-
-// TRAIL
-/*
-var xPos = xp;
-var yPos = yp;
-
-var motionTrailLength = Math.round(canvasMel.width/200);
-var positions = [];
-
-
-function update() {
-   storeLastPosition(xPos, yPos);
-
-  ctxM.clearRect(0, 0, canvasMel.width, canvasMel.height);
-
-  yPos = yp;
-
-   for (var i = 0; i < positions.length; i++) {
-    ctxM.beginPath();
-    ctxM.arc(positions[i].x, positions[i].y, 10, 0, 2 * Math.PI, true);
-    ctxM.fillStyle = "#FF6A6A";
-    ctxM.fill();
-  }
-
-  ctxM.beginPath();
-  ctxM.arc(xPos, yPos, 10, 0, 2 * Math.PI, true);
-  ctxM.fillStyle = "#FF6A6A";
-  ctxM.fill();
-
-   //storeLastPosition(xPos, yPos);
-
-  // update position
-  /*if (xPos > 600) {
-    xPos = -100;
-  }*/
-  /*
-  xPos += 0.1*speed;
-
-  requestAnimationFrame(update);
-}
-update();
-
-function storeLastPosition(xPos, yPos) {
-  // push an item
-  positions.push({
-    x: xPos,
-    y: yPos
-  });
-
-  //get rid of first item
-  if (positions.length > motionTrailLength) {
-    positions.shift();
-  }
-}
-*/
