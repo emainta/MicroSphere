@@ -54,8 +54,17 @@ app {
     height: 100%;
     width: 100%;
     transition: 2s;
+    z-index:2;
+    opacity:0;
+}
+
+#melcontour {
+    height: inherit;
+    width:inherit;
+    transition: 2s;
     z-index:1;
     opacity:0;
+    position: fixed;
 }
 
 bottom { /*SCRITTA IN BASSO COI NOMI*/
