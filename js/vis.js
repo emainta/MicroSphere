@@ -6,7 +6,7 @@ var aWrapper = document.getElementById("aWrapper");
 var canvasPotato = document.getElementById("potatoCanvas");
 var ctxP = canvasPotato.getContext("2d");
 
-var canvasMel = document.getElementById("canvasMel");
+var canvasMel = document.getElementById("melcontour");
 var ctxM = canvasMel.getContext("2d");
 
 var clearWp=0;
@@ -127,6 +127,8 @@ function startCanvas() {
     return idCan = setInterval(draw, speed);
 }
 
+//------------------DISEGNA SFONDO
+
   function draw() {
       ctx.clearRect(0, 0, clearX, clearY);
       //DISEGNA SFONDO
@@ -155,26 +157,72 @@ function startCanvas() {
 
 
 //---------------------------------------
+var xm = xp;
+var motionTrailLength = Math.round(canvasMel.width/200);
+var positions = [];
+
+function storeLastPosition(xPos, yPos) {
+  // push an item
+  positions.push({
+    x: xPos,
+    y: yPos
+  });
+
+  //get rid of first item
+  if (positions.length > motionTrailLength) {
+    positions.shift();
+  }
+}
+
 
 function drawPotato() {
-  radius = 12 +4*pol;
+  radius = 12 + 4*pol;
   iStep = van - 12; // da -12 a +12
   verticalStep = - (iStep +1 ) / nStep;
 
   yp =  clearHp * verticalStep; //scaling factor by jacopo
+
   ctxP.clear(true);
+  //ctxM.clear(true);
+
   ctxP.translate(x0,y0);
+  ctxM.translate(x0,y0);
+
   ctxP.beginPath(); //This line gave me a major headache.
+
   ctxP.arc(xp, yp, radius, 0 , 2 * Math.PI);
+
+  storeLastPosition(xm, yp)
+
+  for (var i = 0; i < positions.length; i++) {
+    ctxM.beginPath();
+    ctxM.arc(position[i].x, position[i].y, 0.3*radius, 0 , 2 * Math.PI);
+
+    if(pol==2){
+      ctxM.fillStyle = "white";
+    }
+    else {
+      ctxM.fillStyle = 'hsl(' + myHue[pol] + ',70%, 65%)'
+    }
+    ctxM.fill();
+  }
+
+
+  xm += 0.2*speed;
+
+
   if(pol==2){
     ctxP.fillStyle = "white";
   }
   else {
     ctxP.fillStyle = 'hsl(' + myHue[pol] + ',90%, 75%)'
-    //console.log(ctxP.fillStyle);
   }
+
   ctxP.fill();
+
   ctxP.translate(-x0,-y0);
+  ctxM.translate(-x0,-y0);
+
   requestAnimationFrame(drawPotato);
 }
 
@@ -204,3 +252,59 @@ CanvasRenderingContext2D.prototype.clear =
       this.restore();
     }
 };
+
+
+// TRAIL
+/*
+var xPos = xp;
+var yPos = yp;
+
+var motionTrailLength = Math.round(canvasMel.width/200);
+var positions = [];
+
+
+function update() {
+   storeLastPosition(xPos, yPos);
+
+  ctxM.clearRect(0, 0, canvasMel.width, canvasMel.height);
+
+  yPos = yp;
+
+   for (var i = 0; i < positions.length; i++) {
+    ctxM.beginPath();
+    ctxM.arc(positions[i].x, positions[i].y, 10, 0, 2 * Math.PI, true);
+    ctxM.fillStyle = "#FF6A6A";
+    ctxM.fill();
+  }
+
+  ctxM.beginPath();
+  ctxM.arc(xPos, yPos, 10, 0, 2 * Math.PI, true);
+  ctxM.fillStyle = "#FF6A6A";
+  ctxM.fill();
+
+   //storeLastPosition(xPos, yPos);
+
+  // update position
+  /*if (xPos > 600) {
+    xPos = -100;
+  }*/
+  /*
+  xPos += 0.1*speed;
+
+  requestAnimationFrame(update);
+}
+update();
+
+function storeLastPosition(xPos, yPos) {
+  // push an item
+  positions.push({
+    x: xPos,
+    y: yPos
+  });
+
+  //get rid of first item
+  if (positions.length > motionTrailLength) {
+    positions.shift();
+  }
+}
+*/
