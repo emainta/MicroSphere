@@ -1,9 +1,18 @@
-#box{
+/*
+#ffcf56
+#e83f6f #d72839
+#1dd1b6
+#212842 ACTIVE > #313959
+ #bbc2dd
+#487df9
+*/
+
+#box{ /*synth*/
   display:inline-grid;
-  height:200;
-  width:100;
+  height:100%;
+  width:100%;
   margin: auto;
-  border: 5px  solid blue;
+  border: 2px  solid darkgreen;
   border-top-style:groove;
   text-align: center;
 }
@@ -22,6 +31,8 @@ fxparam {
   margin: 5px;
   background-color: black;
   border-radius: 3px;
+  font-variant: small-caps;
+
 }
 
 #masterGain {
@@ -44,29 +55,37 @@ input[type=range]:focus {
 /*SLIDER*/
 input[type=range]::-webkit-slider-runnable-track {
   width: 100%;
-  height: 10px;
+  height: 6px;
   cursor: pointer;
   animate: 0.2s;
-  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
-  background: red;
+  box-shadow: 0px 0px 1px 1px #212842;
+  background: #212842;
   border-radius: 10px;
-  border: 0px solid #000101;
+  border: 0px solid #212842;
 }
 /*THUMB*/
 input[type=range]::-webkit-slider-thumb {
-  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
-  border: 0px solid #000000;
-  height: 15px;
-  width: 15px;
+  box-shadow: 0px 0px 2px 1px #000000, 0px 0px 0px #0d0d0d;
+  border: 0px;
+  height: 12px;
+  width: 12px;
   border-radius: 50%;
-  background: blue;
+  background: #e83f6f; /* Old browsers */
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#e83f6f+53,e81717+100 */
+background: #e83f6f; /* Old browsers */
+
+background: -webkit-radial-gradient(center, ellipse cover, #e83f6f 45%,#e81717 90%); /* Chrome10-25,Safari5.1-6 */
+background: radial-gradient(ellipse at center, #e83f6f 45%,#e81717 90%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e83f6f', endColorstr='#e81717',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+
+
   cursor: pointer;
   -webkit-appearance: none;
-  margin-top: -2.5px;
+  margin-top: -3px;
 }
 /*ACTIVE TRACK*/
 input[type=range]:focus::-webkit-slider-runnable-track {
-  background: green;
+  background: #313959;
 }
 
 /*MOZILLA TRACK*/
@@ -76,7 +95,10 @@ input[type=range]::-moz-range-track {
   cursor: pointer;
   animate: 0.2s;
   box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
-  background: #ac51b5;
+
+  background: #e83f6f; /* Old browsers */
+  background: -moz-radial-gradient(center, ellipse cover, #e83f6f 45%, #e81717 90%); /* FF3.6-15 */
+
   border-radius: 7px;
   border: 0px solid #000101;
 }
@@ -97,7 +119,9 @@ input[type=range]::-ms-track {
   height: 10px;
   cursor: pointer;
   animate: 0.2s;
-  background: transparent;
+
+  background: #e83f6f; /* Old browsers */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e83f6f', endColorstr='#e81717',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
   border-color: transparent;
   border-width: 39px 0;
   color: transparent;
