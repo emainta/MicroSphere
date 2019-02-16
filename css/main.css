@@ -64,7 +64,8 @@ app {
     transition: 5s;
     z-index:1;
     opacity:0;
-    position: fixed;
+    /*position: fixed;*/
+     position: absolute;
 }
 
 bottom { /*SCRITTA IN BASSO COI NOMI*/
