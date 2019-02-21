@@ -1,14 +1,17 @@
 keyboard {
   position:relative;
 
-  transform: scale(0.67);
+  /*transform: scale(0.67);*/
   height: auto;
   width:80%;
-  margin-left: 8%;
+  margin: auto;
   cursor: pointer;
   list-style-type: none;
   display:flex;
   /*border: 2px solid blue;*/
+  padding-left: 15%;
+  margin-top: 20%;
+  margin-bottom: 10%;
 
 }
 

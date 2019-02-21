@@ -587,7 +587,7 @@ envDecay = this.value;
 
 document.querySelector("#envS").oninput = function (value){
 envSustain = this.value;
-}*/
+}
 
 document.querySelector("#envR").oninput = function (value){
 envRelease= this.value;
@@ -604,12 +604,12 @@ document.querySelector("#filterEnvD").oninput = function (value){
 
 document.querySelector("#filterEnvS").oninput = function (value){
   filterEnvSus = this.value;
-}*/
+}
 
 document.querySelector("#filterEnvR").oninput = function (value){
   filterEnvR = this.value;
 }
-
+*/
 
 //valori del compressore
 document.querySelector("#compA").oninput = function (value){

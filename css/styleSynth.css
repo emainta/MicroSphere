@@ -24,6 +24,11 @@
   border: none;
 }
 
+param{
+  border: 2px solid white;
+  background-color: pink;
+}
+
 fxparam {
   border: 1px solid green;
   display: grid;
@@ -36,7 +41,7 @@ fxparam {
 }
 
 #masterGain {
-  transform: rotate(90deg);
+  transform: rotate(270deg);
   width: inherit;
 }
 

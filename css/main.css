@@ -23,14 +23,6 @@ app {
     background-color: black;
 }
 
-#ball{
-  width:100px;
-  height:100px;
-  background-color:red;
-  border-radius:50%;
-  z-index: 3;
-}
-
 #aWrapper {
     /*Horizontally centers the canvas*/
     /*margin: 0 auto;*/
@@ -87,8 +79,9 @@ dam {   /*Tutta la parte di sotto CTRL + KB + SYNTH*/
 
 ctrl {
     width: 100%;
-    height: 60px;
+    height: 120px;
     display: block;
+    margin: auto;
 }
 
 synthCtrl { /*dx*/
@@ -96,6 +89,7 @@ synthCtrl { /*dx*/
   width: 48%;
   height: auto;
   display: inline-block;
+  text-align: center;
 }
 
 left{  /*sx*/
@@ -103,6 +97,7 @@ left{  /*sx*/
   width: 48%;
   height: 100%;
   border: 2px solid green;
+  float: left;
 }
 
 #controlli {
@@ -142,7 +137,7 @@ left{  /*sx*/
 }
 
 button {
-    height: 20px;
+    height: 30px;
     width: 100px;
     font-size: 12px;
     background-color: #e83f6f;
@@ -153,6 +148,7 @@ button {
     float: left;
     position: relative;
     transform: translate(0,12px);
+    top:-5px;
 }
 
 button:active {
@@ -169,12 +165,20 @@ button:active {
 }
 
 #searchButton {
-  height: 30px;
   vertical-align: middle;
-  top:-5px;
+
 
 }
 
 #startButton {
 
+}
+
+
+s_top{
+  display: block;
+}
+
+s_bottom{
+  display: block;
 }

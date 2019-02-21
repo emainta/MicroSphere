@@ -46,11 +46,14 @@ function resizeCanvas() {
   //The viewport is in landscape mode, so var width should be based off viewport HEIGHT
     else {
         //Makes the canvas 100% of the viewport height
-        var width = Math.round(1.5 * window.innerHeight);
+         var width = Math.round(1.5 * window.innerHeight);
     }
 
+    //Simple scaling factor for a smaller canvas
+    width = 0.6*width;
     //This is done in order to maintain the 1:1 aspect ratio, adjust as needed
     var height =0.5*width;
+
 
     //This will be used to downscale the canvas element when devicePixelRatio > 1
     aWrapper.style.width = width + "px";
