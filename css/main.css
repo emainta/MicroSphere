@@ -11,11 +11,14 @@ body {
   font-family: Helvetica;
   color: white;
   display: flex;
+  overflow-x: hidden;
   /*overflow: hidden;*/
 }
 
 app {
     margin: auto;
+    padding-top:5px;
+    padding-bottom: 5px;
     width: 100%;
     height: auto;
     display: block;
@@ -63,16 +66,17 @@ app {
 bottom { /*SCRITTA IN BASSO COI NOMI*/
     text-align: center;
     color: white;
-    font-size: 15px;
+    font-size: 12px;
     font-variant: small-caps;
     top:22px;
 }
 
 dam {   /*Tutta la parte di sotto CTRL + KB + SYNTH*/
-    width: 100vw;
-    height: auto;
+    width: 96%;
+    height:420px;
     display: inline-block;
     font-variant: small-caps;
+    margin-top: 3px;
   }
 
 ctrl {
@@ -87,6 +91,7 @@ left{  /*sx*/
   width: 48%;
   height: 100%;
   float: left;
+  margin-right: 3%;
 }
 
 #controlli {
@@ -95,6 +100,7 @@ left{  /*sx*/
     padding: 10px;
     background-color: #212842;
     font-variant: small-caps;
+    margin-top: 40px;
 }
 
 #midi_in {
@@ -165,12 +171,11 @@ button:active {
 
 
 synthCtrl { /*dx*/
-  border: 1px solid #212842;
-  border-radius: 5px;
   width: 48%;
-  height: 30em;
+  height: 100%;
   display: inline-block;
   text-align: center;
+  margin-right: 2px;
 }
 
 s_top{
@@ -184,11 +189,11 @@ s_bottom{
   padding: 3%;
   display: inline-flex;
   width: 100%;
-  height: 40%%;
+  height: 40%;
 
 }
 
 .smallfont{
-  font-size: 10px;
+  font-size: 12px;
   margin: 5px;
 }

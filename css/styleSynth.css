@@ -26,6 +26,7 @@
 .param{
   width: auto;
   float: left;
+  padding-top: auto ;
 }
 
 fxparam {
@@ -34,7 +35,6 @@ fxparam {
   margin: 5px;
   border-radius: 3px;
   font-variant: small-caps;
-
 }
 
 #masterGain {
@@ -43,6 +43,7 @@ fxparam {
   height: 0px;
   position: relative;
   top: 60px;
+
 }
 
 
@@ -50,6 +51,19 @@ fxparam {
     width: 60%;
     padding-left: 20%;
     padding-right: 20%;
+      font-weight: normal;
+      font-size:12px;
+
+}
+
+.grosso{
+  font-weight: bold;
+  font-size:18px;
+}
+
+.bordino{
+    border: 1px solid #212842;
+    border-radius: 4px;
 }
 
 select{
