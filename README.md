@@ -7,7 +7,7 @@ Un controller midi bluetooth, basato su micro:bit, per il controllo di un sintet
 ### TO DO
 - [x] Melodic Contour
 
-- [ ] Synth Interface
+- [x] Synth Interface
 
 - [x] Midi In Led (On/Off)
 
@@ -29,7 +29,7 @@ Un controller midi bluetooth, basato su micro:bit, per il controllo di un sintet
 
 - [ ] CM obiettivi / ACTM competenze utilizzate
 
-- [ ] Repo
+- [ ] Repo (Fork)
 
 
 ## Maybe
