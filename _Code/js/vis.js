@@ -200,7 +200,7 @@ function drawPotato() {
     ctxM.beginPath();
     ctxM.arc(positions_x[i], positions_y[i], 0.2*positions_rad[i], 0 , 2 * Math.PI);
 
-    if(positions_col[i]==2){
+    if(positions_col[i]==3){
       ctxM.fillStyle = "black";
     }
     else {

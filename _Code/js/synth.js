@@ -611,6 +611,7 @@ document.querySelector("#filterEnvR").oninput = function (value){
 }
 */
 
+/*
 //valori del compressore
 document.querySelector("#compA").oninput = function (value){
   compressor.attack.value = this.value;
@@ -633,6 +634,7 @@ document.querySelector("#compT").oninput = function (value){
 }
 
 
+*/
 
 // crea effectChain, delay, distortion, convolver, masterGain, compressor
 function initAudio() {
