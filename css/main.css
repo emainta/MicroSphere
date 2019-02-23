@@ -11,13 +11,13 @@ body {
   font-family: Helvetica;
   color: white;
   display: flex;
-  overflow-x: hidden;
+  overflow: hidden;
   /*overflow: hidden;*/
 }
 
 app {
     margin: auto;
-    padding-top:5px;
+
     padding-bottom: 5px;
     width: 100%;
     height: auto;
@@ -33,7 +33,6 @@ app {
     width: 80%;*/
     margin: auto;
     margin-bottom: 5px;
-    margin-top: 10px;
     border: 1px solid #212842;
     display: flex;
 }
@@ -64,16 +63,17 @@ app {
 }
 
 bottom { /*SCRITTA IN BASSO COI NOMI*/
+    position: relative;
     text-align: center;
     color: white;
-    font-size: 12px;
+    font-size: 17px;
     font-variant: small-caps;
     top:22px;
 }
 
 dam {   /*Tutta la parte di sotto CTRL + KB + SYNTH*/
-    width: 96%;
-    height:420px;
+    width: 100%;
+    height:500px;
     display: inline-block;
     font-variant: small-caps;
     margin-top: 3px;
@@ -103,13 +103,22 @@ left{  /*sx*/
     margin-top: 40px;
 }
 
+#fourbuttons{
+  width: 50%;
+  display: grid;
+  padding-top: 10px;
+  padding-right: 10%;
+  margin: auto;
+  padding-left: 10%;
+}
+
 #midi_in {
     float: left;
     height: 100%;
     width: 80px;
     text-align: center;
     display: grid;
-    font-size: 15px;
+    font-size: 17px;
 
 }
 
@@ -186,14 +195,13 @@ s_top{
 }
 
 s_bottom{
-  padding: 3%;
   display: inline-flex;
-  width: 100%;
-  height: 40%;
+  /*width: 100%;
+  height: 40%;*/
 
 }
 
 .smallfont{
-  font-size: 12px;
+  font-size: 15px;
   margin: 5px;
 }
