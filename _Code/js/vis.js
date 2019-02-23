@@ -200,22 +200,22 @@ function drawPotato() {
     ctxM.beginPath();
     ctxM.arc(positions_x[i], positions_y[i], 0.2*positions_rad[i], 0 , 2 * Math.PI);
 
-    if(positions_col[i]==3){
+    if(positions_col[i]==0){
       ctxM.fillStyle = "black";
     }
     else {
-      ctxM.fillStyle = 'hsl(' + myHue[positions_col[i]] + ',60%, 75%)'
+      ctxM.fillStyle = 'hsl(' + myHue[positions_col[i]] + ',60%, 30%)'
     }
     ctxM.fill();
   }
 
-  storeLastPosition(yp,pol,radius);
+  storeLastPosition(yp,mode[pol],radius);
 
   if(pol==3){
     ctxP.fillStyle = "white";
   }
   else {
-    ctxP.fillStyle = 'hsl(' + myHue[pol] + ',90%, 75%)'
+    ctxP.fillStyle = 'hsl(' + myHue[mode[pol]] + ',100%, 50%)'
   }
 
   ctxP.fill();

@@ -207,9 +207,9 @@ function compareScale(tmpScale, rec){
   modeScales[1]= modeScales[i+1];
   scaleToPlay[0]= scaleToPlay[i];
   scaleToPlay[1]= scaleToPlay[i+1];
-  mode[0] = BRIGHTNESS.get(modeScales[0]);
-  mode[1] = 0;
+  mode[1] = BRIGHTNESS.get(modeScales[0]);
   mode[2] = BRIGHTNESS.get(modeScales[1]);
+  mode[3] = 0;
   console.log("Le playable Scale sono  : " + modeScales[0] + " e " + modeScales[1]);
 
 }
