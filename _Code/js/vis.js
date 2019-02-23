@@ -211,7 +211,7 @@ function drawPotato() {
 
   storeLastPosition(yp,pol,radius);
 
-  if(pol==2){
+  if(pol==3){
     ctxP.fillStyle = "white";
   }
   else {
