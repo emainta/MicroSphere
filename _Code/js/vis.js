@@ -195,6 +195,7 @@ function drawPotato() {
 
   ctxP.arc(xp, yp, radius, 0 , 2 * Math.PI);
 
+  console.log('MODE:' + mode[pol]);
 
   for (var i = 0; i < positions_x.length; i++) {
     ctxM.beginPath();

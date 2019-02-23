@@ -286,35 +286,33 @@ function searchDevice(){
 
 
 microBit.onBleNotify(function(){
-/*
-  document.getElementById("acc_X").innerHTML=microBit.getAccelerometer().x;
-  document.getElementById("acc_Y").innerHTML=microBit.getAccelerometer().y;
-  document.getElementById("acc_Z").innerHTML=microBit.getAccelerometer().z;
-*/
+
   acX = microBit.getAccelerometer().x;
   acY = microBit.getAccelerometer().y;
   acZ = microBit.getAccelerometer().z;
 
   if( acZ<0 && acY<=1024 && acY>330 ){
      pol = 1;
+     envAttack = 2;
+     envDecay = 10;
+     envSustain = 10;
+     envRelease= 5;
      scaleToPlay[0]!=null ?
-        (scaleToPlay != currentScale ?
-          (currentScale = scaleToPlay[0])
-          :changed = false)
-     :changed = false}//console.log(" su polso :" + pol + " non ci sono scale" )}
-
+        currentScale = scaleToPlay[0] :changed = false}
+//posizione 1 ho la scala più chiara
   if( acZ<0 && acY<=330 && acY>=-360){
      pol = 2;
-     currentScale = new Set([0,0,0,0,0,0,0]);
-   }
+     envAttack = 2;
+     envDecay = 2;
+     envSustain = 0;
+     envRelease= 0;
+     scaleToPlay[1]!=null ?
+          currentScale = scaleToPlay[1]: changed = false}
+
 
   if( acZ<0 && acY<-360 && acY>=-1024){
      pol = 3;
-     scaleToPlay[1]!=null ?
-        (scaleToPlay != currentScale ?
-          (currentScale = scaleToPlay[1])
-          :changed = false)
-     : changed = false}
+    currentScale = new Set([0,0,0,0,0,0,0]);}
 
 //c3 a E4
      if( acZ<0 && acX>=-1024 && acX<-931-SAF ){
@@ -411,5 +409,11 @@ microBit.onBleNotify(function(){
          ctr = van;}
 
     van!=currentNote ? (noteOff(currentMidiNote), currentNote = van, playIfyouCan())
-                :changed = false;
+                     :changed = false;
+    changeFilterGain();
+    changeFilterCutOff();
+    setQ();
+    chooseFilterType();
+    valueRev= 50/1024*acY;
+    changeValue(valueRev);
 })

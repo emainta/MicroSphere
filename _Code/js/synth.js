@@ -28,9 +28,8 @@ function initialValues(){
   BRIGHTNESS = new Map();
   currentScale = new Set();
   scaleToPlay = new Array();
-  mode = new Array(3).fill(0);
+  mode = new Array(4).fill(0);
   currentAcquiredNotes = new Set();
-  lastAcquiredNotes = {}
 
   //scale dei modi maggiori
   var lyd = new Set([ 0, 2, 4, 6, 7, 9, 11 ]);
@@ -78,13 +77,13 @@ function noteIsOnScale(){
 //suona la nota se noteIsOnScale
 function playIfyouCan(){
    //suona note dal C3 al C5
-   console.log("il valore di van " + currentNote)
+  // console.log("il valore di van " + currentNote)
   if(noteIsOnScale()){
     currentMidiNote =  rootNote + currentNote + 36;//midi
     console.log("nota midi " + currentMidiNote)
-    noteOn(currentMidiNote);}
+    noteOn(currentMidiNote)}
 }
-
+/*
 //oscillatore per la tastiera midi!!!!
 function oscillatorStart(note){
   var note =  440 * Math.pow(2,(note-69)/12);
@@ -99,6 +98,7 @@ function oscillatorStart(note){
   o1.frequency.value = note;
   o1.start();
 }
+*/
 
 //questa funzione raccoglie tutte le note midi proveniente dall'accordo
 function acquireNote(note){
@@ -111,8 +111,8 @@ function acquireNote(note){
     //currentAcquiredNotes.forEach(function(el){console.log("notes acquired : " + el )})
     var tmp = new Array();
     currentAcquiredNotes.forEach(function(n){tmp.push(findNote(n))});// faccio il modulo
-    tmp.length > 3 // devono essere 4 note diverse, se preme c3 e c4 è come se avesse premuto una nota.
-    ? startNewRec(tmp) : console.log("mancano ancora delle note");
+    if(tmp.length > 3) // devono essere 4 note diverse, se preme c3 e c4 è come se avesse premuto una nota.
+      startNewRec(tmp);
   }
 }
 
@@ -167,7 +167,7 @@ function findNote(note){
 }
 
 //CAMBIA UNA SCALA QUANDO VIENE CHIAMATA //verificare se è giusto X*D
-function setTonality(currentScale){
+function setTonality(currentScale,rootNote){
     var newScale = new Set();
     let newNote
     for(let i of currentScale){
@@ -180,33 +180,50 @@ function setTonality(currentScale){
 }
 
 
-//METTE SU scaleToPlay LE SCALE CAMBIATE DI TONALITA'
+//alla fine avrò le scale compatibili su scaletoplay
 //viene chiamata da setRec()per trovare la migliore scala per quella rec di note
 function compareScale(tmpScale, rec){
 
   var modeScales = new Array(6).fill(0); // MI SERVE SOLO PER TENERE TRACCIA DEL MODO, POI è INUTILE
   var setScale = new Set();
-  let position = 6; // ci sono 7 scale in totale
+  let position = 1; // l'applicazione restituisce al massimo due scale
+
+
   for (const [mode, scale] of MAJORMODESCALE){
-    setScale  = setTonality(scale);
+    setScale  = setTonality(scale, rootNote);
     var comNotes = new Set(tmpScale.filter(x => setScale .has(x)));
 
     //aggiunge tutte le scale con più di tre note in comune con l'accordo midi
-    console.log(comNotes.size + " INTERSEZIONI CON LA SCALA : " + mode)
+   //console.log(comNotes.size + " INTERSEZIONI CON LA SCALA : " + mode)
+   //la scala più chiara sta sulla poszione 1, su 0 la più scura
     if(comNotes.size>3){
-      modeScales[position] = mode; scaleToPlay[position] = setScale;
-      console.log("IMPOSTO LA SCALA : " + modeScales[position] + " nella posizione " +  position);
-      position--;
+
+      if(mode == 'dor' || mode == "aol" ||  mode == "phr"){
+        setScale = setTonality(MAJORMODESCALE.getElementsByName('AEO'),0);
+        modeScales[position] = 'aol'; scaleToPlay[1] = setScale;
+        setScale = setTonality(MAJORMODESCALE.getElementsByName('PHR'),0);
+        modeScales[position] = 'phr'; scaleToPlay[0] = setScale;
+        }
+      if (mode == 'loc'){
+        modeScales[position] = 'phr'; scaleToPlay[1] = setScale;
+        setScale = setTonality(MAJORMODESCALE.getElementsByName('PHR'),5);
+        modeScales[position] = mode; scaleToPlay[0] = setScale;
+        }
+      if (mode == 'mix'){
+        setScale = setTonality(MAJORMODESCALE.getElementsByName('PHR'),9);
+        modeScales[position] = 'phr'; scaleToPlay[1] = setScale;
+        setScale = setTonality(MAJORMODESCALE.getElementsByName('LOC'),4);
+        modeScales[position] = 'loc'; scaleToPlay[0] = setScale;
+        }
+      if (mode == 'ion' || mode == 'lyd'){
+        setScale = setTonality(MAJORMODESCALE.getElementsByName('PHR'),4);
+        modeScales[position] = 'phr'; scaleToPlay[1] = setScale;
+        setScale = setTonality(MAJORMODESCALE.getElementsByName('LOC'),11);
+        modeScales[position] = 'loc'; scaleToPlay[0] = setScale;
+        }
       }
     }
-  //prendo solo le più scure
-  let i = 0;
-  while(modeScales[i]==0){i++}
-  console.log(i);
-  modeScales[0]= modeScales[i];
-  modeScales[1]= modeScales[i+1];
-  scaleToPlay[0]= scaleToPlay[i];
-  scaleToPlay[1]= scaleToPlay[i+1];
+
   mode[1] = BRIGHTNESS.get(modeScales[0]);
   mode[2] = BRIGHTNESS.get(modeScales[1]);
   mode[3] = 0;
@@ -241,14 +258,10 @@ function onMIDISuccess(midiAccess) {
     }
 
 
-//FINE CODICE CONTOLLER
+//<<<<<<<<<<< FINE CODICE CONRTOLLER >>>>>>>>>>>>>
 
 
-// <<<<<<<<<<< CODICE DI MICROBIT >>>>>>>>>>>>>>>
-
-
-
-//<<<<<<<<<<< FINE CODICE MICROBIT >>>>>>>>>>>>>
+//<<<<<<<<<<<  CODICE SYNTH >>>>>>>>>>>>>
 
 
 var c = new AudioContext();
@@ -329,7 +342,6 @@ function noteOff( note ) {
    if( key == 0 || key == 2 || key == 4 || key == 5 || key == 7 || key == 9 || key == 11 || key == 12 || key == 14 || key == 16 || key == 17 || key == 19 || key == 21 || key == 23|| key == 25){
     allKeys.item(key).classList.remove("whiteActive")}
     else{ allKeys.item(key).classList.remove("blackActive")}}
-
 }
 
 function filterFrequencyFromCutoff( pitch, cutoff ) {
@@ -359,14 +371,6 @@ function createPeriodicWave(){
   return customWaveform;
 }
 
-//cambia il filtro in base al polso
-function chooseFilterType(){
-  if(pol==3 || pol ==2){return "highpass"}
-  else {
-    return "lowpass"
-  }
- //return filterPicker.options[filterPicker.selectedIndex].value;
-}
 
 //FUNZIONE PRINCIPALE_: crea gli oscillatori, i modulatori, i filtri e li collega
 function playNote(note, v){
@@ -513,9 +517,9 @@ playNote.prototype.setFilterQ = function( value ) {
   //  filterQ = this.value;
 function setQ(){
   if (pol == 1){
-    filterQ = 0;
+    filterQ = 15;
   }
-  else filterQ = 15;
+  else filterQ = 20;
 	  for (var i=0; i<255; i++) {
 		if (activeOscillators[i] != null) {
 			activeOscillators[i].setFilterQ(filterQ);
@@ -533,7 +537,7 @@ function changeFilterGain(){
    if (pol == 1){
     filterGain = 100;
    }
-   else filterGain = 120 ;
+   else filterGain = 110 ;
 	  for (var i=0; i<255; i++) {
 		if (activeOscillators[i] != null) {
 			activeOscillators[i].setFilterGain( filterGain );
@@ -549,15 +553,22 @@ playNote.prototype.setFilterCutoff = function( value ) {
   //  filterCutOff = this.value ;
 function changeFilterCutOff(){
   if (pol == 1){
-    filterCutOff = 50;
+    filterCutOff = 500;
   }
-  else filterCutOff = 500;
+  else filterCutOff = 100;
     for (var i=0; i<255; i++) {
 		if (activeOscillators[i] != null) {
 			activeOscillators[i].setFilterCutoff(filterCutOff);
       }
     }
   }
+
+//cambia il filtro in base al polso
+function chooseFilterType(){
+  if(pol ==2) return "highpass";
+  return "lowpass";
+  //return filterPicker.options[filterPicker.selectedIndex].value;
+}
 
   //detune oscillator
 playNote.prototype.setDetune = function( value ) {
@@ -577,64 +588,9 @@ playNote.prototype.setModFreq = function( value ) {
 	this.modOsc.frequency.value = value;
 }
 
-/*document.querySelector("#envA").oninput = function (value){
-envAttack = this.value;
-}
-
-document.querySelector("#envD").oninput = function (value){
-envDecay = this.value;
-}
-
-document.querySelector("#envS").oninput = function (value){
-envSustain = this.value;
-}
-
-document.querySelector("#envR").oninput = function (value){
-envRelease= this.value;
-}
-
-/*
-document.querySelector("#filterEnvA").oninput = function (value){
-  filterEnvAtt = this.value;
-}
-
-document.querySelector("#filterEnvD").oninput = function (value){
-  filterEnvD = this.value;
-}
-
-document.querySelector("#filterEnvS").oninput = function (value){
-  filterEnvSus = this.value;
-}
-
-document.querySelector("#filterEnvR").oninput = function (value){
-  filterEnvR = this.value;
-}
-*/
-
-/*
-//valori del compressore
-document.querySelector("#compA").oninput = function (value){
-  compressor.attack.value = this.value;
-}
-
-document.querySelector("#compR").oninput = function (value){
-  compressor.release.value = this.value;
-}
-
-document.querySelector("#compK").oninput = function (value){
-  compressor.knee.value = this.value;
-}
-
-document.querySelector("#compRatio").oninput = function (value){
- compressor.ratio.value = this.value;
-}
-
-document.querySelector("#compT").oninput = function (value){
-  compressor.threshold.value = - this.value;
-}
 
 
-*/
+
 
 // crea effectChain, delay, distortion, convolver, masterGain, compressor
 function initAudio() {
