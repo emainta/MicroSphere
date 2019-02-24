@@ -410,10 +410,13 @@ microBit.onBleNotify(function(){
 
     van!=currentNote ? (noteOff(currentMidiNote), currentNote = van, playIfyouCan())
                      :changed = false;
+
   //  changeFilterGain();
     changeFilterCutOff();
-  //  setQ();
-  //  chooseFilterType();
+    setQ();
+    chooseFilterType();
     valueRev= 50/1024*acY;
     changeValue(valueRev);
+    document.getElementById("md").innerHTML = currentGrade[pol]+currentMode[pol-1]; // pol = 3 da valore null su currentMode;
+
 })

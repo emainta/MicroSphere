@@ -7,8 +7,6 @@ var rootNote;
 var currentScale;
 //le scale che vengono valutate per esserre proposte
 var MAJORMODESCALE;
-//Le tre scale che si possono suoanre
-var scaleToPlay; // array
 //variabili per acquisire e memorizzare gli accordi
 var currentAcquiredNotes;
 //capire se mi può servire realmente
@@ -60,6 +58,8 @@ function initialValues(){
   currentScale = scaleToPlay[0];
   rootNote = 0; //Corrisponde a un do
   currentNote = 0; //nessuna nota suonata ancora
+  mdc[3] = -1;
+  currentMode[2] = 'MUTE';
 }
 
 initialValues();
@@ -190,46 +190,54 @@ function compareScale(tmpScale, rec){
     setScale  = setTonality(scale, rootNote);
     var comNotes = new Set(tmpScale.filter(x => setScale .has(x)));
 
-    //aggiunge tutte le scale con più di tre note in comune con l'accordo midi
-   //console.log(comNotes.size + " INTERSEZIONI CON LA SCALA : " + mode)
    //la scala più chiara sta sulla poszione 1, su 0 la più scura
-    if(comNotes.size>3 && found == false){
+   if(comNotes.size>3 && found == false){
 
-        console.log('mode found ' +  mode)
+       console.log('mode found ' +  mode)
 
-      if(mode == 'DOR' || mode == 'AOL' ||  mode == 'PHR'){
-          setScale = setTonality(MAJORMODESCALE.get('AOL'),0);
-          modeScales[position] = 'AOL'; scaleToPlay[position] = setScale;
-          setScale = setTonality(MAJORMODESCALE.get('PHR'),0);
-          modeScales[position-1] = 'PHR'; scaleToPlay[position-1] = setScale;
-          found = true;
-        }
-      if (mode == 'LOC'){
-          modeScales[position-1] = mode; scaleToPlay[position-1] = setScale;
-          setScale = setTonality(MAJORMODESCALE.get('PHR'),5);
-          modeScales[position] = 'PHR'; scaleToPlay[position] = setScale;
-          found = true;
-        }
-      if (mode == 'MIX'){
-          setScale = setTonality(MAJORMODESCALE.get('PHR'),9);
-          modeScales[position] = 'PHR'; scaleToPlay[position] = setScale;
-          setScale = setTonality(MAJORMODESCALE.get('LOC'),4);
-          modeScales[position-1] = 'LOC'; scaleToPlay[position-1] = setScale;
-          found = true;
-        }
-      if (mode == 'ION' || mode == 'LYD'){
-          setScale = setTonality(MAJORMODESCALE.get('PHR'),4);
-          modeScales[position] = 'PHR'; scaleToPlay[position] = setScale;
-          setScale = setTonality(MAJORMODESCALE.get('LOC'),11);
-          modeScales[position-1] = 'LOC'; scaleToPlay[position-1] = setScale;
-          found = true;
-        }
-      }
-    }
+     if(mode == 'DOR' || mode == 'AOL' ||  mode == 'PHR'){
+         setScale = setTonality(MAJORMODESCALE.get('AOL'),0);
+         modeScales[position] = 'AOL'; scaleToPlay[position] = setScale;
+         currentGrade[1] = 1;
+         setScale = setTonality(MAJORMODESCALE.get('PHR'),0);
+         modeScales[position-1] = 'PHR'; scaleToPlay[position-1] = setScale;
+         currentGrade[0] = 1;
+         found = true;
+       }
+     if (mode == 'LOC'){
+         modeScales[position-1] = mode; scaleToPlay[position-1] = setScale;
+         currentGrade[0] = 1;
+         setScale = setTonality(MAJORMODESCALE.get('PHR'),5);
+         modeScales[position] = 'PHR'; scaleToPlay[position] = setScale;
+         currentGrade[1] = 4;
+         found = true;
+       }
+     if (mode == 'MIX'){
+         setScale = setTonality(MAJORMODESCALE.get('PHR'),9);
+         modeScales[position] = 'PHR'; scaleToPlay[position] = setScale;
+         currentGrade[1] = 6;
+         setScale = setTonality(MAJORMODESCALE.get('LOC'),4);
+         modeScales[position-1] = 'LOC'; scaleToPlay[position-1] = setScale;
+         currentGrade[0] = 4;
+         found = true;
+       }
+     if (mode == 'ION' || mode == 'LYD'){
+         setScale = setTonality(MAJORMODESCALE.get('PHR'),4);
+         modeScales[position] = 'PHR'; scaleToPlay[position] = setScale;
+         currentGrade[1] = 3;
+         setScale = setTonality(MAJORMODESCALE.get('LOC'),11);
+         modeScales[position-1] = 'LOC'; scaleToPlay[position-1] = setScale;
+         currentGrade[0] = 7;
+         found = true;
+       }
+     }
+   }
 
   mdc[1] = BRIGHTNESS.get(modeScales[position]);
   mdc[2] = BRIGHTNESS.get(modeScales[position-1]);
-  mdc[3] = -1;
+  currentMode[1] = modeScales[position];
+  currentMode[0] = modeScales[position-1];
+
   console.log("Le playable Scale sono  : " + modeScales[position-1] + " e " + modeScales[position] +
               " su scaleToPlay ho  : " + scaleToPlay[position-1] + " + " + scaleToPlay[position])
 
@@ -522,7 +530,7 @@ playNote.prototype.setFilterQ = function( value ) {
   //  filterQ = this.value;
 function setQ(){
   if (pol == 1){
-    filterQ = 15;
+    filterQ = 8;
   }
   else filterQ = 20;
 	  for (var i=0; i<255; i++) {
@@ -540,9 +548,9 @@ playNote.prototype.setFilterGain = function( value ) {
    //filterGain = this.value;
 function changeFilterGain(){
    if (pol == 1){
-    filterGain = 100;
+    filterGain = 130;
    }
-   else filterGain = 110 ;
+   else filterGain = 100 ;
 	  for (var i=0; i<255; i++) {
 		if (activeOscillators[i] != null) {
 			activeOscillators[i].setFilterGain( filterGain );
@@ -558,9 +566,9 @@ playNote.prototype.setFilterCutoff = function( value ) {
   //  filterCutOff = this.value ;
 function changeFilterCutOff(){
   if (pol == 1){
-    filterCutOff = 850;
+    filterCutOff = 900;
   }
-  else filterCutOff = 500;
+  else filterCutOff = 700;
     for (var i=0; i<255; i++) {
 		if (activeOscillators[i] != null) {
 			activeOscillators[i].setFilterCutoff(filterCutOff);
