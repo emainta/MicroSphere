@@ -59,6 +59,8 @@ function initialValues(){
   rootNote = 0; //Corrisponde a un do
   currentNote = 0; //nessuna nota suonata ancora
   mdc[3] = -1;
+  currentMode[0] = 'WAIT';
+  currentMode[1] = 'WAIT';
   currentMode[2] = 'MUTE';
 }
 

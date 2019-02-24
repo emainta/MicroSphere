@@ -406,6 +406,10 @@ microBit.onBleNotify(function(){
     changeFilterGain();
     valueRev= 50/1024*acY;
     changeValue(valueRev);
-    document.getElementById("md").innerHTML = currentGrade[pol-1] + currentMode[pol-1]; // pol = 3 da valore null su currentMode;
+if ( currentGrade[pol-1] == 0) {
+  document.getElementById("md").innerHTML = currentMode[pol-1];
+} else {
+    document.getElementById("md").innerHTML = currentGrade[pol-1] + " ° "+ currentMode[pol-1]; // pol = 3 da valore null su currentMode;
+}
 
 })
