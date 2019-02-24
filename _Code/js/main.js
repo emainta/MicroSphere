@@ -8,7 +8,7 @@ var currentNote;
 var acX = 0; //note
 var acY = 0; // polso
 var acZ = 0;
-var mode;
+var mdc = new Array(4).fill(0);
 
 //valori che vengono modificati in automatico
 var envAttack;

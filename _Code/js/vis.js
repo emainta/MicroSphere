@@ -195,7 +195,7 @@ function drawPotato() {
 
   ctxP.arc(xp, yp, radius, 0 , 2 * Math.PI);
 
-  console.log('MODE:' + mode[pol]);
+  console.log('MODE:' + mdc[pol]);
 
   for (var i = 0; i < positions_x.length; i++) {
     ctxM.beginPath();
@@ -210,13 +210,13 @@ function drawPotato() {
     ctxM.fill();
   }
 
-  storeLastPosition(yp,mode[pol],radius);
+  storeLastPosition(yp,mdc[pol],radius);
 
   if(pol==3){
     ctxP.fillStyle = "white";
   }
   else {
-    ctxP.fillStyle = 'hsl(' + myHue[mode[pol]] + ',100%, 50%)'
+    ctxP.fillStyle = 'hsl(' + myHue[mdc[pol]] + ',100%, 50%)'
   }
 
   ctxP.fill();

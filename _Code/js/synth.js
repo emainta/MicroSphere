@@ -26,7 +26,6 @@ function initialValues(){
   BRIGHTNESS = new Map();
   currentScale = new Set();
   scaleToPlay = new Array();
-  mode = new Array(4).fill(0);
   currentAcquiredNotes = new Set();
 
   //scale dei modi maggiori
@@ -165,11 +164,11 @@ function findNote(note){
 }
 
 //CAMBIA UNA SCALA QUANDO VIENE CHIAMATA //
-function setTonality(currentScale,rootNote){
+function setTonality(scale,root){
     var newScale = new Set();
     let newNote
-    for(let i of currentScale){
-          newNote = i + rootNote;
+    for(let i of scale){
+          newNote = i + root;
           if(newNote<0){newNote = newNote+12;}
           if (newNote>=12) {newNote = newNote-12}
           newScale.add(newNote);
@@ -196,12 +195,14 @@ function compareScale(tmpScale, rec){
    //la scala più chiara sta sulla poszione 1, su 0 la più scura
     if(comNotes.size>3 && found == false){
 
+        console.log('mode found ' +  mode)
+
       if(mode == 'DOR' || mode == 'AOL' ||  mode == 'PHR'){
-          setScale = setTonality(MAJORMODESCALE.get('AEO'),0);
+          setScale = setTonality(MAJORMODESCALE.get('AOL'),0);
           modeScales[position] = 'AOL'; scaleToPlay[position] = setScale;
           setScale = setTonality(MAJORMODESCALE.get('PHR'),0);
           modeScales[position-1] = 'PHR'; scaleToPlay[position-1] = setScale;
-        found = true;
+          found = true;
         }
       if (mode == 'LOC'){
           modeScales[position-1] = mode; scaleToPlay[position-1] = setScale;
@@ -213,7 +214,7 @@ function compareScale(tmpScale, rec){
           setScale = setTonality(MAJORMODESCALE.get('PHR'),9);
           modeScales[position] = 'PHR'; scaleToPlay[position] = setScale;
           setScale = setTonality(MAJORMODESCALE.get('LOC'),4);
-          modeScales[position] = 'LOC'; scaleToPlay[position-1] = setScale;
+          modeScales[position-1] = 'LOC'; scaleToPlay[position-1] = setScale;
           found = true;
         }
       if (mode == 'ION' || mode == 'LYD'){
@@ -226,10 +227,11 @@ function compareScale(tmpScale, rec){
       }
     }
 
-  mode[1] = BRIGHTNESS.get(modeScales[position]);
-  mode[2] = BRIGHTNESS.get(modeScales[position-1]);
-  mode[3] = 0;
-  console.log("Le playable Scale sono  : " + modeScales[position-1] + " e " + modeScales[position]);
+  mdc[1] = BRIGHTNESS.get(modeScales[position]);
+  mdc[2] = BRIGHTNESS.get(modeScales[position-1]);
+  mdc[3] = 0;
+  console.log("Le playable Scale sono  : " + modeScales[position-1] + " e " + modeScales[position] +
+              " su scaleToPlay ho  : " + scaleToPlay[position-1] + " + " + scaleToPlay[position])
 
 }
 
