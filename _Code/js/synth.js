@@ -5,8 +5,6 @@
 var rootNote;
 //la scala scelta dall'inclinazione del polso tra quelle suggerite dall'applicazione
 var currentScale;
-//Ultima nota suonata: HA VALORI DA 0 A 20 per il momento
-var currentNote;
 //le scale che vengono valutate per esserre proposte
 var MAJORMODESCALE;
 //Le tre scale che si possono suoanre
@@ -58,8 +56,8 @@ function initialValues(){
 
   numberOfRec = 0;
   currentRec = 0;
-  scaleToPlay[0] = ion;
-  scaleToPlay[1] = loc;
+  scaleToPlay[1] = ion;
+  scaleToPlay[0] = loc;
   currentScale = scaleToPlay[0];
   rootNote = 0; //Corrisponde a un do
   currentNote = 0; //nessuna nota suonata ancora
@@ -80,7 +78,7 @@ function playIfyouCan(){
   // console.log("il valore di van " + currentNote)
   if(noteIsOnScale()){
     currentMidiNote =  rootNote + currentNote + 36;//midi
-    console.log("nota midi " + currentMidiNote)
+  //  console.log("nota midi " + currentMidiNote)
     noteOn(currentMidiNote)}
 }
 /*
@@ -166,7 +164,7 @@ function findNote(note){
   return module12Note;
 }
 
-//CAMBIA UNA SCALA QUANDO VIENE CHIAMATA //verificare se è giusto X*D
+//CAMBIA UNA SCALA QUANDO VIENE CHIAMATA //
 function setTonality(currentScale,rootNote){
     var newScale = new Set();
     let newNote
@@ -183,7 +181,7 @@ function setTonality(currentScale,rootNote){
 //alla fine avrò le scale compatibili su scaletoplay
 //viene chiamata da setRec()per trovare la migliore scala per quella rec di note
 function compareScale(tmpScale, rec){
-
+  var found = false;
   var modeScales = new Array(6).fill(0); // MI SERVE SOLO PER TENERE TRACCIA DEL MODO, POI è INUTILE
   var setScale = new Set();
   let position = 1; // l'applicazione restituisce al massimo due scale
@@ -196,38 +194,42 @@ function compareScale(tmpScale, rec){
     //aggiunge tutte le scale con più di tre note in comune con l'accordo midi
    //console.log(comNotes.size + " INTERSEZIONI CON LA SCALA : " + mode)
    //la scala più chiara sta sulla poszione 1, su 0 la più scura
-    if(comNotes.size>3){
+    if(comNotes.size>3 && found == false){
 
-      if(mode == 'dor' || mode == "aol" ||  mode == "phr"){
-        setScale = setTonality(MAJORMODESCALE.getElementsByName('AEO'),0);
-        modeScales[position] = 'aol'; scaleToPlay[1] = setScale;
-        setScale = setTonality(MAJORMODESCALE.getElementsByName('PHR'),0);
-        modeScales[position] = 'phr'; scaleToPlay[0] = setScale;
+      if(mode == 'DOR' || mode == 'AOL' ||  mode == 'PHR'){
+          setScale = setTonality(MAJORMODESCALE.get('AEO'),0);
+          modeScales[position] = 'AOL'; scaleToPlay[position] = setScale;
+          setScale = setTonality(MAJORMODESCALE.get('PHR'),0);
+          modeScales[position-1] = 'PHR'; scaleToPlay[position-1] = setScale;
+        found = true;
         }
-      if (mode == 'loc'){
-        modeScales[position] = 'phr'; scaleToPlay[1] = setScale;
-        setScale = setTonality(MAJORMODESCALE.getElementsByName('PHR'),5);
-        modeScales[position] = mode; scaleToPlay[0] = setScale;
+      if (mode == 'LOC'){
+          modeScales[position-1] = mode; scaleToPlay[position-1] = setScale;
+          setScale = setTonality(MAJORMODESCALE.get('PHR'),5);
+          modeScales[position] = 'PHR'; scaleToPlay[position] = setScale;
+          found = true;
         }
-      if (mode == 'mix'){
-        setScale = setTonality(MAJORMODESCALE.getElementsByName('PHR'),9);
-        modeScales[position] = 'phr'; scaleToPlay[1] = setScale;
-        setScale = setTonality(MAJORMODESCALE.getElementsByName('LOC'),4);
-        modeScales[position] = 'loc'; scaleToPlay[0] = setScale;
+      if (mode == 'MIX'){
+          setScale = setTonality(MAJORMODESCALE.get('PHR'),9);
+          modeScales[position] = 'PHR'; scaleToPlay[position] = setScale;
+          setScale = setTonality(MAJORMODESCALE.get('LOC'),4);
+          modeScales[position] = 'LOC'; scaleToPlay[position-1] = setScale;
+          found = true;
         }
-      if (mode == 'ion' || mode == 'lyd'){
-        setScale = setTonality(MAJORMODESCALE.getElementsByName('PHR'),4);
-        modeScales[position] = 'phr'; scaleToPlay[1] = setScale;
-        setScale = setTonality(MAJORMODESCALE.getElementsByName('LOC'),11);
-        modeScales[position] = 'loc'; scaleToPlay[0] = setScale;
+      if (mode == 'ION' || mode == 'LYD'){
+          setScale = setTonality(MAJORMODESCALE.get('PHR'),4);
+          modeScales[position] = 'PHR'; scaleToPlay[position] = setScale;
+          setScale = setTonality(MAJORMODESCALE.get('LOC'),11);
+          modeScales[position-1] = 'LOC'; scaleToPlay[position-1] = setScale;
+          found = true;
         }
       }
     }
 
-  mode[1] = BRIGHTNESS.get(modeScales[0]);
-  mode[2] = BRIGHTNESS.get(modeScales[1]);
+  mode[1] = BRIGHTNESS.get(modeScales[position]);
+  mode[2] = BRIGHTNESS.get(modeScales[position-1]);
   mode[3] = 0;
-  console.log("Le playable Scale sono  : " + modeScales[0] + " e " + modeScales[1]);
+  console.log("Le playable Scale sono  : " + modeScales[position-1] + " e " + modeScales[position]);
 
 }
 
@@ -247,7 +249,8 @@ function getMIDIMessage(message) {
         case 144: // noteOn
             if (velocity > 0) {
               acquireNote(note);
-              oscillatorStart(note);}
+            //  oscillatorStart(note);}
+          }
             break;
       }
   }
@@ -273,14 +276,14 @@ var filterGain = 100;
 var currentModFrequency;  // fa vibrare l'oscillatore, capire come si puo automatizzare la frazione
 var currentOsc1Detune = 0;
 
-var filterCutOff = 500;
+var filterCutOff = 600;
 var filterQ = 20;
 var filterEnvelope= 56;
 
 var envAttack = 2;
 var envDecay = 15;
-var envSustain = 68;
-var envRelease= 5;
+var envSustain = 70;
+var envRelease= 10;
 
 var filterEnvAtt = 5;
 var filterEnvD = 6;
@@ -553,9 +556,9 @@ playNote.prototype.setFilterCutoff = function( value ) {
   //  filterCutOff = this.value ;
 function changeFilterCutOff(){
   if (pol == 1){
-    filterCutOff = 500;
+    filterCutOff = 850;
   }
-  else filterCutOff = 100;
+  else filterCutOff = 500;
     for (var i=0; i<255; i++) {
 		if (activeOscillators[i] != null) {
 			activeOscillators[i].setFilterCutoff(filterCutOff);

@@ -302,10 +302,10 @@ microBit.onBleNotify(function(){
 //posizione 1 ho la scala più chiara
   if( acZ<0 && acY<=330 && acY>=-360){
      pol = 2;
-     envAttack = 2;
-     envDecay = 2;
+     envAttack = 3;
+     envDecay = 1;
      envSustain = 0;
-     envRelease= 0;
+     envRelease= 15;
      scaleToPlay[1]!=null ?
           currentScale = scaleToPlay[1]: changed = false}
 
@@ -410,10 +410,10 @@ microBit.onBleNotify(function(){
 
     van!=currentNote ? (noteOff(currentMidiNote), currentNote = van, playIfyouCan())
                      :changed = false;
-    changeFilterGain();
+  //  changeFilterGain();
     changeFilterCutOff();
-    setQ();
-    chooseFilterType();
+  //  setQ();
+  //  chooseFilterType();
     valueRev= 50/1024*acY;
     changeValue(valueRev);
 })
