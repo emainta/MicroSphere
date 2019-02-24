@@ -205,7 +205,11 @@ function compareScale(tmpScale, rec){
          found = true;
        }
      if (mode == 'LOC'){
+       console.log("sono nella locria")
          modeScales[position-1] = mode; scaleToPlay[position-1] = setScale;
+         for ( let i of setScale){
+           console.log("note della scala nuova : " + i)
+         }
          currentGrade[0] = 1;
          setScale = setTonality(MAJORMODESCALE.get('PHR'),5);
          modeScales[position] = 'PHR'; scaleToPlay[position] = setScale;
@@ -548,9 +552,9 @@ playNote.prototype.setFilterGain = function( value ) {
    //filterGain = this.value;
 function changeFilterGain(){
    if (pol == 1){
-    filterGain = 130;
+    filterGain = 120;
    }
-   else filterGain = 100 ;
+   else filterGain = 120 ;
 	  for (var i=0; i<255; i++) {
 		if (activeOscillators[i] != null) {
 			activeOscillators[i].setFilterGain( filterGain );

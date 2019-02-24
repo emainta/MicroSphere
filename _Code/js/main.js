@@ -12,7 +12,7 @@ var acY = 0; // polso
 var acZ = 0;
 var mdc = new Array(4).fill(0);
 var currentMode = new Array(3);
-var currentGrade =  new Array(2);
+var currentGrade =  new Array(3).fill(0);
 //valori che vengono modificati in automatico
 var envAttack;
 var filterEnvAtt;

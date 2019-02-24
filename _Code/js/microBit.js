@@ -16,7 +16,7 @@ var IO_PIN_PWM = 'e95dd822-251d-470a-a062-fa1922dfa9a8'
 //var van = 0; //valore nota
 //var con; //contour melodico
 var ctr = 0; //un semplice counter
-var SAF = 9;
+var SAF = 11;
 
 
 
@@ -293,19 +293,11 @@ microBit.onBleNotify(function(){
 
   if( acZ<0 && acY<=1024 && acY>330 ){
      pol = 1;
-     envAttack = 2;
-     envDecay = 10;
-     envSustain = 10;
-     envRelease= 5;
      scaleToPlay[0]!=null ?
         currentScale = scaleToPlay[0] :changed = false}
 //posizione 1 ho la scala più chiara
   if( acZ<0 && acY<=330 && acY>=-360){
      pol = 2;
-     envAttack = 3;
-     envDecay = 1;
-     envSustain = 0;
-     envRelease= 15;
      scaleToPlay[1]!=null ?
           currentScale = scaleToPlay[1]: changed = false}
 
@@ -411,12 +403,9 @@ microBit.onBleNotify(function(){
     van!=currentNote ? (noteOff(currentMidiNote), currentNote = van, playIfyouCan())
                      :changed = false;
 
-  //  changeFilterGain();
-    changeFilterCutOff();
-    setQ();
-    chooseFilterType();
+    changeFilterGain();
     valueRev= 50/1024*acY;
     changeValue(valueRev);
-    document.getElementById("md").innerHTML = currentGrade[pol]+currentMode[pol-1]; // pol = 3 da valore null su currentMode;
+    document.getElementById("md").innerHTML = currentGrade[pol-1] + currentMode[pol-1]; // pol = 3 da valore null su currentMode;
 
 })
