@@ -18,6 +18,8 @@ var flagFirstChord = 0 ;
 //grado dell'accordo suonato dopo il primo
 var gradeOfOtherChords = 0;
 
+var rootChar = ['C', ' C#', 'D', 'D#' , 'E' , 'F' , 'F#' , 'G' , 'G#' , 'A' , 'A#' , 'B'];
+
 var CHORDS;
 //Inializza tutti i valori
 function initialValues(){
@@ -173,11 +175,12 @@ function findrootNote(){
   //svuota il set
   currentAcquiredNotes.clear();
 
+
   //setta la rootNote solo la prima volta
   lowest = findNote(lowest); //trova il modulo
   if(flagFirstChord==0){
     rootNote = lowest;
-    document.querySelector('.root').innerHTML = rootNote;
+    document.querySelector('.root').innerHTML = rootChar[rootNote];
     console.log("LA ROOTNOTE è " + rootNote)}
   // trova il grado del nuovo accordo relativo a rootNote
   else {gradeOfOtherChords = lowest; console.log("gradeOfOtherChords è " + gradeOfOtherChords)}

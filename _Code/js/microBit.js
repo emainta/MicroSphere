@@ -406,7 +406,13 @@ microBit.onBleNotify(function(){
   //  changeFilterGain();
     valueRev= 50/1024*acY;
     changeValue(valueRev);
-    if ( pol == 2) {
-      document.getElementById("md").innerHTML = currentMode;}
+
+  //  if ( pol == 0) {
+      document.getElementById("md").innerHTML = currentMode;
+    //}
      // aggiungere la visualizzazione del grado }
+/*
+else {
+  document.getElementById("md").innerHTML = currentGrade + " ° " + currentMode;
+} */
 })

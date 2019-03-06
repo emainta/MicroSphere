@@ -7,11 +7,12 @@ var currentNote;
 //Le tre scale che si possono suoanre
 var scaleToPlay;
 
+
 var acX = 0; //note
 var acY = 0; // polso
 var acZ = 0;
 var mdc = new Array(4).fill(0);
-var currentMode = 'ION';
+var currentMode = 'WAIT';
 var currentGrade = 0;
 //valori che vengono modificati in automatico
 var envAttack;
