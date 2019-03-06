@@ -293,13 +293,13 @@ microBit.onBleNotify(function(){
 
   if( acZ<0 && acY<=1024 && acY>330 ){
      pol = 1;
-     scaleToPlay[0]!=null ?
-        currentScale = scaleToPlay[0] :changed = false}
-//posizione 1 ho la scala più chiara
+     currentScale = new Set([0,0,0,0,0,0,0]);}
+
+  //posizione 1 ho la scala più chiara
   if( acZ<0 && acY<=330 && acY>=-360){
      pol = 2;
-     scaleToPlay[1]!=null ?
-          currentScale = scaleToPlay[1]: changed = false}
+     scaleToPlay[0]!=null ?
+          currentScale = scaleToPlay[0]: changed = false}
 
 
   if( acZ<0 && acY<-360 && acY>=-1024){
@@ -403,13 +403,10 @@ microBit.onBleNotify(function(){
     van!=currentNote ? (noteOff(currentMidiNote), currentNote = van, playIfyouCan())
                      :changed = false;
 
-    changeFilterGain();
+  //  changeFilterGain();
     valueRev= 50/1024*acY;
     changeValue(valueRev);
-if ( currentGrade[pol-1] == 0) {
-  document.getElementById("md").innerHTML = currentMode[pol-1];
-} else {
-    document.getElementById("md").innerHTML = currentGrade[pol-1] + " ° "+ currentMode[pol-1]; // pol = 3 da valore null su currentMode;
-}
-
+    if ( pol == 2) {
+      document.getElementById("md").innerHTML = currentMode;}
+     // aggiungere la visualizzazione del grado }
 })

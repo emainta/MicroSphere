@@ -9,19 +9,22 @@ var currentScale;
 var MAJORMODESCALE;
 //variabili per acquisire e memorizzare gli accordi
 var currentAcquiredNotes;
-//capire se mi può servire realmente
-var lastAcquiredNotes; //last of 30 sec
 //Tiene conto di quante acquisizioni di note ho fatto
 var numberOfRec;
 //Valore attualmente suonata in valore midi
 var currentMidiNote;
+// va a uno dopo che è stato preso il prima accordo
+var flagFirstChord = 0 ;
+//grado dell'accordo suonato dopo il primo
+var gradeOfOtherChords = 0;
 
-
+var CHORDS;
 //Inializza tutti i valori
 function initialValues(){
 
   MAJORMODESCALE = new Map();
-  BRIGHTNESS = new Map();
+  MODEINORDER = new Map();
+  CHORDS = new Map();
   currentScale = new Set();
   scaleToPlay = new Array();
   currentAcquiredNotes = new Set();
@@ -43,19 +46,31 @@ function initialValues(){
   MAJORMODESCALE.set('PHR',phr);
   MAJORMODESCALE.set('LOC',loc);
 
-  BRIGHTNESS.set('LYD',6);
-  BRIGHTNESS.set('ION',5);
-  BRIGHTNESS.set('MIX',4);
-  BRIGHTNESS.set('DOR',3);
-  BRIGHTNESS.set('AOL',2);
-  BRIGHTNESS.set('PHR',1);
-  BRIGHTNESS.set('LOC',0);
+// non è più l'ordine  di MODEINORDER ma dei modi maggiori sulla scala.
+  MODEINORDER.set(3,'LYD');
+  MODEINORDER.set(0,'ION');
+  MODEINORDER.set(4,'MIX');
+  MODEINORDER.set(1,'DOR');
+  MODEINORDER.set(5,'AOL');
+  MODEINORDER.set(2,'PHR');
+  MODEINORDER.set(6,'LOC');
+
+  //maschere accordi
+  major7th= new Set([ 0, 4, 7, 11]); // major7th
+  minor7th=new Set([0, 3, 7, 10]);
+  dominant7th = new Set([0,4,7,10]);
+  minor7thDim = new Set([0,3,6,10]);
+
+  CHORDS.set('MAJOR7th',major7th);
+  CHORDS.set('MINOR7th',minor7th);
+  CHORDS.set('DOMINANT',dominant7th);
+  CHORDS.set('MINORDIMINISHED',minor7thDim);
+
 
   numberOfRec = 0;
   currentRec = 0;
-  scaleToPlay[1] = ion;
-  scaleToPlay[0] = loc;
-  currentScale = scaleToPlay[0];
+  scaleToPlay = ion;
+  currentScale = scaleToPlay;
   rootNote = 0; //Corrisponde a un do
   currentNote = 0; //nessuna nota suonata ancora
   mdc[3] = -1;
@@ -75,72 +90,98 @@ function noteIsOnScale(){
 
 //suona la nota se noteIsOnScale
 function playIfyouCan(){
-   //suona note dal C3 al C5
-  // console.log("il valore di van " + currentNote)
   if(noteIsOnScale()){
     currentMidiNote =  rootNote + currentNote + 36;//midi
-  //  console.log("nota midi " + currentMidiNote)
     noteOn(currentMidiNote)}
 }
-/*
-//oscillatore per la tastiera midi!!!!
-function oscillatorStart(note){
-  var note =  440 * Math.pow(2,(note-69)/12);
-  o1 = c.createOscillator();
-  gain = c.createGain();
-  gain.connect(c.destination);
-  o1.connect(gain);
-  now = c.currentTime;
-  gain.gain.setValueAtTime(0,now);
-  gain.gain.linearRampToValueAtTime(1,now+0.1);
-  gain.gain.linearRampToValueAtTime(0,now+0.5);
-  o1.frequency.value = note;
-  o1.start();
-}
-*/
 
-//questa funzione raccoglie tutte le note midi proveniente dall'accordo
-function acquireNote(note){
-  currentAcquiredNotes.add(note);
+//accende il led
+function turnOnLed(){
   var myVar;
   function ghandi(){document.querySelector("#led").classList.remove("led_on")};
   myVar = setTimeout(ghandi, 900);
   document.querySelector("#led").classList.add("led_on");
+
+}
+
+
+//controlla se il pianista sta suonando un accordo ammissibile dall'applicazione
+function checkSeventhChord(acquiredSetOfNotesScale){
+  var newScale = new Array();
+  let root;
+
+  if(flagFirstChord == 0) root = rootNote;
+  else root = gradeOfOtherChords;
+
+
+  for(let i of acquiredSetOfNotesScale){
+      i = i - root ; //dovrebbe traslare le note facendole partire tutte da zero.
+      if(i<0) i = i+12;
+      if (i>=12) i = i-12
+      newScale.push(i);
+  }
+
+  for(i=0; i<newScale.length; i++){
+    console.log("valori traslati a zero : " + newScale[i]);
+  }
+
+  var found = false;
+  for (const [c, chord] of CHORDS){
+    if(!found){
+      var comNotes = new Set(newScale.filter(x => chord.has(x)));
+      for( let i of comNotes ){
+        console.log("valori in comune con il modo: "+ " " + c  + " " + i )}
+      if(comNotes.size>3){
+        found = true;
+        }
+      }
+    }
+  if(!found){ return false}
+  return true;
+}
+
+//questa funzione raccoglie tutte le note midi proveniente dall'accordo
+function acquireNote(note){
+  currentAcquiredNotes.add(note);
   if(currentAcquiredNotes.size>3){
-    //currentAcquiredNotes.forEach(function(el){console.log("notes acquired : " + el )})
-    var tmp = new Array();
-    currentAcquiredNotes.forEach(function(n){tmp.push(findNote(n))});// faccio il modulo
-    if(tmp.length > 3) // devono essere 4 note diverse, se preme c3 e c4 è come se avesse premuto una nota.
-      startNewRec(tmp);
+    var acquiredSetOfNotes = new Array();
+    currentAcquiredNotes.forEach(function(n){acquiredSetOfNotes.push(findNote(n))});// faccio il modulo
+    if(acquiredSetOfNotes.length > 3){ // devono essere 4 note diverse, se preme c3 e c4 è come se avesse premuto una nota.
+      findrootNote();
+      if(checkSeventhChord(acquiredSetOfNotes)){
+        compareScale(acquiredSetOfNotes)}//devo fare ritornare qualcosa a compare scale??
+      }else{
+      console.log("Non hai suonato un accordo valido! Suona un'accordo di settima! Puoi suonare un MAJOR7th, un MINOR7th, un DOMINANT o un MINOR DIMINISHED7th");
+    }
   }
 }
 
 
-//tmp ha il modulo 12 delle note acuisite alla rec numberOfRec
-function startNewRec(tmp){
-  numberOfRec++;
-  findrootNote(); // trova la root e le cancella l'ultima rec
-  lastAcquiredNotes = {numberOfRec:tmp}
-  tmp = compareScale(tmp, numberOfRec)} // confronta le note acquisite con le scale e cancella il set
-
 //prende la nota più bassa dell'accordo e la fa diventare ROOT
 //LA rootNote HA VA DA 0 A 12
-//quindi quando acquisisco le note non posso fare subito module 12 perchè mi serve sapere chi è la più bassa
-//MI SALVA currentDiff
 function findrootNote(){
   var lowest = 0;
   let n = false;
+  //trova la più bassa del set
   currentAcquiredNotes.forEach(function(note){
     if(n){
       note<lowest
       ? lowest=note : lowest=lowest}
     else{
       lowest = note; n = true;}
-  })
-
+    })
+  //svuota il set
   currentAcquiredNotes.clear();
+
+  //setta la rootNote solo la prima volta
   lowest = findNote(lowest); //trova il modulo
-  rootNote = lowest;
+  if(flagFirstChord==0){
+    rootNote = lowest;
+    document.querySelector('.root').innerHTML = rootNote;
+    console.log("LA ROOTNOTE è " + rootNote)}
+  // trova il grado del nuovo accordo relativo a rootNote
+  else {gradeOfOtherChords = lowest; console.log("gradeOfOtherChords è " + gradeOfOtherChords)}
+
 }
 
 //trova l'ottava della nota
@@ -154,98 +195,92 @@ function findOctave(note){
   if(note>=60 &&note<72){octave=5};
   if(note>=72 &&note<84){octave=6};
   if(note>=84 &&note<96){octave=7};
-  if(note==108){octave=8};
+  if(note>=96){octave=8};
   return octave;
 }
 
-//ritorna la nota modulo 12 dalle note midi
+//ritorna la nota con valori tra 0 e 12
 function findNote(note){
   var octave = findOctave(note);
   var module12Note = note-octave*12;
   return module12Note;
 }
 
-//CAMBIA UNA SCALA QUANDO VIENE CHIAMATA //
+//trasla tutte le note di scale partendo da root
 function setTonality(scale,root){
     var newScale = new Set();
-    let newNote
     for(let i of scale){
-          newNote = i + root;
-          if(newNote<0){newNote = newNote+12;}
-          if (newNote>=12) {newNote = newNote-12}
-          newScale.add(newNote);
+          i = i + root;
+          if(i<0){newNote = i+12;}
+          if (i>=12) {i= i-12}
+          newScale.add(i);
           }
    return newScale;
 }
 
+//dopo che aggiorno root in compareScale, trovo il vero valore del grado di gradeOfOtherChords da restituire a video
+function findGradeRelativeToRoot(){
+  gradeOfOtherChords = gradeOfOtherChords - rootNote;
+  if(gradeOfOtherChords<rootNote){
+     gradeOfOtherChords = gradeOfOtherChords + 12;
+    }
+  gradeOfOtherChords = Math.ceil(gradeOfOtherChords/2) + 1 ;
+  console.log("gradeOfOtherChords effettivo rispetto alla ROOT : " + gradeOfOtherChords);
+}
 
 //alla fine avrò le scale compatibili su scaletoplay
 //viene chiamata da setRec()per trovare la migliore scala per quella rec di note
-function compareScale(tmpScale, rec){
+function compareScale(acquiredSetOfNotesScale){
+
   var found = false;
-  var modeScales = new Array(6).fill(0); // MI SERVE SOLO PER TENERE TRACCIA DEL MODO, POI è INUTILE
+  var modeScales; // MI SERVE SOLO PER TENERE TRACCIA DEL MODO, POI è INUTILE
   var setScale = new Set();
-  let position = 1; // l'applicazione restituisce al massimo due scale
+  let root = 0;
+
+  if(flagFirstChord == 0) root = rootNote;
+  else root = gradeOfOtherChords;
+
+  findGradeRelativeToRoot();
 
 
   for (const [mode, scale] of MAJORMODESCALE){
-    setScale  = setTonality(scale, rootNote);
-    var comNotes = new Set(tmpScale.filter(x => setScale .has(x)));
+    if(found == false){
+        setScale  = setTonality(scale, root);
+        var comNotes = new Set(acquiredSetOfNotesScale.filter(x => setScale .has(x)));
 
-   //la scala più chiara sta sulla poszione 1, su 0 la più scura
-   if(comNotes.size>3 && found == false){
+       //la scala più chiara sta sulla poszione 1, su 0 la più scura
+       if(comNotes.size>3){
 
-       console.log('mode found ' +  mode)
-
-     if(mode == 'DOR' || mode == 'AOL' ||  mode == 'PHR'){
-         setScale = setTonality(MAJORMODESCALE.get('AOL'),0);
-         modeScales[position] = 'AOL'; scaleToPlay[position] = setScale;
-         currentGrade[1] = 1;
-         setScale = setTonality(MAJORMODESCALE.get('PHR'),0);
-         modeScales[position-1] = 'PHR'; scaleToPlay[position-1] = setScale;
-         currentGrade[0] = 1;
-         found = true;
-       }
-     if (mode == 'LOC'){
-       console.log("sono nella locria")
-         modeScales[position-1] = mode; scaleToPlay[position-1] = setScale;
-         for ( let i of setScale){
-           console.log("note della scala nuova : " + i)
+          if (mode == 'ION' || mode == 'LYD'){
+             modeScales = 'ION';
+            }
+          else if(mode == 'DOR' || mode == 'AOL' ||  mode == 'PHR'){
+             modeScales = 'DOR';
+            }
+          else if (mode == 'MIX'){
+             modeScales = mode;
+             }
+          else if (mode == 'LOC'){
+             modeScales = mode;
+           }
+           found = true;
+           console.log('Mode found ' +  modeScales)
          }
-         currentGrade[0] = 1;
-         setScale = setTonality(MAJORMODESCALE.get('PHR'),5);
-         modeScales[position] = 'PHR'; scaleToPlay[position] = setScale;
-         currentGrade[1] = 4;
-         found = true;
-       }
-     if (mode == 'MIX'){
-         setScale = setTonality(MAJORMODESCALE.get('PHR'),9);
-         modeScales[position] = 'PHR'; scaleToPlay[position] = setScale;
-         currentGrade[1] = 6;
-         setScale = setTonality(MAJORMODESCALE.get('LOC'),4);
-         modeScales[position-1] = 'LOC'; scaleToPlay[position-1] = setScale;
-         currentGrade[0] = 4;
-         found = true;
-       }
-     if (mode == 'ION' || mode == 'LYD'){
-         setScale = setTonality(MAJORMODESCALE.get('PHR'),4);
-         modeScales[position] = 'PHR'; scaleToPlay[position] = setScale;
-         currentGrade[1] = 3;
-         setScale = setTonality(MAJORMODESCALE.get('LOC'),11);
-         modeScales[position-1] = 'LOC'; scaleToPlay[position-1] = setScale;
-         currentGrade[0] = 7;
-         found = true;
-       }
      }
    }
 
-  mdc[1] = BRIGHTNESS.get(modeScales[position]);
-  mdc[2] = BRIGHTNESS.get(modeScales[position-1]);
-  currentMode[1] = modeScales[position];
-  currentMode[0] = modeScales[position-1];
-
-  console.log("Le playable Scale sono  : " + modeScales[position-1] + " e " + modeScales[position] +
-              " su scaleToPlay ho  : " + scaleToPlay[position-1] + " + " + scaleToPlay[position])
+   if (flagFirstChord==0){
+     // la scala su microbit viene settata qua solo per il primo accordo
+        flagFirstChord=1;
+       scaleToPlay= setScale;
+       currentMode = modeScales;
+       currentGrade = rootNote ;
+       console.log("Hai suonato il modo  : " + modeScales + " su microbit suono : "  + scaleToPlay)
+    }
+    else{
+      currentMode = MODEINORDER.get(gradeOfOtherChords-1); //modo relativo alla rootNote
+      console.log(" New current mode : " + currentMode + "on the grade " + gradeOfOtherChords);
+    }
 
 }
 
@@ -277,6 +312,17 @@ function onMIDISuccess(midiAccess) {
     }
 
 
+//Funzione per il reset della rootNote
+document.getElementById('tonalRef').onclick = resetTonRef;
+
+function resetTonRef(e) {
+  document.querySelector('.root').innerHTML = "♫♫";
+    flagFirstChord = 0;
+    gradeOfOtherChords=0;
+    rootNote=0;
+}
+
+
 //<<<<<<<<<<< FINE CODICE CONRTOLLER >>>>>>>>>>>>>
 
 
@@ -292,8 +338,8 @@ var filterGain = 100;
 var currentModFrequency;  // fa vibrare l'oscillatore, capire come si puo automatizzare la frazione
 var currentOsc1Detune = 0;
 
-var filterCutOff = 600;
-var filterQ = 20;
+var filterCutOff = 700;
+var filterQ = 15;
 var filterEnvelope= 56;
 
 var envAttack = 2;
@@ -345,7 +391,6 @@ function noteOn( note, velocity ) {
 	if (activeOscillators[note] == null) {
 		 activeOscillators[note] = new playNote(note, velocity/127.0);}
   var key = note-36;
-  console.log(key)
   if( key == 0 || key == 2 || key == 4 || key == 5 || key == 7 || key == 9 || key == 11 || key == 12 || key == 14 || key == 16 || key == 17 || key == 19 || key == 21 || key == 23|| key == 25){
   allKeys.item(key).classList.add("whiteActive");}
   else{
@@ -607,7 +652,14 @@ playNote.prototype.setModFreq = function( value ) {
 	this.modOsc.frequency.value = value;
 }
 
-
+document.querySelector("#freqMod").oninput = function(){
+    currentModFrequency= this.value;
+    for (var i=0; i<255; i++) {
+		if (activeOscillators[i] != null) {
+			activeOscillators[i].setModFreq( currentModFrequency );
+      }
+   }
+}
 
 
 
