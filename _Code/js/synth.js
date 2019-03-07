@@ -331,6 +331,7 @@ function resetTonRef(e) {
     flagFirstChord = 0;
     gradeOfOtherChords=0;
     rootNote=0;
+    currentMode = 'WAIT';
 }
 
 
