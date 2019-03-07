@@ -13,10 +13,7 @@ var currentAcquiredNotes;
 var numberOfRec;
 //Valore attualmente suonata in valore midi
 var currentMidiNote;
-// va a uno dopo che è stato preso il prima accordo
-var flagFirstChord = 0 ;
-//grado dell'accordo suonato dopo il primo
-var gradeOfOtherChords = 0;
+
 
 var rootChar = ['C', ' C#', 'D', 'D#' , 'E' , 'F' , 'F#' , 'G' , 'G#' , 'A' , 'A#' , 'B'];
 

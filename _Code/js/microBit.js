@@ -407,12 +407,12 @@ microBit.onBleNotify(function(){
     valueRev= 50/1024*acY;
     changeValue(valueRev);
 
-  //  if ( pol == 0) {
+ if ( gradeOfOtherChords == 0) {
       document.getElementById("md").innerHTML = currentMode;
-    //}
+    }
      // aggiungere la visualizzazione del grado }
-/*
+
 else {
-  document.getElementById("md").innerHTML = currentGrade + " ° " + currentMode;
-} */
+  document.getElementById("md").innerHTML = gradeOfOtherChords + " ° " + currentMode;
+}
 })

@@ -6,6 +6,10 @@ var con; //contour melodico
 var currentNote;
 //Le tre scale che si possono suoanre
 var scaleToPlay;
+//grado dell'accordo suonato dopo il primo
+var gradeOfOtherChords = 0;
+// va a uno dopo che è stato preso il prima accordo
+var flagFirstChord = 0 ;
 
 var acX = 0; //note
 var acY = 0; // polso
