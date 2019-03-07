@@ -148,6 +148,7 @@ function acquireNote(note){
       if(checkSeventhChord(acquiredSetOfNotes)){
         compareScale(acquiredSetOfNotes)}//devo fare ritornare qualcosa a compare scale??
       else{
+      document.getElementById("md").innerHTML = "NOT VALID";
       console.log("Non hai suonato un accordo valido! Suona un'accordo di settima! Puoi suonare un MAJOR7th, un MINOR7th, un DOMINANT o un MINOR DIMINISHED7th");
       }
     }
@@ -238,7 +239,7 @@ function findGradeRelativeToRoot(){
 function compareScale(acquiredSetOfNotesScale){
 
   var found = false;
-  var modeScales; // MI SERVE SOLO PER TENERE TRACCIA DEL MODO, POI è INUTILE
+  var modeScales = '1st CHORD'; // MI SERVE SOLO PER TENERE TRACCIA DEL MODO, POI è INUTILE
   var setScale = new Set();
   let root = 0;
 
