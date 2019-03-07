@@ -72,7 +72,7 @@ function initialValues(){
   numberOfRec = 0;
   currentRec = 0;
   scaleToPlay = ion;
-  currentScale = scaleToPlay;
+  currentScale = ion;
   rootNote = 0; //Corrisponde a un do
   currentNote = 0; //nessuna nota suonata ancora
   mdc[3] = -1;
@@ -93,7 +93,7 @@ function noteIsOnScale(){
 //suona la nota se noteIsOnScale
 function playIfyouCan(){
   if(noteIsOnScale()){
-    currentMidiNote =  rootNote + currentNote + 36;//midi
+    currentMidiNote = rootNote+ currentNote + 36;//midi
     noteOn(currentMidiNote)}
 }
 
@@ -119,26 +119,21 @@ function checkSeventhChord(acquiredSetOfNotesScale){
   for(let i of acquiredSetOfNotesScale){
       i = i - root ; //dovrebbe traslare le note facendole partire tutte da zero.
       if(i<0) i = i+12;
-      if (i>=12) i = i-12
+      if (i>=12) i = i-12;
       newScale.push(i);
   }
-
-  for(i=0; i<newScale.length; i++){
-    console.log("valori traslati a zero : " + newScale[i]);
-  }
-
   var found = false;
   for (const [c, chord] of CHORDS){
     if(!found){
       var comNotes = new Set(newScale.filter(x => chord.has(x)));
-      for( let i of comNotes ){
-        console.log("valori in comune con il modo: "+ " " + c  + " " + i )}
+    /*  for( let i of comNotes ){
+        console.log("valori in comune con il modo: "+ " " + c  + " " + i )}*/
       if(comNotes.size>3){
         found = true;
         }
       }
     }
-  if(!found){ return false}
+  if(!found){ console.log("FALSO "); return false}
   return true;
 }
 
@@ -152,8 +147,9 @@ function acquireNote(note){
       findrootNote();
       if(checkSeventhChord(acquiredSetOfNotes)){
         compareScale(acquiredSetOfNotes)}//devo fare ritornare qualcosa a compare scale??
-      }else{
+      else{
       console.log("Non hai suonato un accordo valido! Suona un'accordo di settima! Puoi suonare un MAJOR7th, un MINOR7th, un DOMINANT o un MINOR DIMINISHED7th");
+      }
     }
   }
 }
@@ -175,7 +171,6 @@ function findrootNote(){
   //svuota il set
   currentAcquiredNotes.clear();
 
-
   //setta la rootNote solo la prima volta
   lowest = findNote(lowest); //trova il modulo
   if(flagFirstChord==0){
@@ -183,7 +178,7 @@ function findrootNote(){
     document.querySelector('.root').innerHTML = rootChar[rootNote];
     console.log("LA ROOTNOTE è " + rootNote)}
   // trova il grado del nuovo accordo relativo a rootNote
-  else {gradeOfOtherChords = lowest; console.log("gradeOfOtherChords è " + gradeOfOtherChords)}
+  else {gradeOfOtherChords = lowest;}
 
 }
 
@@ -212,22 +207,29 @@ function findNote(note){
 //trasla tutte le note di scale partendo da root
 function setTonality(scale,root){
     var newScale = new Set();
+  /*  for( let i of scale ){
+      console.log("Scala corrente: " + i )}*/
     for(let i of scale){
           i = i + root;
           if(i<0){newNote = i+12;}
           if (i>=12) {i= i-12}
           newScale.add(i);
           }
+/*  for( let i of newScale ){
+      console.log("Scala dopo set scale: " + i )}*/
    return newScale;
 }
 
 //dopo che aggiorno root in compareScale, trovo il vero valore del grado di gradeOfOtherChords da restituire a video
 function findGradeRelativeToRoot(){
-  gradeOfOtherChords = gradeOfOtherChords - rootNote;
+  let tmp;
+  tmp = gradeOfOtherChords - rootNote;
+  console.log("gradeOfOtherChords : " + gradeOfOtherChords);
+  console.log("tmp : " + tmp);
   if(gradeOfOtherChords<rootNote){
-     gradeOfOtherChords = gradeOfOtherChords + 12;
+     gradeOfOtherChords = tmp + 12;
     }
-  gradeOfOtherChords = Math.ceil(gradeOfOtherChords/2) + 1 ;
+  gradeOfOtherChords = Math.ceil(tmp/2) + 1 ;
   console.log("gradeOfOtherChords effettivo rispetto alla ROOT : " + gradeOfOtherChords);
 }
 
@@ -241,31 +243,40 @@ function compareScale(acquiredSetOfNotesScale){
   let root = 0;
 
   if(flagFirstChord == 0) root = rootNote;
-  else root = gradeOfOtherChords;
-
-  findGradeRelativeToRoot();
+  else {root = gradeOfOtherChords; findGradeRelativeToRoot();}
 
 
   for (const [mode, scale] of MAJORMODESCALE){
     if(found == false){
-        setScale  = setTonality(scale, root);
-        var comNotes = new Set(acquiredSetOfNotesScale.filter(x => setScale .has(x)));
-
-       //la scala più chiara sta sulla poszione 1, su 0 la più scura
-       if(comNotes.size>3){
+      var comNotes = new Set(acquiredSetOfNotesScale.filter(x => setScale .has(x)));
+      //la scala più chiara sta sulla poszione 1, su 0 la più scura
+      if(comNotes.size>3){
 
           if (mode == 'ION' || mode == 'LYD'){
+            if(flagFirstChord==0){
+              setTonality(MAJORMODESCALE.get("ION"), rootNote);
+            }
              modeScales = 'ION';
             }
           else if(mode == 'DOR' || mode == 'AOL' ||  mode == 'PHR'){
+            if(flagFirstChord==0){
+              setTonality(MAJORMODESCALE.get("DOR"), rootNote);
+            }
              modeScales = 'DOR';
             }
           else if (mode == 'MIX'){
+            if(flagFirstChord==0){
+              setTonality(MAJORMODESCALE.get("MIX"), rootNote);
+            }
              modeScales = mode;
              }
           else if (mode == 'LOC'){
+            if(flagFirstChord==0){
+              setTonality(MAJORMODESCALE.get("LOC"), rootNote);
+            }
              modeScales = mode;
            }
+
            found = true;
            console.log('Mode found ' +  modeScales)
          }
@@ -274,15 +285,14 @@ function compareScale(acquiredSetOfNotesScale){
 
    if (flagFirstChord==0){
      // la scala su microbit viene settata qua solo per il primo accordo
-        flagFirstChord=1;
-       scaleToPlay= setScale;
-       currentMode = modeScales;
-       currentGrade = rootNote ;
-       console.log("Hai suonato il modo  : " + modeScales + " su microbit suono : "  + scaleToPlay)
+      flagFirstChord=1;
+      currentMode = modeScales;
+      currentGrade = rootNote ;
+      console.log("Hai suonato il modo  : " + modeScales );
     }
     else{
       currentMode = MODEINORDER.get(gradeOfOtherChords-1); //modo relativo alla rootNote
-      console.log(" New current mode : " + currentMode + "on the grade " + gradeOfOtherChords);
+      console.log(" New current mode : " + currentMode + " on the grade " + gradeOfOtherChords);
     }
 
 }
@@ -393,6 +403,7 @@ var modwavePicker = document.querySelector("select[name='modwaveform']");
 function noteOn( note, velocity ) {
 	if (activeOscillators[note] == null) {
 		 activeOscillators[note] = new playNote(note, velocity/127.0);}
+  console.log("STO SUONANDO LA NOTA :" + note);
   var key = note-36;
   if( key == 0 || key == 2 || key == 4 || key == 5 || key == 7 || key == 9 || key == 11 || key == 12 || key == 14 || key == 16 || key == 17 || key == 19 || key == 21 || key == 23|| key == 25){
   allKeys.item(key).classList.add("whiteActive");}
@@ -405,7 +416,7 @@ function noteOff( note ) {
 		// Shut off the note playing and clear it
 		stopNote(note);
 		activeOscillators[note] = null;
-   var key = note-36
+   var key = note-36;
    if( key == 0 || key == 2 || key == 4 || key == 5 || key == 7 || key == 9 || key == 11 || key == 12 || key == 14 || key == 16 || key == 17 || key == 19 || key == 21 || key == 23|| key == 25){
     allKeys.item(key).classList.remove("whiteActive")}
     else{ allKeys.item(key).classList.remove("blackActive")}}

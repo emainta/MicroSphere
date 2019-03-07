@@ -7,7 +7,6 @@ var currentNote;
 //Le tre scale che si possono suoanre
 var scaleToPlay;
 
-
 var acX = 0; //note
 var acY = 0; // polso
 var acZ = 0;

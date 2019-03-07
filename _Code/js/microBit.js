@@ -16,7 +16,7 @@ var IO_PIN_PWM = 'e95dd822-251d-470a-a062-fa1922dfa9a8'
 //var van = 0; //valore nota
 //var con; //contour melodico
 var ctr = 0; //un semplice counter
-var SAF = 11;
+var SAF = 9;
 
 
 
@@ -298,8 +298,8 @@ microBit.onBleNotify(function(){
   //posizione 1 ho la scala più chiara
   if( acZ<0 && acY<=330 && acY>=-360){
      pol = 2;
-     scaleToPlay[0]!=null ?
-          currentScale = scaleToPlay[0]: changed = false}
+     scaleToPlay!=null ?
+       currentScale = scaleToPlay: changed = false}
 
 
   if( acZ<0 && acY<-360 && acY>=-1024){
