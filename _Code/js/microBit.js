@@ -293,17 +293,17 @@ microBit.onBleNotify(function(){
 
   //posizione 1 ho la scala più chiara
   if( acZ<0 && acY<=1024 && acY>734 ){
-     pol = 1;
+     pol = 7;
      currentScale = scaleToPlay[6];
      currentMode = mdc[6];}
 
   if( acZ<0 && acY<=734 && acY>=444){
-     pol = 2;
+     pol = 6;
      currentScale = scaleToPlay[5];
      currentMode = mdc[5];}
 
   if( acZ<0 && acY<444 && acY>=154){
-     pol = 3;
+     pol = 5;
      currentScale = scaleToPlay[4];
      currentMode = mdc[4];}
 
@@ -313,17 +313,17 @@ microBit.onBleNotify(function(){
       currentMode = mdc[3];}
 
   if( acZ<0 && acY<-136 && acY>=-426){
-      pol = 5;
+      pol = 3;
       currentScale = scaleToPlay[2];
       currentMode = mdc[2];}
 
   if( acZ<0 && acY<-426 && acY>=-716){
-      pol = 6;
+      pol = 2;
       currentScale = scaleToPlay[1];
       currentMode = mdc[1];}
 
   if( acZ<0 && acY<-716 && acY>=-1024){
-      pol = 7;
+      pol = 1;
       currentScale = scaleToPlay[0];
       currentMode = mdc[0];}
 
@@ -428,5 +428,5 @@ microBit.onBleNotify(function(){
     valueRev= 50/1024*acY;
     changeValue(valueRev);
 
-    document.getElementById("md").innerHTML = pol + " ° ";
+    document.getElementById("md").innerHTML = currentMode ;
 })

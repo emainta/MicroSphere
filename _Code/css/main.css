@@ -82,7 +82,7 @@ app {
   font-variant: small-caps;
 }
 
-#myTimer{
+#time{
   color: #FAEBD7;
   font-weight: bold;
   z-index:4;
@@ -130,7 +130,7 @@ left{  /*sx*/
 }
 
 #fourbuttons{
-  width: 50%;
+  width: 43%;
   display: grid;
   padding-top: 10px;
   /*
@@ -153,6 +153,7 @@ left{  /*sx*/
   font-size: 50px;
   padding: 10px;
 }
+
 #midi_in {
     float: left;
     height: 100%;
@@ -248,44 +249,24 @@ s_bottom{
 }
 
 #md{
-
-  height: 50px;
-  width: 50px;
-  font-size: 12px;
-  background-color: #e83f6f;
-  color: white;
-  margin: 8px;
-  display: inline-grid;
-  border: none;
-  float: left;
-  position: relative;
-  transform: translate(0,10px);
-  top:-5px;
-
+  margin: auto;
+  width: 70px;
+  height: 70px;
+  font-size: 50px;
+  padding: 10px;
 }
 
+.mdBox{
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  vertical-align: middle;
+}
 
 #mdcPIANO{
   font-size: 40px;
   text-align: center;
   margin-top: 25px;
-}
-
-#time{
-
-  height: 50px;
-  width: 50px;
-  font-size: 12px;
-  background-color: #e83f6f;
-  color: white;
-  margin: 8px;
-  display: inline-grid;
-  border: none;
-  float: left;
-  position: relative;
-  transform: translate(0,10px);
-  top:-5px;
-
 }
 
 @keyframes change_color {

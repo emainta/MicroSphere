@@ -161,7 +161,6 @@ function acquireNote(note){
   }
 }
 
-
 //prende la nota più bassa dell'accordo e la fa diventare ROOT
 //LA rootOfCurrentChord HA VA DA 0 A 12
 function findLowestNote(){
@@ -217,17 +216,8 @@ function setTonality(scale,root){
   return newScale;
 }
 
-// trova il vero valore del grado di rootOfCurrentChord rispetto a rootOfCurrentChord, considerando che rootOfCurrentChord ha grado 1
-/*function findGradeRelativeToRoot(){
-  let tmp;
-  tmp = rootOfCurrentChord - rootOfCurrentChord;
-  if(rootOfCurrentChord<rootOfCurrentChord){
-     rootOfCurrentChord = tmp + 12;}
-  rootOfCurrentChord = Math.ceil(tmp/2) + 1 ;
-  console.log("rootOfCurrentChord effettivo rispetto alla ROOT : " + rootOfCurrentChord);
-}*/
 
-
+//trova il modo suonato dall'accordo sulla midi keyboard, trovato il modo fa partire il timer
 function compareScale(acquiredSetOfNotesScale){
 
   var found = false;
@@ -269,41 +259,57 @@ function compareScale(acquiredSetOfNotesScale){
          }//if cm notes
      }//found = false
    }//chiude il for
-  showTimer(); // mostra a video il timer e verifica i risultati dopo 20 sec
+   if(found){
+     showTimer(); // mostra a video il timer e verifica i risultati dopo 20 sec
+   }
+   else{
+     console.log("non ho trovato il modo dell'accordo");
+   }
 }
 
 function showTimer(){
-  var timeleft = 20;
+  var timeleft = 10;
   timer= setInterval(function(){
     document.getElementById("time").innerHTML = timeleft + " seconds remaining";
     timeleft -= 1;
   if(timeleft <= 0){
     twentySeconds();
     clearInterval(timer);
-    document.getElementById("countdown").innerHTML = "Finished"
+    document.getElementById("time").innerHTML = "Finished"
     }
-  }, 2000);
+  }, 1000);
 }
 
 function twentySeconds(){
-  var found = false;
+  var foundMode = false;
+
   switch (currentChord){
     case "MAJOR7th":
+      console.log("la variabile polso : " + pol )
       if(pol == 1 || pol == 2 ){
-        found == true; break;}
+        foundMode = true;
+        console.log("if trovato : "  + currentChord + "io sono found " + foundMode); }
+        break;
     case "MINOR7th":
       if(pol ==4 || pol == 5 || pol == 6){
-        found == true; break;}
+        foundMode = true; }
+        break;
     case "DOMINANT":
       if(pol == 3){
-       found == true;}
+       foundMode = true;}
+       break;
     case "MINORDIMINISHED":
       if ( pol == 7){
-        found == true; breack;}
+        foundMode = true;}
+        break;
     }
-    if(found){
+    if(foundMode==true){
+      console.log("trovato : "  + currentChord);
       document.getElementById("md").innerHTML = pol + " ° " + currentMode;
-      document.getElementById("mdcPIANO").innerHTML = mdcPIANO}
+      document.getElementById("mdcPIANO").innerHTML = "RIGHT"+ mdcPIANO}
+    else{
+      document.getElementById("mdcPIANO").innerHTML = "WRONG"
+    }
 }
 
 // MIDI ACCESS
@@ -360,7 +366,7 @@ var currentModFrequency;  // fa vibrare l'oscillatore, capire come si puo automa
 var currentOsc1Detune = 0;
 
 var filterCutOff = 800;
-var filterQ = 20;
+var filterQ = 15;
 var filterEnvelope= 56;
 
 var envAttack = 2;
@@ -496,7 +502,7 @@ function playNote(note, v){
 	this.modFilterGain = c.createGain();
   this.modOsc.connect( this.modFilterGain );
   this.modFilterGain.gain.value =filterGain*24; // mettere una variabile da regolare per il mix del filtro 2 da 100 a 300
-	this.modFilterGain.connect( this.filter.detune );	// filter vibrato
+	this.modFilterGain.connect( this.filter.detune );	// vibrato
 
 	// crepo l'envelope dell'attacco all'oscillatore
 	this.envelope = c.createGain();
@@ -516,7 +522,7 @@ function playNote(note, v){
 	var filterSustainLevel = filterAttackLevel* filterEnvSus / 100.0; // range: 0-7200
 	var filterAttackEnd = (filterEnvAtt/20.0);
 	if (!filterAttackEnd)
-				filterAttackEnd=0.05; // tweak to get target decay to work properly
+				filterAttackEnd=0.05;
 	this.filter.detune.setValueAtTime( 0, now );
 	this.filter.detune.linearRampToValueAtTime( filterAttackLevel, now+filterAttackEnd );
 	this.filter.detune.setTargetAtTime( filterSustainLevel, now+filterAttackEnd, (filterEnvD/100.0) );
@@ -529,12 +535,12 @@ function stopNote(note){
   var now =  c.currentTime;
 	var release = now + (envRelease/10.0);
   var initFilter = filterFrequencyFromCutoff( this.originalFrequency, filterCutOff/100 * (1.0-(filterEnvelope/100.0)) );
-  activeOscillators[note].envelope.gain.cancelScheduledValues(now);
-  activeOscillators[note].envelope.gain.setValueAtTime( activeOscillators[note].envelope.gain.value, now );
+  //activeOscillators[note].envelope.gain.cancelScheduledValues(now);
+  //activeOscillators[note].envelope.gain.setValueAtTime( activeOscillators[note].envelope.gain.value, now );
   activeOscillators[note].envelope.gain.setTargetAtTime(0.0, now, (envRelease/100));
-  activeOscillators[note].filter.detune.cancelScheduledValues(now);
+//  activeOscillators[note].filter.detune.cancelScheduledValues(now);
   activeOscillators[note].filter.detune.setTargetAtTime( 0, now, (filterEnvR/100.0) );
-  activeOscillators[note].filter.Q.cancelScheduledValues(now);
+//  activeOscillators[note].filter.Q.cancelScheduledValues(now);
   activeOscillators[note].filter.Q.setTargetAtTime( 0, now, (filterEnvR/100.0) );
   activeOscillators[note].oscillator1.stop(release);
 }

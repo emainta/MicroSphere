@@ -90,10 +90,10 @@ var radius =12 +4*pol;
 var idCan;
 
 var start = document.getElementById("aWrapper");
-//var reset = document.getElementById("potatoCanvas");
+var reset = document.getElementById("resetButton");
 
 start.onclick = startCanvas;
-//reset.onclick = resetCanvas;
+reset.onclick = resetCanvas;
 
 var xp=0;
 var yp=0;
