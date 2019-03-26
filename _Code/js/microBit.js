@@ -291,20 +291,42 @@ microBit.onBleNotify(function(){
   acY = microBit.getAccelerometer().y;
   acZ = microBit.getAccelerometer().z;
 
-  if( acZ<0 && acY<=1024 && acY>330 ){
-     pol = 1;
-     currentScale = new Set([0,0,0,0,0,0,0]);}
-
   //posizione 1 ho la scala più chiara
-  if( acZ<0 && acY<=330 && acY>=-360){
+  if( acZ<0 && acY<=1024 && acY>734 ){
+     pol = 1;
+     currentScale = scaleToPlay[6];
+     currentMode = mdc[6];}
+
+  if( acZ<0 && acY<=734 && acY>=444){
      pol = 2;
-     scaleToPlay!=null ?
-       currentScale = scaleToPlay: changed = false}
+     currentScale = scaleToPlay[5];
+     currentMode = mdc[5];}
 
-
-  if( acZ<0 && acY<-360 && acY>=-1024){
+  if( acZ<0 && acY<444 && acY>=154){
      pol = 3;
-    currentScale = new Set([0,0,0,0,0,0,0]);}
+     currentScale = scaleToPlay[4];
+     currentMode = mdc[4];}
+
+  if( acZ<0 && acY<154 && acY>=-136){
+      pol = 4;
+      currentScale = scaleToPlay[3];
+      currentMode = mdc[3];}
+
+  if( acZ<0 && acY<-136 && acY>=-426){
+      pol = 5;
+      currentScale = scaleToPlay[2];
+      currentMode = mdc[2];}
+
+  if( acZ<0 && acY<-426 && acY>=-716){
+      pol = 6;
+      currentScale = scaleToPlay[1];
+      currentMode = mdc[1];}
+
+  if( acZ<0 && acY<-716 && acY>=-1024){
+      pol = 7;
+      currentScale = scaleToPlay[0];
+      currentMode = mdc[0];}
+
 
 //c3 a E4
      if( acZ<0 && acX>=-1024 && acX<-931-SAF ){
@@ -403,16 +425,8 @@ microBit.onBleNotify(function(){
     van!=currentNote ? (noteOff(currentMidiNote), currentNote = van, playIfyouCan())
                      :changed = false;
 
-  //  changeFilterGain();
     valueRev= 50/1024*acY;
     changeValue(valueRev);
 
- if ( gradeOfOtherChords == 0) {
-      document.getElementById("md").innerHTML = currentMode;
-    }
-     // aggiungere la visualizzazione del grado }
-
-else {
-  document.getElementById("md").innerHTML = gradeOfOtherChords + " ° " + currentMode;
-}
+    document.getElementById("md").innerHTML = pol + " ° ";
 })

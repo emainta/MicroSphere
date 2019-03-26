@@ -6,21 +6,17 @@ var con; //contour melodico
 var currentNote;
 //Le tre scale che si possono suoanre
 var scaleToPlay;
-//grado dell'accordo suonato dopo il primo
-var gradeOfOtherChords = 0;
-// va a uno dopo che è stato preso il prima accordo
-var flagFirstChord = 0 ;
+//grado dell'accordo suonato
+var rootOfCurrentChord;
+//scala suonata da microbit
+var currentScale;
+//accordo suonato dal piano
+var currentChord;
 
 var acX = 0; //note
 var acY = 0; // polso
 var acZ = 0;
-var mdc = new Array(4).fill(0);
-var currentMode = 'WAIT';
-var currentGrade = 0;
-//valori che vengono modificati in automatico
-var envAttack;
-var filterEnvAtt;
-var envDecay;
-var filterEnvD;
-var envSustain;
-var filterEnvSus;
+
+var mdc; // i sette modi preimpostati
+var mdcPIANO;// modo suonato dal piano
+var currentMode ; //modo attualmente suoanto da microbit

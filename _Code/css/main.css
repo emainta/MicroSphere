@@ -35,6 +35,16 @@ app {
     margin-bottom: 5px;
     border: 1px solid #212842;
     display: flex;
+    text-align: center;
+}
+
+#serviceCanvas {
+    height: inherit;
+    width: inherit;
+    position: absolute;
+    z-index:3;
+    opacity: 1;
+    transition: 2s;
 }
 
 #backgroundCanvas {
@@ -60,6 +70,22 @@ app {
     opacity:0;
     /*position: fixed;*/
      position: absolute;
+}
+
+/* Bottom right text */
+.top-right {
+  font-size: 17px;
+  text-align: right;
+  position: relative;
+  top: 7px;
+  right: 60px;
+  font-variant: small-caps;
+}
+
+#myTimer{
+  color: #FAEBD7;
+  font-weight: bold;
+  z-index:4;
 }
 
 bottom { /*SCRITTA IN BASSO COI NOMI*/
@@ -222,8 +248,49 @@ s_bottom{
 }
 
 #md{
+
+  height: 50px;
+  width: 50px;
+  font-size: 12px;
+  background-color: #e83f6f;
+  color: white;
+  margin: 8px;
+  display: inline-grid;
+  border: none;
+  float: left;
+  position: relative;
+  transform: translate(0,10px);
+  top:-5px;
+
+}
+
+
+#mdcPIANO{
   font-size: 40px;
   text-align: center;
   margin-top: 25px;
+}
 
+#time{
+
+  height: 50px;
+  width: 50px;
+  font-size: 12px;
+  background-color: #e83f6f;
+  color: white;
+  margin: 8px;
+  display: inline-grid;
+  border: none;
+  float: left;
+  position: relative;
+  transform: translate(0,10px);
+  top:-5px;
+
+}
+
+@keyframes change_color {
+    0%   {background-color: white;}
+    25%  {background-color:#f5d6e6;}
+    50%  {background-color: #f0dbe6;}
+    100% {background-color: #e7e4e6;}
 }

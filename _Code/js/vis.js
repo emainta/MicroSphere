@@ -9,6 +9,9 @@ var ctxP = canvasPotato.getContext("2d");
 var canvasMel = document.getElementById("melcontour");
 var ctxM = canvasMel.getContext("2d");
 
+var canvasText = document.getElementById("serviceCanvas");
+var ctxT = canvasText.getContext("2d");
+
 var clearWp=0;
 var clearHp=0;
 
@@ -23,7 +26,7 @@ verticalStep: i-th step / n' step
 var iStep = van - 12; // da -12 a +12
 var nStep = 25;
 var verticalStep = - (iStep +1 ) / nStep;
-
+var p_r;
 //Trasparenza iniziale
 canvas.style.opacity = 0;
 canvas.style.transition = "opacity 2s";
@@ -62,6 +65,9 @@ function resizeCanvas() {
     canvas.width = width * pixelRatio;
     canvas.height = height * pixelRatio;
 
+    canvasText.width = width * pixelRatio;
+    canvasText.height = height * pixelRatio;
+
     canvasPotato.width = width * pixelRatio;
     canvasPotato.height = height * pixelRatio;
 
@@ -70,6 +76,8 @@ function resizeCanvas() {
 
     clearWp=canvasPotato.width;
     clearHp=canvasPotato.height;
+
+    p_r = pixelRatio;
 }
 
 resizeCanvas();
@@ -79,18 +87,25 @@ x0=Math.round(0.2*canvas.width) +0.5;
 y0=Math.round(0.5*canvas.height) +0.5;
 var radius =12 +4*pol;
 
-
-var start = document.getElementById("startButton");
-var reset = document.getElementById("resetButton");
-
 var idCan;
+
+var start = document.getElementById("aWrapper");
+//var reset = document.getElementById("potatoCanvas");
+
 start.onclick = startCanvas;
-reset.onclick = resetCanvas;
+//reset.onclick = resetCanvas;
 
 var xp=0;
 var yp=0;
 
-//---------------------------- BACKGROUND
+//----------------------------Initial text
+
+ctxT.font = (25*p_r).toString() +"px Helvetica";
+ctxT.fillStyle = "white";
+ctxT.textAlign = "center";
+ctxT.fillText("Click here to start the visualization", canvasText.width/2, canvasText.height/2);
+
+//----------------------------BACKGROUND
 var img = new Image();
 img.src = 'img/stars.png';
 
@@ -98,6 +113,7 @@ var CanvasW = canvas.width;
 var CanvasH = canvas.height;
 
 var speed = 10;
+
 /* A MALI ESTREMI ESTREMI, ESTREMI RIMEDI
 console.log(canvas.width, img.width, canvas.height,img.height)
 var scale = Math.min(canvas.width/img.width, canvas.height/img.height);
@@ -249,6 +265,7 @@ function dissolvenzaCanvas() {
     canvas.style.opacity = 1;
     canvasPotato.style.opacity = 1;
     canvasMel.style.opacity = 0.65;
+    canvasText.style.opacity = 0;
 }
 
 function resetCanvas(){
@@ -256,6 +273,7 @@ function resetCanvas(){
   canvas.style.opacity = 0;
   canvasPotato.style.opacity = 0;
   canvasMel.style.opacity = 0;
+  canvasText.style.opacity = 1;
 }
 
 CanvasRenderingContext2D.prototype.clear =
