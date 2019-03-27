@@ -12,6 +12,9 @@ var ctxM = canvasMel.getContext("2d");
 var canvasText = document.getElementById("serviceCanvas");
 var ctxT = canvasText.getContext("2d");
 
+var myTimer = document.querySelector(".top-right");
+//document.getElementById("time");
+
 var clearWp=0;
 var clearHp=0;
 
@@ -265,7 +268,8 @@ function dissolvenzaCanvas() {
     canvas.style.opacity = 1;
     canvasPotato.style.opacity = 1;
     canvasMel.style.opacity = 0.65;
-    canvasText.style.opacity = 0;
+    canvasText.style.opacity = 0; //Has to disappear
+    myTimer.style.opacity = 1;
 }
 
 function resetCanvas(){
@@ -273,7 +277,8 @@ function resetCanvas(){
   canvas.style.opacity = 0;
   canvasPotato.style.opacity = 0;
   canvasMel.style.opacity = 0;
-  canvasText.style.opacity = 1;
+  canvasText.style.opacity = 1; //Has to appear
+  myTimer.style.opacity = 0;
 }
 
 CanvasRenderingContext2D.prototype.clear =

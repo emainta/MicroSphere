@@ -80,6 +80,8 @@ app {
   top: 7px;
   right: 60px;
   font-variant: small-caps;
+  opacity: 0;
+  transition: 2s;
 }
 
 #time{
@@ -232,7 +234,7 @@ synthCtrl { /*dx*/
 s_top{
   padding: 3%;
   display: inline-flex;
-  width: 100%;
+  width: auto;
   height: 40%;
 }
 
@@ -244,7 +246,7 @@ s_bottom{
 }
 
 .smallfont{
-  font-size: 15px;
+  font-size: 12px;
   margin: 5px;
 }
 
