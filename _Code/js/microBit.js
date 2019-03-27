@@ -428,5 +428,7 @@ microBit.onBleNotify(function(){
     valueRev= 50/1024*acY;
     changeValue(valueRev);
 
+    document.getElementById("md").style.fontSize = "30px";
     document.getElementById("md").innerHTML = currentMode ;
+
 })

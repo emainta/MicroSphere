@@ -155,7 +155,7 @@ function acquireNote(note){
       if(timer!=null){clearTimeout(timer)}; //cancella il timeout prima di farlo ripartire
       compareScale(acquiredSetOfNotes);}//devo fare ritornare qualcosa a compare scale??
       else{
-        document.getElementById("md").innerHTML = "NOT VALID";
+        //document.getElementById("md").innerHTML = "NOT VALID";
         console.log("Non hai suonato un accordo valido! Suona un'accordo di settima! Puoi suonare un MAJOR7th, un MINOR7th, un DOMINANT o un MINOR DIMINISHED7th");}
     }
   }
@@ -270,7 +270,7 @@ function compareScale(acquiredSetOfNotesScale){
 function showTimer(){
   var timeleft = 10;
   timer= setInterval(function(){
-    document.getElementById("time").innerHTML = timeleft + " seconds remaining";
+    document.getElementById("time").innerHTML = timeleft;
     timeleft -= 1;
   if(timeleft <= 0){
     twentySeconds();
@@ -305,8 +305,8 @@ function twentySeconds(){
     }
     if(foundMode==true){
       console.log("trovato : "  + currentChord);
-      document.getElementById("md").innerHTML = pol + " ° " + currentMode;
-      document.getElementById("mdcPIANO").innerHTML = "RIGHT"+ mdcPIANO}
+      //document.getElementById("md").innerHTML = pol + " ° " + currentMode;
+      document.getElementById("mdcPIANO").innerHTML = "RIGHT: "+ mdcPIANO}
     else{
       document.getElementById("mdcPIANO").innerHTML = "WRONG"
     }
@@ -346,7 +346,7 @@ function resetTonRef(e) {
   document.querySelector('.root').innerHTML = "♫♫";
   rootOfCurrentChord=0;
   transalteAllScales();
-  currentMode = 'WAIT';
+  //currentMode = 'WAIT';
 }
 
 

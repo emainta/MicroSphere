@@ -88,7 +88,7 @@ resizeCanvas();
 //New Origin Point
 x0=Math.round(0.2*canvas.width) +0.5;
 y0=Math.round(0.5*canvas.height) +0.5;
-var radius =12 +4*pol;
+var radius = 17 + pol;
 
 var idCan;
 
@@ -198,7 +198,7 @@ function makeArr(startValue, stopValue, cardinality) {
 positions_x  = makeArr(xp, canvasMel.width , motionTrailLength);
 
 function drawPotato() {
-  radius = 12 + 4*pol;
+  radius = 17 + pol;
   iStep = van - 12; // da -12 a +12
   verticalStep = - (iStep +1 ) / nStep;
 
@@ -220,23 +220,15 @@ function drawPotato() {
     ctxM.beginPath();
     ctxM.arc(positions_x[i], positions_y[i], 0.2*positions_rad[i], 0 , 2 * Math.PI);
 
-    if(positions_col[i]==-1){
-      ctxM.fillStyle = "black";
-    }
-    else {
-      ctxM.fillStyle = 'hsl(' + myHue[positions_col[i]] + ',60%, 30%)'
-    }
+
+    ctxM.fillStyle = 'hsl(' + myHue[positions_col[i]] + ',90%, 20%)'
+
     ctxM.fill();
   }
 
-  storeLastPosition(yp,mdc[pol],radius);
-
-  if(pol==3){
-    ctxP.fillStyle = "white";
-  }
-  else {
-    ctxP.fillStyle = 'hsl(' + myHue[mdc[pol]] + ',100%, 50%)'
-  }
+  storeLastPosition(yp,pol-1,radius);
+  //console.log(pol);
+  ctxP.fillStyle = 'hsl(' + myHue[pol-1] + ',60%, 80%)' //mdc[pol-1]
 
   ctxP.fill();
 
