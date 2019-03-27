@@ -149,6 +149,7 @@ function acquireNote(note){
     currentAcquiredNotes.forEach(function(n){acquiredSetOfNotes.push(findNote(n))});// faccio il modulo
     if(acquiredSetOfNotes.length > 3){ // devono essere 4 note diverse, se preme c3 e c4 è come se avesse premuto una nota.
       findLowestNote();
+      document.querySelector('.root').innerHTML = rootChar[rootOfCurrentChord];
       transalteAllScales(rootOfCurrentChord);
       if(checkSeventhChord(acquiredSetOfNotes)){
         //trovato l'accordo procede
@@ -236,7 +237,7 @@ function compareScale(acquiredSetOfNotesScale){
             found = true;
             mdcPIANO[0] = "LYD";
             mdcPIANO[1] = "ION"
-            mdcPIANO[2] = "empty"}
+            mdcPIANO[2] = " "}
 
           else if(mode == 'DOR' || mode == 'AOL' ||  mode == 'PHR'){
             found = true;
@@ -247,14 +248,14 @@ function compareScale(acquiredSetOfNotesScale){
           else if (mode == 'MIX'){
             found = true;
             mdcPIANO[0] = mode;
-            mdcPIANO[1] = "empty"
-            mdcPIANO[2] = "empty"}
+            mdcPIANO[1] = " "
+            mdcPIANO[2] = " "}
 
           else if (mode == 'LOC'){
             found = true;
             mdcPIANO[0] = mode;
-            mdcPIANO[1] = "empty";
-            mdcPIANO[2] = "empty";}
+            mdcPIANO[1] = " ";
+            mdcPIANO[2] = " ";}
 
          }//if cm notes
      }//found = false
@@ -366,15 +367,15 @@ var currentModFrequency;  // fa vibrare l'oscillatore, capire come si puo automa
 var currentOsc1Detune = 0;
 
 var filterCutOff = 800;
-var filterQ = 15;
+var filterQ = 10;
 var filterEnvelope= 56;
 
-var envAttack = 2;
+var envAttack = 5;
 var envDecay = 15;
 var envSustain = 68;
 var envRelease= 5;
 
-var filterEnvAtt = 5;
+var filterEnvAtt = 10;
 var filterEnvD = 6;
 var filterEnvSus = 5;
 var filterEnvR = 7;
@@ -414,9 +415,10 @@ var filterPicker = document.querySelector("select[name='filterType']");
 
 
 //When playing a note
-function noteOn( note, velocity ) {
+function noteOn( note) {
 	if (activeOscillators[note] == null) {
-		 activeOscillators[note] = new playNote(note, velocity/127.0);}
+		 activeOscillators[note] = new playNote(note);}
+  //serve solo per visualizzare i tasti suonati sulla midi keyboard
   var key = note-36;
   if( key == 0 || key == 2 || key == 4 || key == 5 || key == 7 || key == 9 || key == 11 || key == 12 || key == 14 || key == 16 || key == 17 || key == 19 || key == 21 || key == 23|| key == 25){
   allKeys.item(key).classList.add("whiteActive");}
@@ -426,25 +428,19 @@ function noteOn( note, velocity ) {
 
 function noteOff( note ) {
 	if (activeOscillators[note] != null) {
-		// Shut off the note playing and clear it
+		//stoppa la nota e cancella la posizione sull'array
 		stopNote(note);
 		activeOscillators[note] = null;
+    //serve solo per visualizzare i tasti suonati sulla midi keyboard
    var key = note-36;
    if( key == 0 || key == 2 || key == 4 || key == 5 || key == 7 || key == 9 || key == 11 || key == 12 || key == 14 || key == 16 || key == 17 || key == 19 || key == 21 || key == 23|| key == 25){
     allKeys.item(key).classList.remove("whiteActive")}
     else{ allKeys.item(key).classList.remove("blackActive")}}
 }
 
-function filterFrequencyFromCutoff( pitch, cutoff ) {
-    var nyquist = 0.5 * c.sampleRate;
-    var filterFrequency = Math.pow(2, (9 * cutoff) - 1) * pitch;
-    if (filterFrequency > nyquist)
-        filterFrequency = nyquist;
-	return filterFrequency;
-}
 
 //change MIDI in frequency
-function frequencyFromNoteNumber( note ) {
+function frequencyFromMIDI( note ) {
 	return 440 * Math.pow(2,(note-69)/12);
 }
 
@@ -468,7 +464,7 @@ function playNote(note, v){
 
    //creo un primo oscillatore e gli do parametri freq e gain iniziale
    this.oscillator1 = c.createOscillator();
-   this.oscillator1.frequency.value = frequencyFromNoteNumber( note );
+   this.oscillator1.frequency.value = frequencyFromMIDI( note );
 
   //tipo di wave
   let type = chooseOscillatorType();
@@ -484,7 +480,7 @@ function playNote(note, v){
   // creo un secondo oscillatore, in funzione di modulatore, a cui do una frequenza iniziale
 	this.modOsc = c.createOscillator();
 	this.modOsc.type = chooseModType();
-  currentModFrequency = this.oscillator1.frequency.value - this.oscillator1.frequency.value*40 / 60;
+  currentModFrequency = this.oscillator1.frequency.value - this.oscillator1.frequency.value*41 / 60;
 	this.modOsc.frequency.value = currentModFrequency ;
   //collego il modulatore a un gain e collego il modulatore al primo oscillatore così che varia il suo gain in base alla frequenza
 	this.modOsc1Gain = c.createGain();
@@ -521,8 +517,7 @@ function playNote(note, v){
 	var filterAttackLevel = filterEnvelope*72;  // Range: 0-7200: 6-octave range
 	var filterSustainLevel = filterAttackLevel* filterEnvSus / 100.0; // range: 0-7200
 	var filterAttackEnd = (filterEnvAtt/20.0);
-	if (!filterAttackEnd)
-				filterAttackEnd=0.05;
+
 	this.filter.detune.setValueAtTime( 0, now );
 	this.filter.detune.linearRampToValueAtTime( filterAttackLevel, now+filterAttackEnd );
 	this.filter.detune.setTargetAtTime( filterSustainLevel, now+filterAttackEnd, (filterEnvD/100.0) );
@@ -534,7 +529,6 @@ function playNote(note, v){
 function stopNote(note){
   var now =  c.currentTime;
 	var release = now + (envRelease/10.0);
-  var initFilter = filterFrequencyFromCutoff( this.originalFrequency, filterCutOff/100 * (1.0-(filterEnvelope/100.0)) );
   //activeOscillators[note].envelope.gain.cancelScheduledValues(now);
   //activeOscillators[note].envelope.gain.setValueAtTime( activeOscillators[note].envelope.gain.value, now );
   activeOscillators[note].envelope.gain.setTargetAtTime(0.0, now, (envRelease/100));

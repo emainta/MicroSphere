@@ -171,7 +171,8 @@ left{  /*sx*/
     height: 10px;
     border-radius: 50%;
     border: 2px solid white;
-    margin: auto;
+    margin-top: 20px;
+    margin-left: 35px;
     position: relative;
     transform: translate(0,-100%);
 
