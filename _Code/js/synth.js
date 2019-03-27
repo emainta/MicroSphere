@@ -370,13 +370,13 @@ var filterCutOff = 800;
 var filterQ = 10;
 var filterEnvelope= 56;
 
-var envAttack = 5;
+var envAttack = 6;
 var envDecay = 15;
-var envSustain = 68;
+var envSustain = 50;
 var envRelease= 5;
 
-var filterEnvAtt = 10;
-var filterEnvD = 6;
+var filterEnvAtt =7;
+var filterEnvD = 7;
 var filterEnvSus = 5;
 var filterEnvR = 7;
 
@@ -517,7 +517,8 @@ function playNote(note, v){
 	var filterAttackLevel = filterEnvelope*72;  // Range: 0-7200: 6-octave range
 	var filterSustainLevel = filterAttackLevel* filterEnvSus / 100.0; // range: 0-7200
 	var filterAttackEnd = (filterEnvAtt/20.0);
-
+  if (!filterAttackEnd)
+        filterAttackEnd=0.05;
 	this.filter.detune.setValueAtTime( 0, now );
 	this.filter.detune.linearRampToValueAtTime( filterAttackLevel, now+filterAttackEnd );
 	this.filter.detune.setTargetAtTime( filterSustainLevel, now+filterAttackEnd, (filterEnvD/100.0) );
@@ -529,12 +530,12 @@ function playNote(note, v){
 function stopNote(note){
   var now =  c.currentTime;
 	var release = now + (envRelease/10.0);
-  //activeOscillators[note].envelope.gain.cancelScheduledValues(now);
-  //activeOscillators[note].envelope.gain.setValueAtTime( activeOscillators[note].envelope.gain.value, now );
+  activeOscillators[note].envelope.gain.cancelScheduledValues(now);
+  activeOscillators[note].envelope.gain.setValueAtTime( activeOscillators[note].envelope.gain.value, now );
   activeOscillators[note].envelope.gain.setTargetAtTime(0.0, now, (envRelease/100));
-//  activeOscillators[note].filter.detune.cancelScheduledValues(now);
+  activeOscillators[note].filter.detune.cancelScheduledValues(now);
   activeOscillators[note].filter.detune.setTargetAtTime( 0, now, (filterEnvR/100.0) );
-//  activeOscillators[note].filter.Q.cancelScheduledValues(now);
+  activeOscillators[note].filter.Q.cancelScheduledValues(now);
   activeOscillators[note].filter.Q.setTargetAtTime( 0, now, (filterEnvR/100.0) );
   activeOscillators[note].oscillator1.stop(release);
 }
