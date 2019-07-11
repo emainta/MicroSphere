@@ -272,6 +272,25 @@ s_bottom{
   margin-top: 25px;
 }
 
+.presets{
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.preset_btn{
+  height: 30px;
+  width: 30px;
+  font-size: 12px;
+  display: inline-grid;
+  border: none;
+  float: left;
+  position: relative;
+  transform: translate(0,12px);
+  top:-5px;
+}
+
 @keyframes change_color {
     0%   {background-color: white;}
     25%  {background-color:#f5d6e6;}

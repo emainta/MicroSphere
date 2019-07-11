@@ -334,7 +334,7 @@ microBit.onBleNotify(function(){
      currentMode = mdc[1];}
 
   if( acZ<0 && acY<-360 && acY>=-1024){
-     pol = 3;
+     pol = 1;
      currentScale = scaleToPlay[0];
      currentMode = mdc[0];}
 
