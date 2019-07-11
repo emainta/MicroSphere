@@ -13,6 +13,13 @@ var currentScale;
 //accordo suonato dal piano
 var currentChord;
 
+//modifica seconodo oscillatore
+var num = 41;
+var den = 60;
+
+//Numero Preset
+var numPreset = 1;
+
 var acX = 0; //note
 var acY = 0; // polso
 var acZ = 0;

@@ -12,13 +12,14 @@ var ctxM = canvasMel.getContext("2d");
 var canvasText = document.getElementById("serviceCanvas");
 var ctxT = canvasText.getContext("2d");
 
-var myTimer = document.querySelector(".top-right");
-//document.getElementById("time");
+
 
 var clearWp=0;
 var clearHp=0;
 
-var myHue = [0, 15, 45, 135, 180, 240, 330];
+var myHue = [0, 15, 45, 135, 180, 240, 300, 330];
+
+var hueCtrl = numPreset + pol -1;
 
 /*var rnd = Math.round( Math.random() *255 );
 /*Math.random() * (max - min) + min; */
@@ -96,9 +97,11 @@ var radius = 17 + pol;
 var idCan;
 
 var start = document.getElementById("aWrapper");
+var start2 = document.getElementById("startButton");
 var reset = document.getElementById("resetButton");
 
 start.onclick = startCanvas;
+start2.onclick = startCanvas;
 reset.onclick = resetCanvas;
 
 var xp=0;
@@ -148,6 +151,8 @@ function startCanvas() {
     //DISEGNA CERCHIO
     drawPotato();
 
+    start = 0;
+    start2 = 0;
     dissolvenzaCanvas();
     return idCan = setInterval(draw, speed);
 }
@@ -229,9 +234,10 @@ function drawPotato() {
     ctxM.fill();
   }
 
-  storeLastPosition(yp,pol-1,radius);
+  storeLastPosition(yp,hueCtrl,radius);
   //console.log(pol);
-  ctxP.fillStyle = 'hsl(' + myHue[pol-1] + ',60%, 80%)' //mdc[pol-1]
+  hueCtrl = numPreset + pol -1;
+  ctxP.fillStyle = 'hsl(' + myHue[hueCtrl] + ',60%, 80%)' //mdc[pol-1]
 
   ctxP.fill();
 
@@ -273,7 +279,10 @@ function resetCanvas(){
   canvasPotato.style.opacity = 0;
   canvasMel.style.opacity = 0;
   canvasText.style.opacity = 1; //Has to appear
-  myTimer.style.opacity = 0;
+
+  start = document.getElementById("aWrapper");
+  start2 = document.getElementById("startButton");
+
 }
 
 CanvasRenderingContext2D.prototype.clear =

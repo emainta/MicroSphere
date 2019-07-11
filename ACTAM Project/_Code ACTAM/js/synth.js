@@ -334,7 +334,7 @@ function onMIDISuccess(midiAccess) {
     }
 
 
-    
+
 //<<<<<<<<<<< FINE CODICE CONRTOLLER >>>>>>>>>>>>>
 
 
@@ -464,7 +464,7 @@ function playNote(note, v){
   // creo un secondo oscillatore, in funzione di modulatore, a cui do una frequenza iniziale
 	this.modOsc = c.createOscillator();
 	this.modOsc.type = chooseModType();
-  currentModFrequency = this.oscillator1.frequency.value - this.oscillator1.frequency.value*41 / 60;
+  currentModFrequency = this.oscillator1.frequency.value - this.oscillator1.frequency.value*num / den;
 	this.modOsc.frequency.value = currentModFrequency ;
   //collego il modulatore a un gain e collego il modulatore al primo oscillatore così che varia il suo gain in base alla frequenza
 	this.modOsc1Gain = c.createGain();

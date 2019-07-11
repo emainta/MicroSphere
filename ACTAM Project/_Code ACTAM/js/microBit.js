@@ -284,6 +284,77 @@ function searchDevice(){
   microBit.searchDevice();
 };
 
+
+//Gestione preserveTransform
+
+document.getElementById('preset1').onclick = sceltaPreset(1);
+document.getElementById('preset2').onclick = sceltaPreset(2);
+document.getElementById('preset3').onclick = sceltaPreset(3);
+document.getElementById('preset4').onclick = sceltaPreset(4);
+
+function sceltaPreset(aaa){
+  return function(){
+    numPreset = aaa;
+  }
+}
+
+function callPreset(polso, nPr) {
+  switch (nPr) {
+    case 1: //Preset1
+      switch (polso) {
+        case 1:
+          longPreset();
+          break;
+          case 3:
+          pluckedPreset();
+            break;
+        default:
+
+      }
+      break;
+
+      case 2: //Preset2
+        switch (polso) {
+          case 1:
+            acidPreset();
+            break;
+          case 3:
+            reset();
+            break;
+
+        }
+        break;
+
+        case 3: //Preset3
+          switch (polso) {
+            case 1:
+              longPreset();
+              break;
+              case 3:
+                ambientPreset();
+                break;
+            default:
+
+          }
+          break;
+
+          case 4: //Preset4
+            switch (polso) {
+              case 1:
+                aggressivePreset();
+                break;
+                case 3:
+                pluckedPreset();
+                  break;
+              default:
+
+            }
+            break;
+    default:
+
+  }
+}
+// PRESET
 function longPreset(){
   envAttack = 5;
   envDecay = 10;
@@ -291,6 +362,26 @@ function longPreset(){
   envRelease= 10;
   filterQ = 10;
   filterCutOff = 800;
+}
+
+function aggressivePreset(){
+  envAttack = 0;
+  envDecay = 6;
+  envSustain = 15;
+  envRelease = 6;
+  filterQ = 15;
+  filterCutOff = 760;
+}
+
+function ambientPreset(){
+  envAttack = 5;
+  envDecay = 10;
+  envSustain = 30;
+  envRelease= 10;
+  filterQ = 10;
+  filterCutOff = 800;
+  num = 21;
+  den= 100;
 }
 
 
@@ -303,13 +394,14 @@ function pluckedPreset(){
   filterQ = 12;
 }
 
-function technoPreset(){
-  envAttack = 1;
+function acidPreset(){
+  envAttack = 2;
   envDecay = 2;
   filterCutOff = 700;
   envSustain =0;
   envRelease= 0;
   filterQ = 30;
+
 }
 
 function reset(){
@@ -330,21 +422,21 @@ microBit.onBleNotify(function(){
 
 
   //posizione 1 ho la scala più chiara
-  if( acZ<0 && acY<=1024 && acY>330 ){
+  if( acZ<0 && acY<=1024 && acY>230 ){
      pol = 3;
      currentScale = scaleToPlay[2];
-     longPreset();
+     callPreset(pol, numPreset);
      currentMode = mdc[2];}
 
-  if( acZ<0 && acY<=330 && acY>=-360){
+  if( acZ<0 && acY<=230 && acY>=-360){
      pol = 2;
-     pluckedPreset();
-     currentScale = scaleToPlay[1];
-     currentMode = mdc[1];}
+     //callPreset(1,numPreset);
+     currentScale = scaleToPlay[3];
+     currentMode = mdc[3];}
 
   if( acZ<0 && acY<-360 && acY>=-1024){
      pol = 1;
-     technoPreset();
+     callPreset(pol, numPreset);
      currentScale = scaleToPlay[0];
      currentMode = mdc[0];}
 
