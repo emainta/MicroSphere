@@ -284,6 +284,33 @@ function searchDevice(){
   microBit.searchDevice();
 };
 
+function longPreset(){
+  envAttack = 5;
+  envDecay = 10;
+  envSustain = 30;
+  envRelease= 10;
+  filterQ = 10;
+  filterCutOff = 800;
+}
+
+
+function pluckedPreset(){
+  envAttack = 1;
+  envDecay = 2;
+  filterCutOff = 700;
+  envSustain =0;
+  envRelease= 0;
+  filterQ = 12;
+}
+
+function reset(){
+  filterCutOff = 800;
+  envAttack = 6;
+  envDecay = 15;
+  envSustain = 50;
+  envRelease= 5;
+  filterQ = 10;
+}
 
 microBit.onBleNotify(function(){
 
@@ -291,41 +318,25 @@ microBit.onBleNotify(function(){
   acY = microBit.getAccelerometer().y;
   acZ = microBit.getAccelerometer().z;
 
+
+
   //posizione 1 ho la scala più chiara
-  if( acZ<0 && acY<=1024 && acY>734 ){
-     pol = 7;
-     currentScale = scaleToPlay[6];
-     currentMode = mdc[6];}
+  if( acZ<0 && acY<=1024 && acY>330 ){
+     pol = 3;
+     currentScale = scaleToPlay[2];
+     longPreset();
+     currentMode = mdc[2];}
 
-  if( acZ<0 && acY<=734 && acY>=444){
-     pol = 6;
-     currentScale = scaleToPlay[5];
-     currentMode = mdc[5];}
+  if( acZ<0 && acY<=330 && acY>=-360){
+     pol = 2;
+     pluckedPreset();
+     currentScale = scaleToPlay[1];
+     currentMode = mdc[1];}
 
-  if( acZ<0 && acY<444 && acY>=154){
-     pol = 5;
-     currentScale = scaleToPlay[4];
-     currentMode = mdc[4];}
-
-  if( acZ<0 && acY<154 && acY>=-136){
-      pol = 4;
-      currentScale = scaleToPlay[3];
-      currentMode = mdc[3];}
-
-  if( acZ<0 && acY<-136 && acY>=-426){
-      pol = 3;
-      currentScale = scaleToPlay[2];
-      currentMode = mdc[2];}
-
-  if( acZ<0 && acY<-426 && acY>=-716){
-      pol = 2;
-      currentScale = scaleToPlay[1];
-      currentMode = mdc[1];}
-
-  if( acZ<0 && acY<-716 && acY>=-1024){
-      pol = 1;
-      currentScale = scaleToPlay[0];
-      currentMode = mdc[0];}
+  if( acZ<0 && acY<-360 && acY>=-1024){
+     pol = 3;
+     currentScale = scaleToPlay[0];
+     currentMode = mdc[0];}
 
 
 //c3 a E4

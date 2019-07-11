@@ -1,8 +1,8 @@
 //<<<<<<<<<<<< INIZIO CODICE CONTROLLER >>>>>>>>>>>>>>>>
 //variabili
 
-//le scale che vengono valutate per esserre proposte
-var MAJORMODESCALE;
+//le SCALES che vengono valutate per esserre proposte
+var SCALES;
 //variabili per acquisire e memorizzare gli accordi
 var currentAcquiredNotes;
 //Valore attualmente suonata in valore midi
@@ -16,12 +16,11 @@ var CHORDS;
 //Inializza tutti i valori
 function initialValues(){
 
-  MAJORMODESCALE = new Map();
-  MODEINORDER = new Map();
+  SCALES = new Map();
   CHORDS = new Map();
   currentAcquiredNotes = new Set();
 
-  //scale dei modi maggiori
+  //SCALES dei modi maggiori
   var lyd = new Set([ 0, 2, 4, 6, 7, 9, 11 ]);
   var ion = new Set([ 0, 2, 4, 5, 7, 9, 11 ]);
   var mix = new Set([ 0, 2, 4, 5, 7, 9, 10 ]);
@@ -29,23 +28,18 @@ function initialValues(){
   var aol = new Set([ 0, 2, 3, 5, 7, 8, 10 ]);
   var phr = new Set([ 0, 1, 3, 5, 7, 8, 10 ]);
   var loc = new Set([ 0, 1, 3, 5, 6, 8, 10 ]);
+  var pentaMinor = new Set([0,4,6,8,10]);
+  var pentaMajor = new Set([0,2,4,7,9]);
 
-  MAJORMODESCALE.set('LYD',lyd);
-  MAJORMODESCALE.set('ION',ion);
-  MAJORMODESCALE.set('MIX',mix);
-  MAJORMODESCALE.set('DOR',dor);
-  MAJORMODESCALE.set('AOL',aol);
-  MAJORMODESCALE.set('PHR',phr);
-  MAJORMODESCALE.set('LOC',loc);
-
-// non è più l'ordine  di MODEINORDER ma dei modi maggiori sulla scala.
-  MODEINORDER.set(3,'LYD');
-  MODEINORDER.set(0,'ION');
-  MODEINORDER.set(4,'MIX');
-  MODEINORDER.set(1,'DOR');
-  MODEINORDER.set(5,'AOL');
-  MODEINORDER.set(2,'PHR');
-  MODEINORDER.set(6,'LOC');
+  SCALES.set('LYD',lyd);
+  SCALES.set('ION',ion);
+  SCALES.set('MIX',mix);
+  SCALES.set('DOR',dor);
+  SCALES.set('AOL',aol);
+  SCALES.set('PHR',phr);
+  SCALES.set('LOC',loc);
+  SCALES.set('pMaj',pentaMajor);
+  SCALES.set('pMin',pentaMinor);
 
   //maschere accordi
   major7th= new Set([ 0, 4, 7, 11]); // major7th
@@ -64,7 +58,7 @@ function initialValues(){
   currentChord = "Suona";
   scaleToPlay = new Array(6).fill(lyd,ion,mix,dor,aol,phr,loc);
   currentScale = new Set();
-  transalteAllScales();
+  transalteAllSCALES();
   currentNote = 0; //nessuna nota suonata ancora
   currentMode = 'WAIT';
   currentGrade = 0;
@@ -74,15 +68,15 @@ initialValues();
 
 
 //questa funzione viene  chiamata da microbit quando si deve suonare una nota!
-//se currentNote appartiene a currentScale ritorna true
-function noteIsOnScale(){
+//se currentNote appartiene a currentSCALES ritorna true
+function noteIsOnSCALES(){
   if(currentScale.has(findNote(currentNote))){
     return true;}
-  }
+}
 
-//suona la nota se noteIsOnScale
+//suona la nota se noteIsOnSCALES
 function playIfyouCan(){
-  if(noteIsOnScale()){
+  if(noteIsOnSCALES()){
     currentMidiNote = rootOfCurrentChord+ currentNote + 36;//midi
     noteOn(currentMidiNote)}
 }
@@ -97,20 +91,20 @@ function turnOnLed(){
 
 
 //controlla se il pianista sta suonando un accordo ammissibile dall'applicazione
-function checkSeventhChord(acquiredSetOfNotesScale){
-  var newScale = new Array();
+function checkSeventhChord(acquiredSetOfNotesSCALES){
+  var newSCALES = new Array();
 
-  for(let i of acquiredSetOfNotesScale){
+  for(let i of acquiredSetOfNotesSCALES){
       i = i - rootOfCurrentChord ; //dovrebbe traslare le note dell'accordo facendole partire tutte da zero.
       if(i<0) i = i+12;
       if (i>=12) i = i-12;
-      newScale.push(i);
+      newSCALES.push(i);
   }
   //verifica che esiste almeno una maschera uguale all'accordo ricevuto da midi
   var found = false;
   for (const [c, chord] of CHORDS){
     if(!found){
-      var comNotes = new Set(newScale.filter(x => chord.has(x)));
+      var comNotes = new Set(newSCALES.filter(x => chord.has(x)));
       if(comNotes.size==4){ // se voglio che funzioni con accordi estesi devo mettere maggiore di 3
         for( let i of comNotes ){
           currentChord = c;
@@ -123,21 +117,21 @@ function checkSeventhChord(acquiredSetOfNotesScale){
 }
 
 //sono messi in ordine di brightness
-function transalteAllScales(){
-  scaleToPlay[0] = setTonality(MAJORMODESCALE.get("LYD"), rootOfCurrentChord);
-  scaleToPlay[1] = setTonality(MAJORMODESCALE.get("ION"), rootOfCurrentChord);
-  scaleToPlay[2] = setTonality(MAJORMODESCALE.get("MIX"), rootOfCurrentChord);
-  scaleToPlay[3] = setTonality(MAJORMODESCALE.get("DOR"), rootOfCurrentChord);
-  scaleToPlay[4] = setTonality(MAJORMODESCALE.get("AOL"), rootOfCurrentChord);
-  scaleToPlay[5] = setTonality(MAJORMODESCALE.get("PHR"), rootOfCurrentChord);
-  scaleToPlay[6] = setTonality(MAJORMODESCALE.get("LOC"), rootOfCurrentChord);
-  mdc[0]= "LYD";
-  mdc[1]= "ION";
-  mdc[2]= "MIX";
-  mdc[3]= "DOR";
+function transalteAllSCALES(){
+  scaleToPlay[0] = setTonality(SCALES.get("DOR"), rootOfCurrentChord);
+  scaleToPlay[1] = setTonality(SCALES.get("pMaj"), rootOfCurrentChord);
+  scaleToPlay[2] = setTonality(SCALES.get("pMin") , rootOfCurrentChord);
+  /*SCALESToPlay[3] = setTonality(SCALES.get("DOR"), rootOfCurrentChord);
+  SCALESToPlay[4] = setTonality(SCALES.get("AOL"), rootOfCurrentChord);
+  SCALESToPlay[5] = setTonality(SCALES.get("PHR"), rootOfCurrentChord);
+  SCALESToPlay[6] = setTonality(SCALES.get("LOC"), rootOfCurrentChord);*/
+  mdc[0]= "DOR";
+  mdc[1]= "PMAJ";
+  mdc[2]= "PMIN";
+/*  mdc[3]= "DOR";
   mdc[4]= "AOL";
   mdc[5]= "PHR";
-  mdc[6]= "LOC";
+  mdc[6]= "LOC";*/
 }
 
 
@@ -150,11 +144,11 @@ function acquireNote(note){
     if(acquiredSetOfNotes.length > 3){ // devono essere 4 note diverse, se preme c3 e c4 è come se avesse premuto una nota.
       findLowestNote();
       document.querySelector('.root').innerHTML = rootChar[rootOfCurrentChord];
-      transalteAllScales(rootOfCurrentChord);
+      transalteAllSCALES(rootOfCurrentChord);
       if(checkSeventhChord(acquiredSetOfNotes)){
         //trovato l'accordo procede
       if(timer!=null){clearTimeout(timer)}; //cancella il timeout prima di farlo ripartire
-      compareScale(acquiredSetOfNotes);}//devo fare ritornare qualcosa a compare scale??
+      compareSCALES(acquiredSetOfNotes);}//devo fare ritornare qualcosa a compare SCALES??
       else{
         //document.getElementById("md").innerHTML = "NOT VALID";
         console.log("Non hai suonato un accordo valido! Suona un'accordo di settima! Puoi suonare un MAJOR7th, un MINOR7th, un DOMINANT o un MINOR DIMINISHED7th");}
@@ -205,32 +199,32 @@ function findNote(note){
   return module12Note;
 }
 
-//trasla tutte le note di scale partendo da root
-function setTonality(scale,root){
-    var newScale = new Set();
-    for(let i of scale){
+//trasla tutte le note di SCALES partendo da root
+function setTonality(SCALES,root){
+    var newSCALES = new Set();
+    for(let i of SCALES){
           i = i + root;
           if(i<0){newNote = i+12;}
           if (i>=12) {i= i-12}
-          newScale.add(i);
+          newSCALES.add(i);
           }
-  return newScale;
+  return newSCALES;
 }
 
 
 //trova il modo suonato dall'accordo sulla midi keyboard, trovato il modo fa partire il timer
-function compareScale(acquiredSetOfNotesScale){
+function compareSCALES(acquiredSetOfNotesSCALES){
 
   var found = false;
-  var setScale;
+  var setSCALES;
 //  findGradeRelativeToRoot();
 
-  for (const [mode, scale] of MAJORMODESCALE){
+  for (const [mode, SCALES] of SCALES){
 
-    setScale= setTonality(scale, rootOfCurrentChord);
+    setSCALES= setTonality(SCALES, rootOfCurrentChord);
 
     if(found == false){
-      var comNotes = new Set(acquiredSetOfNotesScale.filter(x => setScale .has(x)));
+      var comNotes = new Set(acquiredSetOfNotesSCALES.filter(x => setSCALES .has(x)));
       //la scala più chiara sta sulla poszione 1, su 0 la più scura
       if(comNotes.size>3){
           if (mode == 'ION' || mode == 'LYD'){
@@ -346,7 +340,7 @@ document.getElementById('tonalRef').onclick = resetTonRef;
 function resetTonRef(e) {
   document.querySelector('.root').innerHTML = "♫♫";
   rootOfCurrentChord=0;
-  transalteAllScales();
+  transalteAllSCALES();
   //currentMode = 'WAIT';
 }
 
