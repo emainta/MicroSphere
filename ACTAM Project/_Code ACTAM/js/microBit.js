@@ -297,10 +297,19 @@ function longPreset(){
 function pluckedPreset(){
   envAttack = 1;
   envDecay = 2;
-  filterCutOff = 700;
+  filterCutOff = 600;
   envSustain =0;
   envRelease= 0;
   filterQ = 12;
+}
+
+function technoPreset(){
+  envAttack = 1;
+  envDecay = 2;
+  filterCutOff = 700;
+  envSustain =0;
+  envRelease= 0;
+  filterQ = 30;
 }
 
 function reset(){
@@ -335,6 +344,7 @@ microBit.onBleNotify(function(){
 
   if( acZ<0 && acY<-360 && acY>=-1024){
      pol = 1;
+     technoPreset();
      currentScale = scaleToPlay[0];
      currentMode = mdc[0];}
 
