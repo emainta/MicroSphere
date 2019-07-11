@@ -21,7 +21,10 @@ var clearHp=0;
 var myHue = [0, 15, 45, 135, 180, 240, 330];
 
 /*var rnd = Math.round( Math.random() *255 );
-/*Math.random() * (max - min) + min;
+/*Math.random() * (max - min) + min; */
+
+
+document.body.style.zoom = 0.9;
 
 /*DATI DA Jacopo
 verticalStep: i-th step / n' step
@@ -261,7 +264,7 @@ function dissolvenzaCanvas() {
     canvasPotato.style.opacity = 1;
     canvasMel.style.opacity = 0.65;
     canvasText.style.opacity = 0; //Has to disappear
-    myTimer.style.opacity = 1;
+
 }
 
 function resetCanvas(){

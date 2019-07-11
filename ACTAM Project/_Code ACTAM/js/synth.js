@@ -334,16 +334,6 @@ function onMIDISuccess(midiAccess) {
     }
 
 
-//Funzione per il reset della rootOfCurrentChord
-document.getElementById('tonalRef').onclick = resetTonRef;
-
-function resetTonRef(e) {
-  document.querySelector('.root').innerHTML = "♫♫";
-  rootOfCurrentChord=0;
-  transalteAllSCALES();
-  //currentMode = 'WAIT';
-}
-
 
 //<<<<<<<<<<< FINE CODICE CONRTOLLER >>>>>>>>>>>>>
 
