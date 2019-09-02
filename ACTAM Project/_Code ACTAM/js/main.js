@@ -14,8 +14,7 @@ var currentScale;
 var currentChord;
 
 //modifica seconodo oscillatore
-var num = 41;
-var den = 60;
+var rapporto = 41/60;
 
 //Numero Preset
 var numPreset = 1;

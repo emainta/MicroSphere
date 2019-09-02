@@ -354,6 +354,33 @@ function callPreset(polso, nPr) {
 
   }
 }
+
+
+function setHTML(){
+
+    var newEnvAttack = document.querySelector.getElementsById("filterEnvA");
+    setAttribute(newEnvAttack,envAttack);
+
+    var newenvDecay = document.querySelector.getElementsById("filterEnvD");
+    setAttribute(newEnvDecay,envDecay);
+
+    var newEnvSustain = document.querySelector.getElementsById("filterEnvS");
+    setAttribute(newEnvSustain,envSustain);
+
+    var newEnvRelease = document.querySelector.getElementsById("filterEnvR");
+    setAttribute(newEnvRelease,envRelease);
+
+    var newfilterQ = document.querySelector.getElementsById("qFactor");
+    setAttribute(newfilterQ,filterQ);
+
+    var newfilterCutOff = document.querySelector.getElementsById("cutOffFilter");
+    setAttribute(newfilterCutOff,filterCutOff);
+
+    var newRapporto = document.querySelector.getElementsById("modRapporto");
+    setAttribute(newRapporto,rapporto);
+}
+
+
 // PRESET
 function longPreset(){
   envAttack = 5;
@@ -380,8 +407,7 @@ function ambientPreset(){
   envRelease= 10;
   filterQ = 10;
   filterCutOff = 800;
-  num = 21;
-  den= 100;
+  rapporto= 21/100;
 }
 
 
@@ -426,6 +452,7 @@ microBit.onBleNotify(function(){
      pol = 3;
      currentScale = scaleToPlay[2];
      callPreset(pol, numPreset);
+     setHTML();
      currentMode = mdc[2];}
 
   if( acZ<0 && acY<=230 && acY>=-360){
@@ -437,6 +464,7 @@ microBit.onBleNotify(function(){
   if( acZ<0 && acY<-360 && acY>=-1024){
      pol = 1;
      callPreset(pol, numPreset);
+     setHTML();
      currentScale = scaleToPlay[0];
      currentMode = mdc[0];}
 
@@ -538,8 +566,6 @@ microBit.onBleNotify(function(){
     van!=currentNote ? (noteOff(currentMidiNote), currentNote = van, playIfyouCan())
                      :changed = false;
 
-    valueRev= 50/1024*acY;
-    changeValue(valueRev);
 
     document.getElementById("md").style.fontSize = "30px";
     document.getElementById("md").innerHTML = currentMode ;
