@@ -8,6 +8,8 @@ var currentAcquiredNotes;
 //Valore attualmente suonata in valore midi
 var currentMidiNote;
 
+var timer;
+
 var rootChar = ['C', ' C#', 'D', 'D#' , 'E' , 'F' , 'F#' , 'G' , 'G#' , 'A' , 'A#' , 'B'];
 
 var CHORDS;
@@ -79,6 +81,102 @@ function playIfyouCan(){
     noteOn(currentMidiNote)}
 }
 
+//accende il led
+function turnOnLed(){
+  var myVar;
+  function ghandi(){document.querySelector("#led").classList.remove("led_on")};
+  myVar = setTimeout(ghandi, 900);
+  document.querySelector("#led").classList.add("led_on");
+}
+
+
+//controlla se il pianista sta suonando un accordo ammissibile dall'applicazione
+function checkSeventhChord(acquiredSetOfNotesSCALES){
+  var newSCALES = new Array();
+
+  for(let i of acquiredSetOfNotesSCALES){
+      i = i - rootOfCurrentChord ; //dovrebbe traslare le note dell'accordo facendole partire tutte da zero.
+      if(i<0) i = i+12;
+      if (i>=12) i = i-12;
+      newSCALES.push(i);
+  }
+  //verifica che esiste almeno una maschera uguale all'accordo ricevuto da midi
+  var found = false;
+  for (const [c, chord] of CHORDS){
+    if(!found){
+      var comNotes = new Set(newSCALES.filter(x => chord.has(x)));
+      if(comNotes.size==4){ // se voglio che funzioni con accordi estesi devo mettere maggiore di 3
+        for( let i of comNotes ){
+          currentChord = c;
+          console.log("trovato accordo: " + c)}
+          found = true;} // trova uno tra i possibili modi
+        }
+      }
+  if(!found){ console.log("FALSO "); return false}
+  return true;
+}
+
+//sono messi in ordine di brightness
+function transalteAllSCALES(){
+  scaleToPlay[0] = setTonality(SCALES.get("DOR"), rootOfCurrentChord);
+  scaleToPlay[1] = setTonality(SCALES.get("pMaj"), rootOfCurrentChord);
+  scaleToPlay[2] = setTonality(SCALES.get("pMin") , rootOfCurrentChord);
+  /*SCALESToPlay[3] = setTonality(SCALES.get("DOR"), rootOfCurrentChord);
+  SCALESToPlay[4] = setTonality(SCALES.get("AOL"), rootOfCurrentChord);
+  SCALESToPlay[5] = setTonality(SCALES.get("PHR"), rootOfCurrentChord);
+  SCALESToPlay[6] = setTonality(SCALES.get("LOC"), rootOfCurrentChord);*/
+  mdc[0]= "DOR";
+  mdc[1]= "PMAJ";
+  mdc[2]= "PMIN";
+/*  mdc[3]= "DOR";
+  mdc[4]= "AOL";
+  mdc[5]= "PHR";
+  mdc[6]= "LOC";*/
+}
+
+
+//questa funzione raccoglie tutte le note midi proveniente dall'accordo
+function acquireNote(note){
+  currentAcquiredNotes.add(note);
+  if(currentAcquiredNotes.size>3){
+    var acquiredSetOfNotes = new Array();
+    currentAcquiredNotes.forEach(function(n){acquiredSetOfNotes.push(findNote(n))});// faccio il modulo
+    if(acquiredSetOfNotes.length > 3){ // devono essere 4 note diverse, se preme c3 e c4 è come se avesse premuto una nota.
+      findLowestNote();
+      document.querySelector('.root').innerHTML = rootChar[rootOfCurrentChord];
+      transalteAllSCALES(rootOfCurrentChord);
+      if(checkSeventhChord(acquiredSetOfNotes)){
+        //trovato l'accordo procede
+      if(timer!=null){clearTimeout(timer)}; //cancella il timeout prima di farlo ripartire
+      compareSCALES(acquiredSetOfNotes);}//devo fare ritornare qualcosa a compare SCALES??
+      else{
+        //document.getElementById("md").innerHTML = "NOT VALID";
+        console.log("Non hai suonato un accordo valido! Suona un'accordo di settima! Puoi suonare un MAJOR7th, un MINOR7th, un DOMINANT o un MINOR DIMINISHED7th");}
+    }
+  }
+}
+
+//prende la nota più bassa dell'accordo e la fa diventare ROOT
+//LA rootOfCurrentChord HA VA DA 0 A 12
+function findLowestNote(){
+  var lowest = 0;
+  let n = false;
+  //trova la più bassa del set
+  currentAcquiredNotes.forEach(function(note){
+    if(n){
+      note<lowest
+      ? lowest=note : lowest=lowest}
+    else{
+      lowest = note; n = true;}
+    })
+  //svuota il set
+  currentAcquiredNotes.clear();
+
+  //setta la rootOfCurrentChord solo la prima volta
+  lowest = findNote(lowest); //trova il modulo
+  rootOfCurrentChord = lowest;}
+
+
 //trova l'ottava della nota
 function findOctave(note){
   octave=0;
@@ -101,13 +199,141 @@ function findNote(note){
   return module12Note;
 }
 
-//accende il led
-function turnOnLed(){
-  var myVar;
-  function ghandi(){document.querySelector("#led").classList.remove("led_on")};
-  myVar = setTimeout(ghandi, 900);
-  document.querySelector("#led").classList.add("led_on");
+//trasla tutte le note di SCALES partendo da root
+function setTonality(SCALES,root){
+    var newSCALES = new Set();
+    for(let i of SCALES){
+          i = i + root;
+          if(i<0){newNote = i+12;}
+          if (i>=12) {i= i-12}
+          newSCALES.add(i);
+          }
+  return newSCALES;
 }
+
+
+//trova il modo suonato dall'accordo sulla midi keyboard, trovato il modo fa partire il timer
+function compareSCALES(acquiredSetOfNotesSCALES){
+
+  var found = false;
+  var setSCALES;
+//  findGradeRelativeToRoot();
+
+  for (const [mode, SCALES] of SCALES){
+
+    setSCALES= setTonality(SCALES, rootOfCurrentChord);
+
+    if(found == false){
+      var comNotes = new Set(acquiredSetOfNotesSCALES.filter(x => setSCALES .has(x)));
+      //la scala più chiara sta sulla poszione 1, su 0 la più scura
+      if(comNotes.size>3){
+          if (mode == 'ION' || mode == 'LYD'){
+            found = true;
+            mdcPIANO[0] = "LYD";
+            mdcPIANO[1] = "ION"
+            mdcPIANO[2] = " "}
+
+          else if(mode == 'DOR' || mode == 'AOL' ||  mode == 'PHR'){
+            found = true;
+            mdcPIANO[0] = "DOR";
+            mdcPIANO[1] = "AOL";
+            mdcPIANO[2] = "PHR"}
+
+          else if (mode == 'MIX'){
+            found = true;
+            mdcPIANO[0] = mode;
+            mdcPIANO[1] = " "
+            mdcPIANO[2] = " "}
+
+          else if (mode == 'LOC'){
+            found = true;
+            mdcPIANO[0] = mode;
+            mdcPIANO[1] = " ";
+            mdcPIANO[2] = " ";}
+
+         }//if cm notes
+     }//found = false
+   }//chiude il for
+   if(found){
+     showTimer(); // mostra a video il timer e verifica i risultati dopo 20 sec
+   }
+   else{
+     console.log("non ho trovato il modo dell'accordo");
+   }
+}
+
+function showTimer(){
+  var timeleft = 10;
+  timer= setInterval(function(){
+    document.getElementById("time").innerHTML = timeleft;
+    timeleft -= 1;
+  if(timeleft <= 0){
+    twentySeconds();
+    clearInterval(timer);
+    document.getElementById("time").innerHTML = "Finished"
+    }
+  }, 1000);
+}
+
+function twentySeconds(){
+  var foundMode = false;
+
+  switch (currentChord){
+    case "MAJOR7th":
+      console.log("la variabile polso : " + pol )
+      if(pol == 1 || pol == 2 ){
+        foundMode = true;
+        console.log("if trovato : "  + currentChord + "io sono found " + foundMode); }
+        break;
+    case "MINOR7th":
+      if(pol ==4 || pol == 5 || pol == 6){
+        foundMode = true; }
+        break;
+    case "DOMINANT":
+      if(pol == 3){
+       foundMode = true;}
+       break;
+    case "MINORDIMINISHED":
+      if ( pol == 7){
+        foundMode = true;}
+        break;
+    }
+    if(foundMode==true){
+      console.log("trovato : "  + currentChord);
+      //document.getElementById("md").innerHTML = pol + " ° " + currentMode;
+      document.getElementById("mdcPIANO").innerHTML = "RIGHT: "+ mdcPIANO}
+    else{
+      document.getElementById("mdcPIANO").innerHTML = "WRONG"
+    }
+}
+
+// MIDI ACCESS
+navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
+function onMIDIFailure() {
+    console.log('Could not access your MIDI devices.');
+}
+function getMIDIMessage(message) {
+    var command = message.data[0];
+    var note = message.data[1];
+    console.log(message);
+    var velocity = (message.data.length > 2) ? message.data[2] : 0; // a velocity value might not be included with a noteOff command
+
+    switch (command) {
+        case 144: // noteOn
+            if (velocity > 0) {
+              acquireNote(note);
+            //  oscillatorStart(note);}
+          }
+            break;
+      }
+  }
+
+function onMIDISuccess(midiAccess) {
+    for (var input of midiAccess.inputs.values())
+        input.onmidimessage = getMIDIMessage;
+    }
+
+
 
 //<<<<<<<<<<< FINE CODICE CONRTOLLER >>>>>>>>>>>>>
 
@@ -238,7 +464,7 @@ function playNote(note, v){
   // creo un secondo oscillatore, in funzione di modulatore, a cui do una frequenza iniziale
 	this.modOsc = c.createOscillator();
 	this.modOsc.type = chooseModType();
-  currentModFrequency = this.oscillator1.frequency.value - this.oscillator1.frequency.value*rapporto;
+  currentModFrequency = this.oscillator1.frequency.value - this.oscillator1.frequency.value*num / den;
 	this.modOsc.frequency.value = currentModFrequency ;
   //collego il modulatore a un gain e collego il modulatore al primo oscillatore così che varia il suo gain in base alla frequenza
 	this.modOsc1Gain = c.createGain();
@@ -415,15 +641,15 @@ document.querySelector("#detune").oninput = function(){
 
 
 //MODULATOR FREQUENCY
-playNote.prototype.setModRapporto = function( value ) {
+playNote.prototype.setModFreq = function( value ) {
 	this.modOsc.frequency.value = value;
 }
 
-document.querySelector("#modRapporto").oninput = function(){
-    rapporto= this.value;
+document.querySelector("#freqMod").oninput = function(){
+    currentModFrequency= this.value;
     for (var i=0; i<255; i++) {
 		if (activeOscillators[i] != null) {
-			activeOscillators[i].setModRapporto(this.oscillator1.frequency.value -this.oscillator1.frequency.value*rapporto);
+			activeOscillators[i].setModFreq( currentModFrequency );
       }
    }
 }
