@@ -128,8 +128,8 @@ function transalteAllSCALES(){
   mdc[0]= "DOR";
   mdc[1]= "PMAJ";
   mdc[2]= "PMIN";
-/*  mdc[3]= "DOR";
-  mdc[4]= "AOL";
+  mdc[3]= "MUTE";
+  /*mdc[4]= "AOL";
   mdc[5]= "PHR";
   mdc[6]= "LOC";*/
 }
