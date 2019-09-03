@@ -147,42 +147,6 @@ left{  /*sx*/
   vertical-align: middle;
 
 }
-.root{
-  margin: auto;
-  width: 70px;
-  height: 70px;
-  font-size: 50px;
-  padding: 10px;
-}
-
-#midi_in {
-    float: left;
-    height: 100%;
-    width: 80px;
-    text-align: center;
-    display: grid;
-    font-size: 17px;
-
-}
-
-#led {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    border: 2px solid white;
-    margin-top: 20px;
-    margin-left: 35px;
-    position: relative;
-    transform: translate(0,-100%);
-
-}
-
-.led_off {
-    background-color: darkred;
-}
-.led_on {
-    background-color: red;
-}
 
 button {
     height: 30px;
