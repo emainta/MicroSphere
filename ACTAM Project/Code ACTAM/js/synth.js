@@ -29,7 +29,7 @@ function initialValues(){
   scaleToPlay[1] = pentaMajor;
   scaleToPlay[2] = dor;
   currentNote = 0; //nessuna nota suonata ancora
-  currentMode = 'WAIT';
+  currentMode = 'MUTE';
 }
 
 initialValues();
@@ -46,14 +46,6 @@ function playIfyouCan(){
   if(noteIsOnSCALES()){
     currentMidiNote = currentNote + 36;//midi
     noteOn(currentMidiNote)}
-}
-
-//turn on led
-function turnOnLed(){
-  var myVar;
-  function ghandi(){document.querySelector("#led").classList.remove("led_on")};
-  myVar = setTimeout(ghandi, 900);
-  document.querySelector("#led").classList.add("led_on");
 }
 
 //trova l'ottava della nota
