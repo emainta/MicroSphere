@@ -12,7 +12,7 @@ var ctxM = canvasMel.getContext("2d");
 var canvasText = document.getElementById("serviceCanvas");
 var ctxT = canvasText.getContext("2d");
 
-
+var BAT = 12;
 
 var clearWp=0;
 var clearHp=0;
@@ -30,7 +30,7 @@ document.body.style.zoom = 0.9;
 /*DATI DA Jacopo
 verticalStep: i-th step / n' step
 */
-var iStep = van - 12; // da -12 a +12
+var iStep = van - BAT; // da -12 a +12
 var nStep = 25;
 var verticalStep = - (iStep +1 ) / nStep;
 var p_r;
@@ -207,7 +207,7 @@ positions_x  = makeArr(xp, canvasMel.width , motionTrailLength);
 
 function drawPotato() {
   radius = 17 + pol;
-  iStep = van - 12; // da -12 a +12
+  iStep = van - BAT; // da -12 a +12
   verticalStep = - (iStep +1 ) / nStep;
 
   yp =  clearHp * verticalStep; //scaling factor by jacopo
