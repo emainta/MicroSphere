@@ -40,7 +40,6 @@ function fullScreen() {
   if (!fs) {
      openFullscreen()
    }
-
   else closeFullscreen();
 }
 
