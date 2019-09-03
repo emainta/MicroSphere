@@ -1,0 +1,296 @@
+/*
+#ffcf56
+#e83f6f #d72839
+#1dd1b6
+#212842 #bbc2dd
+#487df9
+*/
+
+body {
+  background-color: black;
+  font-family: Helvetica;
+  color: white;
+  display: flex;
+  overflow: visible;
+}
+
+app {
+    margin: auto;
+
+    padding-bottom: 5px;
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 2px ;
+    background-color: black;
+}
+
+#aWrapper {
+    /*Horizontally centers the canvas*/
+    /*margin: 0 auto;*/
+    /*height: 500px;
+    width: 80%;*/
+    margin: auto;
+    margin-bottom: 5px;
+    border: 1px solid #212842;
+    display: flex;
+    text-align: center;
+}
+
+#serviceCanvas {
+    height: inherit;
+    width: inherit;
+    position: absolute;
+    z-index:3;
+    opacity: 1;
+    transition: 2s;
+}
+
+#backgroundCanvas {
+    height: inherit;
+    width: inherit;
+    position: absolute;
+    z-index:0;
+}
+
+#potatoCanvas {
+    height: 100%;
+    width: 100%;
+    transition: 2s;
+    z-index:2;
+    opacity:0;
+}
+
+#melcontour {
+    height: inherit;
+    width:inherit;
+    transition: 5s;
+    z-index:1;
+    opacity:0;
+    /*position: fixed;*/
+     position: absolute;
+}
+
+/* Bottom right text */
+.top-right {
+  font-size: 17px;
+  text-align: right;
+  position: relative;
+  top: 7px;
+  right: 60px;
+  font-variant: small-caps;
+  opacity: 0;
+  transition: 2s;
+}
+
+#time{
+  color: #FAEBD7;
+  font-weight: bold;
+  z-index:4;
+}
+
+bottom { /*SCRITTA IN BASSO COI NOMI*/
+    position: relative;
+    text-align: center;
+    color: white;
+    font-size: 17px;
+    font-variant: small-caps;
+    top:22px;
+}
+
+dam {   /*Tutta la parte di sotto CTRL + KB + SYNTH*/
+    width: 100%;
+    height:540px;
+    display: inline-block;
+    font-variant: small-caps;
+    margin-top: 3px;
+  }
+
+ctrl {
+    width: 100%;
+    height: 120px;
+    display: flex;
+    margin: auto;
+}
+
+left{  /*sx*/
+  display: inline-block;
+  width: 48%;
+  height: 100%;
+  float: left;
+  margin-right: 3%;
+}
+
+#controlli {
+    width: 80%;
+    margin: auto;
+    padding: 10px;
+    background-color: #212842;
+    font-variant: small-caps;
+    margin-top: 40px;
+}
+
+#fourbuttons{
+  width: 43%;
+  display: grid;
+  padding-top: 10px;
+  /*
+  padding-right: 10%;
+  margin: auto;
+  padding-left: 10%; */
+}
+
+#tonalRef{
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  vertical-align: middle;
+
+}
+.root{
+  margin: auto;
+  width: 70px;
+  height: 70px;
+  font-size: 50px;
+  padding: 10px;
+}
+
+#midi_in {
+    float: left;
+    height: 100%;
+    width: 80px;
+    text-align: center;
+    display: grid;
+    font-size: 17px;
+
+}
+
+#led {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid white;
+    margin-top: 20px;
+    margin-left: 35px;
+    position: relative;
+    transform: translate(0,-100%);
+
+}
+
+.led_off {
+    background-color: darkred;
+}
+.led_on {
+    background-color: red;
+}
+
+button {
+    height: 30px;
+    width: 100px;
+    font-size: 12px;
+    background-color: #e83f6f;
+    color: white;
+    margin: 8px;
+    display: inline-grid;
+    border: none;
+    float: left;
+    position: relative;
+    transform: translate(0,12px);
+    top:-5px;
+}
+
+button:active {
+     box-shadow: 0 0 8px #ffcf56 ;
+     border: 1px solid #ffcf56;
+     color: #ffcfff;
+     background-color: #e83f73;
+}
+.btn_acceso {
+    box-shadow: 0 0 5px white ;
+    border: 1px solid yellow;
+    background-color: yellow;
+    /*box-shadow: none|h-offset v-offset blur spread color |inset|initial|inherit;*/
+}
+
+#searchButton {
+  vertical-align: middle;
+
+
+}
+
+#startButton {
+
+}
+
+
+synthCtrl { /*dx*/
+  width: 48%;
+  height: 100%;
+  display: inline-block;
+  text-align: center;
+  margin-right: 2px;
+}
+
+s_top{
+  padding:2%;
+  display: inline-flex;
+  width: auto;
+  height: 40%;
+}
+
+s_bottom{
+  display: inline-flex;
+
+}
+
+.smallfont{
+  font-size: 12px;
+  margin: 5px;
+}
+
+#md{
+  margin: auto;
+  width: 70px;
+  height: 70px;
+  font-size: 50px;
+  padding-top: 30px;
+}
+
+.mdBox{
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  vertical-align: middle;
+}
+
+#mdcPIANO{
+  font-size: 40px;
+  text-align: center;
+  margin-top: 25px;
+}
+
+.presets{
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.preset_btn{
+  height: 30px;
+  width: 30px;
+  font-size: 12px;
+  display: inline-grid;
+  border: none;
+  float: left;
+  position: relative;
+  transform: translate(0,12px);
+  top:-5px;
+}
+
+@keyframes change_color {
+    0%   {background-color: white;}
+    25%  {background-color:#f5d6e6;}
+    50%  {background-color: #f0dbe6;}
+    100% {background-color: #e7e4e6;}
+}

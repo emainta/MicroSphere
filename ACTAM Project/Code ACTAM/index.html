@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>MicroSphere</title>
+
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/keyboard.css">
+    <link rel="stylesheet" href="css/styleSynth.css">
+
+  </head>
+  <body>
+      <app>
+
+       <div id="aWrapper">
+         <canvas id="serviceCanvas"></canvas>
+         <canvas id="backgroundCanvas"></canvas>
+         <canvas id="potatoCanvas"></canvas>
+         <canvas id="melcontour"></canvas>
+
+      </div>
+
+      <dam>
+
+        <left class="bordino">
+
+        <ctrl id="controlli">
+           <div id="midi_in">Midi In
+           <div id="led" class="led_off"></div>
+          </div>
+
+
+
+
+          <div id="fourbuttons">
+
+<div>
+  <button id="searchButton" onClick="searchDevice()">Search Device
+  </button>
+
+  <button id="fs_btn">Fullscreen
+  </button>
+</div>
+
+<div>
+  <button id="startButton">Start Canvas
+  </button>
+
+  <button id="resetButton" >Reset Canvas
+  </button>
+</div>
+
+</div>
+
+<div class="mdBox">Scale
+<div id="md">♫♫</div>
+</div>
+
+<div class="presets">Presets
+
+<div>
+
+<div>
+  <button type="button" name="button" class="preset_btn" id="preset1">1</button>
+  <button type="button" name="button" class="preset_btn" id="preset2">2</button>
+</div>
+
+<div >
+  <button type="button" name="button" class="preset_btn" id="preset3">3</button>
+  <button type="button" name="button" class="preset_btn" id="preset4">4</button>
+</div>
+
+</div>
+
+</div>
+
+
+        </div>
+        </ctrl>
+
+<div id="mdcPIANO">This is Microsphere!</div>
+        <keyboard>
+
+    <div style="display: flex; margin:auto;">
+      <li class="white" data-key="48"></li>
+      <li class="black" data-key="49"></li>
+      <li class="white" data-key="50"></li>
+      <li class="black" data-key="51"></li>
+      <li class="white" data-key="52"></li>
+      <li class="white" data-key="53"></li>
+      <li class="black" data-key="54"></li>
+      <li class="white" data-key="55"></li>
+      <li class="black" data-key="56"></li>
+      <li class="white" data-key="57"></li>
+      <li class="black" data-key="58"></li>
+      <li class="white" data-key="59"></li>
+      <li class="white" data-key="60"></li>
+      <li class="black" data-key="61"></li>
+      <li class="white" data-key="62"></li>
+      <li class="black" data-key="63"></li>
+      <li class="white" data-key="64"></li>
+      <li class="white" data-key="65"></li>
+      <li class="black" data-key="66"></li>
+      <li class="white" data-key="67"></li>
+      <li class="black" data-key="68"></li>
+      <li class="white" data-key="69"></li>
+      <li class="black" data-key="70"></li>
+      <li class="white" data-key="71"></li>
+      <li class="white" data-key="72"></li>
+
+    </div>
+       </keyboard>
+
+</left>
+
+<synthCtrl class="bordino">
+      <span class="titleLabel" style="position:relative;top:5px;">Synth Control Panel</span>
+
+<s_top>
+
+<!-- OSCILLATOR -->
+<div class="param bordino" style="">
+      <div class="smallfont">Osc Waveform: </div>
+      <select style="width:70px;" name="waveform">
+        <option value="sine"selected>Sine</option>
+        <option value="square">Square</option>
+        <option value="sawtooth">Sawtooth</option>
+        <option value="triangle">Triangle</option>
+        <option value="custom">Custom</option>
+      </select>
+
+      <fxparam class="smallerSlider">
+        <label class="smallfont" style="margin-top: 20px;">Detune</label>
+        <input type="range" id="detune" value = 0 min="0" max="500" step="1" style="margin-top: 20px;">
+              </input>
+      </fxparam>
+
+</div>
+
+<div class="param bordino" style="margin-left:2%;">
+
+      <div class="smallfont">Mod Waveform: </div>
+      <select name="modwaveform" style="width:70px;">
+        <option value="sine"selected>Sine</option>
+        <option value="square">Square</option>
+        <option value="sawtooth">Sawtooth</option>
+        <option value="triangle">Triangle</option>
+      </select>
+
+      <fxparam class="smallerSlider">
+      <label class="smallfont" style="margin-top: 20px;">Modulation Frequency</label>
+      <input type="range" id="freqMod" min="50" max="300" step="1"></input>
+    </fxparam>
+
+</div>
+
+<!-- FILTER1 -->
+<div class="param bordino" style="margin-left:2%; margin-right: 2%;">Filter Control
+
+  <div>
+  <fxparam class="smallerSlider">
+      <label class="smallfont">Q Value</label>
+      <input type="range" id="qFactor" value="20" min="0" max="100" step="1" >
+  </input> </fxparam>
+
+  <fxparam class="smallerSlider">
+    <label class="smallfont">CutOff</label>
+    <input type="range" id="cutOffFilter" value = 500 min="50" max="1000" step="1" >
+    </input></fxparam>
+  </div>
+
+  <div style="padding-top: 20px">
+  <div class="right">
+   <span class="smallfont">Type : </span>
+   <select name="filterType" style="width:70px;">
+     <option value="lowpass"selected>lowpass</option>
+     <option value="highpass">highpass</option>
+     <option value="notch">notch</option>
+     <option value="peaking">peaking</option>
+   </select>
+  </div>
+</div>
+
+</div>
+
+<!-- FILTER 2 -->
+<div class="param bordino" style="">Filter envelope
+
+  <div style="transform: scale(0.8); position:relative; bottom: 15px;">
+
+  <fxparam class="smallerSlider noPad">
+    <label class="smallfont">Gain</label>
+    <input type="range" id="filterGain"  min="10" max="150" value = 100 step="1" >
+   </input></fxparam>
+
+  <fxparam class="smallerSlider noPad" >
+  <label class="smallfont">Attack</label>
+   <input type="range" id="filterEnvA" value = 5 min="0" max="20" step="1" >
+   </input></fxparam>
+
+  <fxparam class="smallerSlider noPad">
+     <label class="smallfont">Decay</label>
+   <input type="range" id="filterEnvD" value = 7 min="0" max="50" step="1" >
+   </input></fxparam>
+
+  <fxparam class="smallerSlider noPad">
+     <label class="smallfont">Sustain</label>
+   <input type="range" id="filterEnvS" value = 5 min="0" max="50" step="1" >
+   </input></fxparam>
+
+  <fxparam class="smallerSlider noPad">
+    <label class="smallfont">Release</label>
+   <input type="range" id="filterEnvR" value = 7 min="0" max="50" step="1" >
+   </input></fxparam>
+</div>
+
+  </div>
+
+</s_top>
+
+<s_bottom class="smallfont">
+
+<!--  DISTORTION  -->
+  <div class="bottomParam grosso bordino" style="margin-right:2%">Distortion
+
+  <div>
+  <fxparam class="smallerSlider">
+     <label class="smallfont">Drive</label>
+     <input type="range" value="0" step="1" min="0.0" max="100" oninput="changeDist(this.value);"></input>
+  </fxparam>
+
+    <fxparam class="smallerSlider">
+      <label class="smallfont">Distortion Curve</label>
+      <input type="range" id="distortionCurve" value ="0" min="0" max="50" step="0.1"></input>
+    </fxparam>
+  </div>
+
+<div>
+    <fxparam class="distortionOversample smallfont" >
+     <label class="smallfont">Oversample </label>
+     <div >
+     <select style="width: 50px; margin: 3px;" name="Oversample" onchange="oversample(this.value)";>
+       <option value="none"selected>none</option>
+       <option value="2x">2x</option>
+       <option value="4x">4x</option>
+      </select>
+    </div>
+    </fxparam>
+</div>
+
+  </div>
+
+<!-- SPACE -->
+<div class="bottomParam grosso bordino" style="margin-right:2%">Space
+  <div>
+ <fxparam class="smallerSlider">
+  <label class="smallfont" >Delay Time</label>
+  <input type="range" id="timeDelay" value = "0" min="0" max="1" step="0.01"></input>
+ </fxparam>
+
+ <fxparam class="smallerSlider">
+  <label class="smallfont" >Delay Gain</label>
+  <input type="range" id="gDelay" value="0" min="0" max="1" step="0.01"></input>
+ </fxparam>
+
+ <fxparam class="mixRev smallerSlider">
+    <label class="smallfont">Reverb</label>
+    <input type="range" value="0" step="1" min="0.0" max="100" oninput="changeValue(this.value);"></input>
+ </fxparam>
+
+</div>
+
+</div>
+
+<!--MASTER -->
+<div class="bottomParam grosso bordino" style="width: 30%">
+<fxparam >
+  <label class="grosso">Master</label>
+  <input type="range" id="masterGain" value=1 min="0" max="1" step="0.1"></input>
+</fxparam>
+</div>
+
+</s_bottom>
+
+</synthCtrl>
+
+
+      </dam>
+
+  <bottom>
+      Progetto di Gino Jacopo, Brundo Nicoletta e Intagliata Emanuele.
+  </bottom>
+
+  </app>
+  </body>
+  <script src="js/main.js" charset="utf-8"></script>
+  <script language="javascript" type="text/javascript" src="js/script.js"></script>
+  <script language="javascript" type="text/javascript" src="js/vis.js"></script>
+  <script language="javascript" type="text/javascript" src="js/synth.js"></script>
+  <script language="javascript" type="text/javascript" src="js/microBit.js"></script>
+
+</html>
