@@ -1,181 +1,62 @@
 //<<<<<<<<<<<< INIZIO CODICE CONTROLLER >>>>>>>>>>>>>>>>
-//variabili
 
-//le SCALES che vengono valutate per esserre proposte
+//variable
 var SCALES;
 //variabili per acquisire e memorizzare gli accordi
-var currentAcquiredNotes;
 //Valore attualmente suonata in valore midi
 var currentMidiNote;
 
-var timer;
-
 var rootChar = ['C', ' C#', 'D', 'D#' , 'E' , 'F' , 'F#' , 'G' , 'G#' , 'A' , 'A#' , 'B'];
 
-var CHORDS;
 //Inializza tutti i valori
 function initialValues(){
 
   SCALES = new Map();
-  CHORDS = new Map();
-  currentAcquiredNotes = new Set();
 
   //SCALES dei modi maggiori
-  var lyd = new Set([ 0, 2, 4, 6, 7, 9, 11 ]);
-  var ion = new Set([ 0, 2, 4, 5, 7, 9, 11 ]);
-  var mix = new Set([ 0, 2, 4, 5, 7, 9, 10 ]);
   var dor = new Set([ 0, 2, 3, 5, 7, 9, 10 ]);
-  var aol = new Set([ 0, 2, 3, 5, 7, 8, 10 ]);
-  var phr = new Set([ 0, 1, 3, 5, 7, 8, 10 ]);
-  var loc = new Set([ 0, 1, 3, 5, 6, 8, 10 ]);
-  var pentaMinor = new Set([0,4,6,8,10]);
-  var pentaMajor = new Set([0,2,4,7,9]);
+  var pentaMinor = new Set([0,4,6,8,10,-1,-1]);
+  var pentaMajor = new Set([0,2,4,7,9,-1,-1]);
 
-  SCALES.set('LYD',lyd);
-  SCALES.set('ION',ion);
-  SCALES.set('MIX',mix);
+
   SCALES.set('DOR',dor);
-  SCALES.set('AOL',aol);
-  SCALES.set('PHR',phr);
-  SCALES.set('LOC',loc);
   SCALES.set('pMaj',pentaMajor);
   SCALES.set('pMin',pentaMinor);
 
-  //maschere accordi
-  major7th= new Set([ 0, 4, 7, 11]); // major7th
-  minor7th=new Set([0, 3, 7, 10]);
-  dominant7th = new Set([0,4,7,10]);
-  minor7thDim = new Set([0,3,6,10]);
-
-  CHORDS.set('MAJOR7th',major7th);
-  CHORDS.set('MINOR7th',minor7th);
-  CHORDS.set('DOMINANT',dominant7th);
-  CHORDS.set('MINORDIMINISHED',minor7thDim);
-
-  mdc = new Array(7).fill(0);
-  mdcPIANO = new Array(3).fill("null", "null", "null");
-  rootOfCurrentChord = 0;
-  currentChord = "Suona";
-  scaleToPlay = new Array(6).fill(lyd,ion,mix,dor,aol,phr,loc);
   currentScale = new Set();
-  transalteAllSCALES();
+  mdc[0] = "pMin";
+  mdc[1] ="pMaj";
+  mdc[2] ="DOR";
+  scaleToPlay[0] = pentaMinor;
+  scaleToPlay[1] = pentaMajor;
+  scaleToPlay[2] = dor;
   currentNote = 0; //nessuna nota suonata ancora
   currentMode = 'WAIT';
-  currentGrade = 0;
 }
 
 initialValues();
 
 
-//questa funzione viene  chiamata da microbit quando si deve suonare una nota!
-//se currentNote appartiene a currentSCALES ritorna true
+//return true if current note belong to the current scale
 function noteIsOnSCALES(){
   if(currentScale.has(findNote(currentNote))){
     return true;}
 }
 
-//suona la nota se noteIsOnSCALES
+//Play a note if it's on scale
 function playIfyouCan(){
   if(noteIsOnSCALES()){
-    currentMidiNote = rootOfCurrentChord+ currentNote + 36;//midi
+    currentMidiNote = currentNote + 36;//midi
     noteOn(currentMidiNote)}
 }
 
-//accende il led
+//turn on led
 function turnOnLed(){
   var myVar;
   function ghandi(){document.querySelector("#led").classList.remove("led_on")};
   myVar = setTimeout(ghandi, 900);
   document.querySelector("#led").classList.add("led_on");
 }
-
-
-//controlla se il pianista sta suonando un accordo ammissibile dall'applicazione
-function checkSeventhChord(acquiredSetOfNotesSCALES){
-  var newSCALES = new Array();
-
-  for(let i of acquiredSetOfNotesSCALES){
-      i = i - rootOfCurrentChord ; //dovrebbe traslare le note dell'accordo facendole partire tutte da zero.
-      if(i<0) i = i+12;
-      if (i>=12) i = i-12;
-      newSCALES.push(i);
-  }
-  //verifica che esiste almeno una maschera uguale all'accordo ricevuto da midi
-  var found = false;
-  for (const [c, chord] of CHORDS){
-    if(!found){
-      var comNotes = new Set(newSCALES.filter(x => chord.has(x)));
-      if(comNotes.size==4){ // se voglio che funzioni con accordi estesi devo mettere maggiore di 3
-        for( let i of comNotes ){
-          currentChord = c;
-          console.log("trovato accordo: " + c)}
-          found = true;} // trova uno tra i possibili modi
-        }
-      }
-  if(!found){ console.log("FALSO "); return false}
-  return true;
-}
-
-//sono messi in ordine di brightness
-function transalteAllSCALES(){
-  scaleToPlay[0] = setTonality(SCALES.get("DOR"), rootOfCurrentChord);
-  scaleToPlay[1] = setTonality(SCALES.get("pMaj"), rootOfCurrentChord);
-  scaleToPlay[2] = setTonality(SCALES.get("pMin") , rootOfCurrentChord);
-  /*SCALESToPlay[3] = setTonality(SCALES.get("DOR"), rootOfCurrentChord);
-  SCALESToPlay[4] = setTonality(SCALES.get("AOL"), rootOfCurrentChord);
-  SCALESToPlay[5] = setTonality(SCALES.get("PHR"), rootOfCurrentChord);
-  SCALESToPlay[6] = setTonality(SCALES.get("LOC"), rootOfCurrentChord);*/
-  mdc[0]= "DOR";
-  mdc[1]= "PMAJ";
-  mdc[2]= "PMIN";
-  mdc[3]= "MUTE";
-  /*mdc[4]= "AOL";
-  mdc[5]= "PHR";
-  mdc[6]= "LOC";*/
-}
-
-
-//questa funzione raccoglie tutte le note midi proveniente dall'accordo
-function acquireNote(note){
-  currentAcquiredNotes.add(note);
-  if(currentAcquiredNotes.size>3){
-    var acquiredSetOfNotes = new Array();
-    currentAcquiredNotes.forEach(function(n){acquiredSetOfNotes.push(findNote(n))});// faccio il modulo
-    if(acquiredSetOfNotes.length > 3){ // devono essere 4 note diverse, se preme c3 e c4 è come se avesse premuto una nota.
-      findLowestNote();
-      document.querySelector('.root').innerHTML = rootChar[rootOfCurrentChord];
-      transalteAllSCALES(rootOfCurrentChord);
-      if(checkSeventhChord(acquiredSetOfNotes)){
-        //trovato l'accordo procede
-      if(timer!=null){clearTimeout(timer)}; //cancella il timeout prima di farlo ripartire
-      compareSCALES(acquiredSetOfNotes);}//devo fare ritornare qualcosa a compare SCALES??
-      else{
-        //document.getElementById("md").innerHTML = "NOT VALID";
-        console.log("Non hai suonato un accordo valido! Suona un'accordo di settima! Puoi suonare un MAJOR7th, un MINOR7th, un DOMINANT o un MINOR DIMINISHED7th");}
-    }
-  }
-}
-
-//prende la nota più bassa dell'accordo e la fa diventare ROOT
-//LA rootOfCurrentChord HA VA DA 0 A 12
-function findLowestNote(){
-  var lowest = 0;
-  let n = false;
-  //trova la più bassa del set
-  currentAcquiredNotes.forEach(function(note){
-    if(n){
-      note<lowest
-      ? lowest=note : lowest=lowest}
-    else{
-      lowest = note; n = true;}
-    })
-  //svuota il set
-  currentAcquiredNotes.clear();
-
-  //setta la rootOfCurrentChord solo la prima volta
-  lowest = findNote(lowest); //trova il modulo
-  rootOfCurrentChord = lowest;}
-
 
 //trova l'ottava della nota
 function findOctave(note){
@@ -199,155 +80,21 @@ function findNote(note){
   return module12Note;
 }
 
-//trasla tutte le note di SCALES partendo da root
-function setTonality(SCALES,root){
-    var newSCALES = new Set();
-    for(let i of SCALES){
-          i = i + root;
-          if(i<0){newNote = i+12;}
-          if (i>=12) {i= i-12}
-          newSCALES.add(i);
-          }
-  return newSCALES;
-}
-
-
-//trova il modo suonato dall'accordo sulla midi keyboard, trovato il modo fa partire il timer
-function compareSCALES(acquiredSetOfNotesSCALES){
-
-  var found = false;
-  var setSCALES;
-//  findGradeRelativeToRoot();
-
-  for (const [mode, SCALES] of SCALES){
-
-    setSCALES= setTonality(SCALES, rootOfCurrentChord);
-
-    if(found == false){
-      var comNotes = new Set(acquiredSetOfNotesSCALES.filter(x => setSCALES .has(x)));
-      //la scala più chiara sta sulla poszione 1, su 0 la più scura
-      if(comNotes.size>3){
-          if (mode == 'ION' || mode == 'LYD'){
-            found = true;
-            mdcPIANO[0] = "LYD";
-            mdcPIANO[1] = "ION"
-            mdcPIANO[2] = " "}
-
-          else if(mode == 'DOR' || mode == 'AOL' ||  mode == 'PHR'){
-            found = true;
-            mdcPIANO[0] = "DOR";
-            mdcPIANO[1] = "AOL";
-            mdcPIANO[2] = "PHR"}
-
-          else if (mode == 'MIX'){
-            found = true;
-            mdcPIANO[0] = mode;
-            mdcPIANO[1] = " "
-            mdcPIANO[2] = " "}
-
-          else if (mode == 'LOC'){
-            found = true;
-            mdcPIANO[0] = mode;
-            mdcPIANO[1] = " ";
-            mdcPIANO[2] = " ";}
-
-         }//if cm notes
-     }//found = false
-   }//chiude il for
-   if(found){
-     showTimer(); // mostra a video il timer e verifica i risultati dopo 20 sec
-   }
-   else{
-     console.log("non ho trovato il modo dell'accordo");
-   }
-}
-
-function showTimer(){
-  var timeleft = 10;
-  timer= setInterval(function(){
-    document.getElementById("time").innerHTML = timeleft;
-    timeleft -= 1;
-  if(timeleft <= 0){
-    twentySeconds();
-    clearInterval(timer);
-    document.getElementById("time").innerHTML = "Finished"
-    }
-  }, 1000);
-}
-
-function twentySeconds(){
-  var foundMode = false;
-
-  switch (currentChord){
-    case "MAJOR7th":
-      console.log("la variabile polso : " + pol )
-      if(pol == 1 || pol == 2 ){
-        foundMode = true;
-        console.log("if trovato : "  + currentChord + "io sono found " + foundMode); }
-        break;
-    case "MINOR7th":
-      if(pol ==4 || pol == 5 || pol == 6){
-        foundMode = true; }
-        break;
-    case "DOMINANT":
-      if(pol == 3){
-       foundMode = true;}
-       break;
-    case "MINORDIMINISHED":
-      if ( pol == 7){
-        foundMode = true;}
-        break;
-    }
-    if(foundMode==true){
-      console.log("trovato : "  + currentChord);
-      //document.getElementById("md").innerHTML = pol + " ° " + currentMode;
-      document.getElementById("mdcPIANO").innerHTML = "RIGHT: "+ mdcPIANO}
-    else{
-      document.getElementById("mdcPIANO").innerHTML = "WRONG"
-    }
-}
-
-// MIDI ACCESS
-navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
-function onMIDIFailure() {
-    console.log('Could not access your MIDI devices.');
-}
-function getMIDIMessage(message) {
-    var command = message.data[0];
-    var note = message.data[1];
-    console.log(message);
-    var velocity = (message.data.length > 2) ? message.data[2] : 0; // a velocity value might not be included with a noteOff command
-
-    switch (command) {
-        case 144: // noteOn
-            if (velocity > 0) {
-              acquireNote(note);
-            //  oscillatorStart(note);}
-          }
-            break;
-      }
-  }
-
-function onMIDISuccess(midiAccess) {
-    for (var input of midiAccess.inputs.values())
-        input.onmidimessage = getMIDIMessage;
-    }
-
-
 
 //<<<<<<<<<<< FINE CODICE CONRTOLLER >>>>>>>>>>>>>
 
 
 //<<<<<<<<<<<  CODICE SYNTH >>>>>>>>>>>>>
 
-
+//Create an audio context
 var c = new AudioContext();
 
 //All the oscillators active now
 var activeOscillators = new Array();
 
+//Initial Parameters
 var filterGain = 100;
-var currentModFrequency;  // fa vibrare l'oscillatore, capire come si puo automatizzare la frazione
+var currentModFrequency;  // to modulate the carrier oscillator
 var currentOsc1Detune = 0;
 
 var filterCutOff = 800;
@@ -372,7 +119,7 @@ var currentDelay = 0.0;
 var currentGainDelay = 5;
 var distCurve = 0;
 
-
+// global gain for the effectChain
 var effectChain;
 var distortion;
 var distortionGain;
@@ -386,13 +133,16 @@ var gainDelay;
 var preDelayGain;
 var impulseBuffer;
 
+//not present in the graphic interface
 var analyser = c.createAnalyser();
 analyser.ffsize=1024;
 
 initAudio();
 
-//tutti i tasti
+//keyboard
 var allKeys = document.getElementsByTagName("li");
+
+//to select waveform
 var wavePicker = document.querySelector("select[name='waveform']");
 var modwavePicker = document.querySelector("select[name='modwaveform']");
 var filterPicker = document.querySelector("select[name='filterType']");
@@ -402,14 +152,16 @@ var filterPicker = document.querySelector("select[name='filterType']");
 function noteOn( note) {
 	if (activeOscillators[note] == null) {
 		 activeOscillators[note] = new playNote(note);}
-  //serve solo per visualizzare i tasti suonati sulla midi keyboard
+
+  //Code to show what note is playng on keyboard
   var key = note-36;
   if( key == 0 || key == 2 || key == 4 || key == 5 || key == 7 || key == 9 || key == 11 || key == 12 || key == 14 || key == 16 || key == 17 || key == 19 || key == 21 || key == 23|| key == 25){
-  allKeys.item(key).classList.add("whiteActive");}
+    allKeys.item(key).classList.add("whiteActive");}
   else{
-  allKeys.item(key).classList.add("blackActive");}
-	}
+    allKeys.item(key).classList.add("blackActive");}
+}
 
+//when stopping a note
 function noteOff( note ) {
 	if (activeOscillators[note] != null) {
 		//stoppa la nota e cancella la posizione sull'array
@@ -418,8 +170,8 @@ function noteOff( note ) {
     //serve solo per visualizzare i tasti suonati sulla midi keyboard
    var key = note-36;
    if( key == 0 || key == 2 || key == 4 || key == 5 || key == 7 || key == 9 || key == 11 || key == 12 || key == 14 || key == 16 || key == 17 || key == 19 || key == 21 || key == 23|| key == 25){
-    allKeys.item(key).classList.remove("whiteActive")}
-    else{ allKeys.item(key).classList.remove("blackActive")}}
+     allKeys.item(key).classList.remove("whiteActive")}
+   else{ allKeys.item(key).classList.remove("blackActive")}}
 }
 
 
@@ -443,48 +195,50 @@ function createPeriodicWave(){
 }
 
 
-//FUNZIONE PRINCIPALE_: crea gli oscillatori, i modulatori, i filtri e li collega
+//PlayNote creates a carrier oscillator, a modulator, a filter and a gain to control ADSR
 function playNote(note, v){
 
-   //creo un primo oscillatore e gli do parametri freq e gain iniziale
+   //carrier
    this.oscillator1 = c.createOscillator();
    this.oscillator1.frequency.value = frequencyFromMIDI( note );
 
-  //tipo di wave
+  //type of wave
   let type = chooseOscillatorType();
   if (type == "custom") {
     this.oscillator1.setPeriodicWave(createPeriodicWave());}
-   else this.oscillator1.type = type;
-  //gain a cui collego l'oscillatore
+  else this.oscillator1.type = type;
+  //carrier's gain
    this.osc1Gain = c.createGain();
  	 this.osc1Gain.gain.value = 1;
 	 this.oscillator1.connect( this.osc1Gain);
 
 
-  // creo un secondo oscillatore, in funzione di modulatore, a cui do una frequenza iniziale
+  // modulator
 	this.modOsc = c.createOscillator();
 	this.modOsc.type = chooseModType();
+  //num/den chenge the frequency modulation
   currentModFrequency = this.oscillator1.frequency.value - this.oscillator1.frequency.value*num / den;
 	this.modOsc.frequency.value = currentModFrequency ;
-  //collego il modulatore a un gain e collego il modulatore al primo oscillatore così che varia il suo gain in base alla frequenza
+  //connect modulator to the carrier's frequency
 	this.modOsc1Gain = c.createGain();
 	this.modOsc.connect( this.modOsc1Gain );
 	this.modOsc1Gain.gain.value = 5;
 	this.modOsc1Gain.connect( this.oscillator1.frequency );
 
+  //filter
 	this.filter = c.createBiquadFilter(); // se metto l'high pass devo abbassare il modfilter gain
 	this.filter.type = chooseFilterType();
 	this.filter.Q.value = filterQ; // da 0 a 20
 	this.filter.frequency.value = filterCutOff;  // da 50 a 1000
 	this.osc1Gain.connect( this.filter );
 
-	// per collegare il modulatore al filtro creo un altro gain , gli collego il modulatore e lo collego a entrmbi i filtri
+	//connect the modulator to the filter
 	this.modFilterGain = c.createGain();
   this.modOsc.connect( this.modFilterGain );
   this.modFilterGain.gain.value =filterGain*24; // mettere una variabile da regolare per il mix del filtro 2 da 100 a 300
 	this.modFilterGain.connect( this.filter.detune );	// vibrato
 
-	// crepo l'envelope dell'attacco all'oscillatore
+	// envelope for ADSR control
 	this.envelope = c.createGain();
 	this.filter.connect( this.envelope );
 	this.envelope.connect(effectChain);
@@ -498,8 +252,8 @@ function playNote(note, v){
 	this.envelope.gain.linearRampToValueAtTime( 1.0, envAttackEnd );
 	this.envelope.gain.setTargetAtTime( (envSustain/100.0), envAttackEnd, (envDecay/100.0)+0.001 );
 
-	var filterAttackLevel = filterEnvelope*72;  // Range: 0-7200: 6-octave range
-	var filterSustainLevel = filterAttackLevel* filterEnvSus / 100.0; // range: 0-7200
+	var filterAttackLevel = filterEnvelope*72;
+	var filterSustainLevel = filterAttackLevel* filterEnvSus / 100.0;
 	var filterAttackEnd = (filterEnvAtt/20.0);
   if (!filterAttackEnd)
         filterAttackEnd=0.05;
@@ -511,6 +265,7 @@ function playNote(note, v){
 	this.modOsc.start(0);
 }
 
+//stopNote
 function stopNote(note){
   var now =  c.currentTime;
 	var release = now + (envRelease/10.0);
@@ -526,7 +281,7 @@ function stopNote(note){
 
 
 
-//CONTROLLI EFFETTI
+//Distortion
 function makeDistortionCurve(value) {
   var k = typeof value === 'number' ? value : 50,
     n_samples = 44100,
@@ -542,7 +297,7 @@ function makeDistortionCurve(value) {
   return curve;
 }
 
-//funzione che cambia i valori del riverbero sui gain
+//Mix reverb
 var mixRev = function( value ) {
 	var gain1 = Math.cos(value * 0.5*Math.PI);
 	var gain2 = Math.cos((1.0-value) * 0.5*Math.PI);
@@ -550,13 +305,14 @@ var mixRev = function( value ) {
 	revWetGain.gain.value = gain2;
 }
 
-//chiamato ogni volta che viene modificato il riverbero
 function changeValue(valueR){
   if(valueR<0){valueR=0;}
   dryWetRev = parseFloat(valueR) / 100.0;
 	mixRev(dryWetRev);
 }
 
+
+//effect changed from html
 document.querySelector("#masterGain").oninput = function(){
   masterGain.gain.value = this.value;
 }
@@ -573,13 +329,12 @@ document.querySelector("#distortionCurve").oninput = function(){
     var value = parseInt(this.value) * 5;
     distortion.curve = makeDistortionCurve(value);
 }
+
 function oversample(type){
   distortion.oversample = type;
 }
 
-
-
-//set filters Q VALUE
+//filter's Q VALUE
 playNote.prototype.setFilterQ = function( value ) {
 	this.filter.Q.value = value;
 }
@@ -593,7 +348,7 @@ document.querySelector("#qFactor").oninput = function(){
     }
  }
 
-//VOLUME FILTRO
+//filter's volume
 playNote.prototype.setFilterGain = function( value ) {
 	this.modFilterGain.gain.value = value;
 }
@@ -608,7 +363,7 @@ document.querySelector("#filterGain").oninput = function(){
  }
 
 
-//CUTOFF FILTRO
+//filter's cutoff
 playNote.prototype.setFilterCutoff = function( value ) {
 	this.filter.frequency.value = value;
 }
@@ -659,8 +414,10 @@ document.querySelector("#freqMod").oninput = function(){
 // crea effectChain, delay, distortion, convolver, masterGain, compressor
 function initAudio() {
 
-	// set up the master effects chain for all voices to connect to.
+  //gain to connect effect to the envelope gain
 	effectChain = c.createGain();
+
+  //distortion
 	distortion =  c.createWaveShaper();
   distortion.curve = makeDistortionCurve(0);
   distortion.oversample = "none";
@@ -680,9 +437,11 @@ function initAudio() {
 
   getImpulse('https://dl.dropboxusercontent.com/s/5lk5wxavxfoev0x/02-6%20Hall%201-00.wav?dl=0');
 
-
+  //master gain
   masterGain = c.createGain();
   masterGain.gain.setValueAtTime(1, c.currentTime);
+
+  //compressor
   compressor = c.createDynamicsCompressor();
   compressor.threshold.setValueAtTime(-40, c.currentTime);
   compressor.knee.setValueAtTime(40, c.currentTime);
@@ -690,7 +449,7 @@ function initAudio() {
   compressor.attack.setValueAtTime(0, c.currentTime);
   compressor.release.setValueAtTime(0.25, c.currentTime);
 
-  //connessioni
+  //connection
   effectChain.connect(distortion);
   distortion.connect(delay);
   delay.connect(gainDelay);
@@ -705,6 +464,7 @@ function initAudio() {
   compressor.connect(	c .destination );
 }
 
+//impulse response
 function getImpulse(impulseUrl) {
   ajaxRequest = new XMLHttpRequest();
   ajaxRequest.open('GET', impulseUrl, true);
@@ -725,7 +485,7 @@ function getImpulse(impulseUrl) {
 }
 
 
-//PLAY FROM COMPUTER KEYBOARD
+//TO PLAY FROM COMPUTER KEYBOARD
 document.onkeypress = function (keyPressed){
   switch(keyPressed.key){
      case "a":

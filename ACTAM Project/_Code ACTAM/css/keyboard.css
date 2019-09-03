@@ -1,14 +1,12 @@
 keyboard {
   position:relative;
-  /*transform: scale(0.67);*/
-  height: auto;
+  height: 50px;
   width:80%;
   margin: auto;
   cursor: pointer;
   list-style-type: none;
   display:flex;
   /*border: 2px solid blue;*/
-
   margin-top: 5%;
   margin-bottom: 20%;
 

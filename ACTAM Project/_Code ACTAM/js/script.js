@@ -17,6 +17,7 @@ function openFullscreen() {
     elem.msRequestFullscreen();
   }
   fs = !fs;
+  document.querySelector('body').style.overflow = "hidden";
 }
 
 /* Close fullscreen */
@@ -31,6 +32,7 @@ function closeFullscreen() {
     document.msExitFullscreen();
   }
   fs = !fs;
+  document.querySelector('body').style.overflow = "visible";
 }
 
 
@@ -41,15 +43,6 @@ function fullScreen() {
 
   else closeFullscreen();
 }
-
-/*
-function toggleButton(data) {
-    data.target.toggleClass(btn_acceso);
-}
-
-document.querySelector("button").onclick = toggleButton;
-*/
-
 
 var start = document.getElementById("startButton");
 var reset = document.getElementById("resetButton");

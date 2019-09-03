@@ -11,8 +11,7 @@ body {
   font-family: Helvetica;
   color: white;
   display: flex;
-  overflow: hidden;
-  /*overflow: hidden;*/
+  overflow: visible;
 }
 
 app {
@@ -101,7 +100,7 @@ bottom { /*SCRITTA IN BASSO COI NOMI*/
 
 dam {   /*Tutta la parte di sotto CTRL + KB + SYNTH*/
     width: 100%;
-    height:500px;
+    height:540px;
     display: inline-block;
     font-variant: small-caps;
     margin-top: 3px;
@@ -233,7 +232,7 @@ synthCtrl { /*dx*/
 }
 
 s_top{
-  padding: 3%;
+  padding:2%;
   display: inline-flex;
   width: auto;
   height: 40%;
@@ -241,8 +240,6 @@ s_top{
 
 s_bottom{
   display: inline-flex;
-  /*width: 100%;
-  height: 40%;*/
 
 }
 

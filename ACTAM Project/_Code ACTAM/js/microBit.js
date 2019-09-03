@@ -285,7 +285,7 @@ function searchDevice(){
 };
 
 
-//Gestione preserveTransform
+//Presets for different sounds
 
 document.getElementById('preset1').onclick = sceltaPreset(1);
 document.getElementById('preset2').onclick = sceltaPreset(2);
@@ -413,26 +413,24 @@ function reset(){
   filterQ = 10;
 }
 
+//this function is called everytime you move microbit
 microBit.onBleNotify(function(){
 
   acX = microBit.getAccelerometer().x;
   acY = microBit.getAccelerometer().y;
   acZ = microBit.getAccelerometer().z;
 
-
-
-  //posizione 1 ho la scala più chiara
   if( acZ<0 && acY<=1024 && acY>230 ){
      pol = 3;
      currentScale = scaleToPlay[2];
      callPreset(pol, numPreset);
      currentMode = mdc[2];}
-
+  // stop position
   if( acZ<0 && acY<=230 && acY>=-360){
      pol = 2;
      //callPreset(1,numPreset);
-     currentScale = scaleToPlay[3];
-     currentMode = mdc[3];}
+     currentScale = scaleToPlay[1];
+     currentMode = mdc[1];}
 
   if( acZ<0 && acY<-360 && acY>=-1024){
      pol = 1;
@@ -538,8 +536,6 @@ microBit.onBleNotify(function(){
     van!=currentNote ? (noteOff(currentMidiNote), currentNote = van, playIfyouCan())
                      :changed = false;
 
-    valueRev= 50/1024*acY;
-    changeValue(valueRev);
 
     document.getElementById("md").style.fontSize = "30px";
     document.getElementById("md").innerHTML = currentMode ;
