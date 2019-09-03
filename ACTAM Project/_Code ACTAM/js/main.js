@@ -5,16 +5,16 @@ var con; //contour melodico
 //Ultima nota suonata: HA VALORI DA 0 A 20 per il momento
 var currentNote;
 //Le tre scale che si possono suoanre
-var scaleToPlay;
-//grado dell'accordo suonato
-var rootOfCurrentChord;
+var scaleToPlay = new Array(3);
 //scala suonata da microbit
 var currentScale;
-//accordo suonato dal piano
-var currentChord;
+
+//All the oscillators active now
+var activeOscillators = new Array();
 
 //modifica seconodo oscillatore
-var rapporto = 41/60;
+var num = 41;
+var den = 60;
 
 //Numero Preset
 var numPreset = 1;
@@ -23,6 +23,5 @@ var acX = 0; //note
 var acY = 0; // polso
 var acZ = 0;
 
-var mdc; // i sette modi preimpostati
-var mdcPIANO;// modo suonato dal piano
+var mdc = new Array(3); // i sette modi preimpostati
 var currentMode ; //modo attualmente suoanto da microbit
