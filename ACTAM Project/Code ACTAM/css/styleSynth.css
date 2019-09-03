@@ -24,7 +24,8 @@
 }
 
 .param{
-  width: 140px; /*20%*/
+  max-width: 140px;
+  width:20%;
   float: left;
   padding-top: auto;
   padding: 3%;
