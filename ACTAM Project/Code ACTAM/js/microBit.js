@@ -354,7 +354,8 @@ function callPreset(polso, nPr) {
 
   }
 }
-// PRESET
+
+//Preset
 function longPreset(){
   envAttack = 5;
   envDecay = 10;
@@ -362,15 +363,19 @@ function longPreset(){
   envRelease= 10;
   filterQ = 10;
   filterCutOff = 800;
+  num = 21;
+  den= 100;
 }
 
 function aggressivePreset(){
-  envAttack = 0;
-  envDecay = 6;
-  envSustain = 15;
-  envRelease = 6;
+  envAttack = 5;
+  envDecay = 7;
+  envSustain = 10;
+  envRelease = 10;
   filterQ = 15;
   filterCutOff = 760;
+  num = 51;
+  den= 85;
 }
 
 function ambientPreset(){
@@ -386,22 +391,25 @@ function ambientPreset(){
 
 
 function pluckedPreset(){
-  envAttack = 1;
-  envDecay = 2;
+  envAttack = 5;
+  envDecay = 4;
   filterCutOff = 600;
-  envSustain =0;
-  envRelease= 0;
+  envSustain =4;
+  envRelease= 4;
   filterQ = 12;
+  num = 41;
+  den= 60;
 }
 
 function acidPreset(){
-  envAttack = 2;
-  envDecay = 2;
+  envAttack = 6;
+  envDecay = 10;
   filterCutOff = 700;
-  envSustain =0;
-  envRelease= 0;
+  envSustain =7;
+  envRelease= 7;
   filterQ = 30;
-
+  num = 41;
+  den= 60;
 }
 
 function reset(){
@@ -411,6 +419,8 @@ function reset(){
   envSustain = 50;
   envRelease= 5;
   filterQ = 10;
+  num = 41;
+  den= 60;
 }
 
 //this function is called everytime you move microbit
