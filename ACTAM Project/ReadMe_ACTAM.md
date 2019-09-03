@@ -1,5 +1,5 @@
 # MICROSPHERE
-*** MICROSPHERE is a Bluetooth synth toy, designed to familiarize with diatonic harmony. ***
+> MICROSPHERE is a Bluetooth synth toy, designed to familiarize with diatonic harmony.
 
 ### Index
 1.	Concept
@@ -8,7 +8,10 @@
 
 ## Concept
 A fundamental need for a musician is to learn how to express himself and how to transmit to an audience what he’s feeling. There are several key skills to achieve and MICROSPHERE works on one of them:
-**GET USED TO HOW SCALES (AND NOTES) SOUND ON DIFFERENT CHORDS.**
+
+:---:
+: **GET USED TO HOW SCALES (AND NOTES) SOUND ON DIFFERENT CHORDS.** :
+
 Microsphere playable scales are the **C dorian** and the **C pentatonic minor**. This choice follows from the fun and the “ready-to-use” expressivity of those two simple scales. Due to their huge popularity in pop music their sound is easy recognizable also by non-musician. 
 A fundamental need for a musician is in fact to learn how to express himself and how to transmit to an audience what he’s feeling. Emotions related to scales and how notes sound “one after another” is a key skill to achieve. MICROSPHERE is a toy that works on this aspect.
 
