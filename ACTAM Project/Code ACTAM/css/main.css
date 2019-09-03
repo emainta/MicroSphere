@@ -131,13 +131,9 @@ left{  /*sx*/
 }
 
 #fourbuttons{
-  width: 43%;
+  min-width: 43%;
   display: grid;
-  padding-top: 10px;
-  /*
-  padding-right: 10%;
   margin: auto;
-  padding-left: 10%; */
 }
 
 #tonalRef{
