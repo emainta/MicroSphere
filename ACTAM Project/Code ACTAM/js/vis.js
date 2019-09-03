@@ -30,7 +30,7 @@ document.body.style.zoom = 0.9;
 /*DATI DA Jacopo
 verticalStep: i-th step / n' step
 */
-var iStep = van - 12; // da -12 a +12
+var iStep = acX / 86; // da -12 a +12
 var nStep = 25;
 var verticalStep = - (iStep +1 ) / nStep;
 var p_r;
