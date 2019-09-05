@@ -30,9 +30,9 @@ The file [index.html](MicroSphere/ACTAM_Project/Code_ACTAM/index.html) must be o
 
 The usable range of the instrument is the upper part of an hemisphere. The sphere has to be used following the verso of the *golden arrow* drawn on it. There is no other indication for the comfortable use of the instrument. Typically is used having the arrow towards the torso to follow the normal keyboard displacement of pitches: having the low ones on the left and the high ones on the right. Tilting the sphere forward and backward will change the playable scale, the central one is the C pentatonic major. The other two are the C pentatonic minor and the C dorian. The changes can be followed on the interface in the `Scales` box. Tilting the sphere left and right will change the pitch of the notes, following the selected scales. The playing notes can be followed on the keyboard on the bottom left of the interface. Once the connection is established the first sounds of the instrument are by default from the first preset (“1” button). Sounds can be changed via presets with the 1, 2, 3 and 4 buttons and modified manually via the synthesizer parameter panel.
 
-![Sphere1](https://raw.githubusercontent.com/emainta/MicroSphere/master/Other%20Stuff/Pictures%20readme/sphere1.png)
+![Sphere1](https://raw.githubusercontent.com/emainta/MicroSphere/master/Other%20Stuff/Pictures%20readme/sphere1.jpg)
 
-![Internal](https://raw.githubusercontent.com/emainta/MicroSphere/master/Other%20Stuff/Pictures%20readme/internal_sphere.png)
+![Internal](https://raw.githubusercontent.com/emainta/MicroSphere/master/Other%20Stuff/Pictures%20readme/internal_sphere.jpg)
 
 ### Interface   
 The interface was entirely developed in HTML, CSS and JS.
