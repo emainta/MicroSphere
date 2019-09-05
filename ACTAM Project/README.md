@@ -23,11 +23,16 @@ A fundamental need for a musician is in fact to learn how to express himself and
 
 ## How to use MICROSPHERE
 
+Inside the sphere there is a box to keep in the correct position the microprocessor. Micro:bit has to be put inside it.
 The file [index.html](MicroSphere/ACTAM_Project/Code_ACTAM/index.html) must be opened with **Google Chrome** browser. Google’s browser is the only one supporting experimental browser features, needed for BLE connection. Clicking on the `Full screen` button will open the interface completely. *Micro:bit* has to be powered up. Clicking on `Search device` button will open a window for the manual search of the microprocessor, no pairing required. Clicking on the `Start Canvas` button will start the visualization of the melodic contour. At this point the setup is ready.
 
 ### The SPHERE
+
 The usable range of the instrument is the upper part of an hemisphere. The sphere has to be used following the verso of the *golden arrow* drawn on it. There is no other indication for the comfortable use of the instrument. Typically is used having the arrow towards the torso to follow the normal keyboard displacement of pitches: having the low ones on the left and the high ones on the right. Tilting the sphere forward and backward will change the playable scale, the central one is the C pentatonic major. The other two are the C pentatonic minor and the C dorian. The changes can be followed on the interface in the `Scales` box. Tilting the sphere left and right will change the pitch of the notes, following the selected scales. The playing notes can be followed on the keyboard on the bottom left of the interface. Once the connection is established the first sounds of the instrument are by default from the first preset (“1” button). Sounds can be changed via presets with the 1, 2, 3 and 4 buttons and modified manually via the synthesizer parameter panel.
 
+![Sphere1](https://raw.githubusercontent.com/emainta/MicroSphere/master/Other%20Stuff/Pictures%20readme/sphere1.png)
+
+![Internal](https://raw.githubusercontent.com/emainta/MicroSphere/master/Other%20Stuff/Pictures%20readme/internal_sphere.png)
 
 ### Interface   
 The interface was entirely developed in HTML, CSS and JS.
