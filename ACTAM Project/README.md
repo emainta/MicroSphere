@@ -3,9 +3,9 @@
 
 ##### ADVANCED CODING TOOLS AND METHODOLOGIES PROJECT
 *A.A. 2018-2019*
-Brundo Nicoletta
-Gino Jacopo
-Intagliata Emanuele
+- Brundo Nicoletta
+- Gino Jacopo
+- Intagliata Emanuele
 
 
 ### Index
