@@ -1,7 +1,7 @@
 # MICROSPHERE
 > MICROSPHERE is a Bluetooth synth toy, designed to familiarize with diatonic harmony.
 
-#### Index
+### Index
 1.	Concept
 2.	How to use MICROSPHERE
 3.	How MICROSPHERE works
