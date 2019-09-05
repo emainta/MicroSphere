@@ -1,9 +1,7 @@
 //<<<<<<<<<<<< INIZIO CODICE CONTROLLER >>>>>>>>>>>>>>>>
 
-//variable
+//variable Definition
 var SCALES;
-//variabili per acquisire e memorizzare gli accordi
-//Valore attualmente suonata in valore midi
 var currentMidiNote;
 
 //Inializza tutti i valori
@@ -33,7 +31,6 @@ function initialValues(){
 }
 
 initialValues();
-
 
 //return true if current note belong to the current scale
 function noteIsOnSCALES(){

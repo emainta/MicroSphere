@@ -12,16 +12,17 @@ var currentScale;
 //All the oscillators active now
 var activeOscillators = new Array();
 
-//modifica seconodo oscillatore
+//modifica secondo oscillatore
 var num = 41;
 var den = 60;
 
-//Numero Preset
+//Numero Preset di Default
 var numPreset = 1;
 
-var acX = 0; //note
+var acX = 0; // note
 var acY = 0; // polso
 var acZ = 0;
 
-var mdc = new Array(3); // i sette modi preimpostati
+// i tre modi preimpostati: pentatonic Minor, pentatonicMajor, Dorian
+var mdc = new Array(3);
 var currentMode ; //modo attualmente suoanto da microbit

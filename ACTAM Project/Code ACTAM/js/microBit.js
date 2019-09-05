@@ -1,4 +1,4 @@
-//Variable
+//Variable Definition
 var microBit;
 var ACCEL_SRV = 'e95d0753-251d-470a-a062-fa1922dfa9a8'
 var ACCEL_DATA = 'e95dca4b-251d-470a-a062-fa1922dfa9a8'
@@ -12,13 +12,8 @@ var IO_AD_CONFIG = 'e95d5899-251d-470a-a062-fa1922dfa9a8'
 var IO_PIN_CONFIG = 'e95db9fe-251d-470a-a062-fa1922dfa9a8'
 var IO_PIN_PWM = 'e95dd822-251d-470a-a062-fa1922dfa9a8'
 
-//var pol = 1; //posizione del polso
-//var van = 0; //valore nota
-//var con; //contour melodico
 var ctr = 0; //un semplice counter
-var SAF = 9;
-
-
+var SAF = 9; //Safe Value
 
 class uBit {
 
@@ -50,16 +45,16 @@ class uBit {
     }
   }
 
-//SERIE DI FUNZIONI
+//SERIE DI FUNZIONI DI GESTIONE DEL MICROBIT
   getAccelerometer() {
       return this.accelerometer;
   }
 
   getButtonA() {
-    return this.buttonA;//QUI NO
+    return this.buttonA; //QUI NO
   }
 
-  setButtonACallback(callbackFunction){//QUI NO
+  setButtonACallback(callbackFunction){ //QUI NO
     this.buttonACallBack=callbackFunction;
   }
 
@@ -85,7 +80,7 @@ class uBit {
 }
 
 
- onButtonA(){//QUI NO
+ onButtonA(){
     this.buttonACallBack();
  }
 
@@ -94,7 +89,6 @@ class uBit {
   }
 
   writePin(pin) {
-    //qui dovrebbe funzionare ma bisogna fare qualcosa tipo
     //this.characteristic.IO_PIN_DATA.writeValue(data);
   }
 
@@ -107,7 +101,7 @@ class uBit {
 
     this.onBLENotifyCallback();
 
-    if (event.target.uuid == BTN_A_STATE) {
+    /* if (event.target.uuid == BTN_A_STATE) {
       console.log("BTN_A_STATE"+ event.target.value.getInt8());
       this.buttonA = event.target.value.getInt8();
       if (this.buttonA){
@@ -119,7 +113,7 @@ class uBit {
       this.buttonB = event.target.value.getInt8();
       if (this.buttonB){
         this.onButtonB();
-      }
+      } */
     }
 
     //ACCELEROMETER CHARACTERISTIC
@@ -285,7 +279,7 @@ function searchDevice(){
 };
 
 
-//Presets for different sounds
+//---- Presets for different sounds
 
 document.getElementById('preset1').onclick = sceltaPreset(1);
 document.getElementById('preset2').onclick = sceltaPreset(2);
@@ -355,7 +349,7 @@ function callPreset(polso, nPr) {
   }
 }
 
-//Preset
+// --------     Preset
 function longPreset(){
   envAttack = 5;
   envDecay = 10;
@@ -449,7 +443,7 @@ microBit.onBleNotify(function(){
      currentMode = mdc[0];}
 
 
-//c3 a E4
+//Defining note that is played ; c3 to E4
      if( acZ<0 && acX>=-1024 && acX<-931-SAF ){
          van = 0;
          con = van - ctr;

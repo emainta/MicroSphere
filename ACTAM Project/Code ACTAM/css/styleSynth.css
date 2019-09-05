@@ -52,10 +52,8 @@ fxparam {
 
 .smallerSlider{
     width: 60%;
-    /*padding-left: 20%;
-    padding-right: 20%;*/
-      font-weight: normal;
-      font-size:12px;
+    font-weight: normal;
+    font-size:12px;
 
 }
 
@@ -89,8 +87,6 @@ select{
 .bottomParam{
   width: 30%;
   min-width: 29%;
-  /*margin-left:2%;
-  margin-right: 2%;*/
   padding: 3%;
 }
 

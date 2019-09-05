@@ -1,4 +1,4 @@
-/*
+/* COLOR PALETTE
 #ffcf56
 #e83f6f #d72839
 #1dd1b6
@@ -27,9 +27,6 @@ app {
 
 #aWrapper {
     /*Horizontally centers the canvas*/
-    /*margin: 0 auto;*/
-    /*height: 500px;
-    width: 80%;*/
     margin: auto;
     margin-bottom: 5px;
     border: 1px solid #212842;
@@ -67,8 +64,7 @@ app {
     transition: 5s;
     z-index:1;
     opacity:0;
-    /*position: fixed;*/
-     position: absolute;
+    position: absolute;
 }
 
 /* Bottom right text */
@@ -174,12 +170,9 @@ button:active {
 
 #searchButton {
   vertical-align: middle;
-
-
 }
 
 #startButton {
-
 }
 
 
