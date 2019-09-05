@@ -21,15 +21,9 @@ var myHue = [0, 15, 45, 135, 180, 240, 300, 330];
 
 var hueCtrl = numPreset + pol -1;
 
-/*var rnd = Math.round( Math.random() *255 );
-/*Math.random() * (max - min) + min; */
-
 
 document.body.style.zoom = 0.9;
 
-/*DATI DA Jacopo
-verticalStep: i-th step / n' step
-*/
 var iStep = van - BAT; // da -12 a +12
 var nStep = 25;
 var verticalStep = - (iStep +1 ) / nStep;
@@ -123,12 +117,6 @@ var CanvasH = canvas.height;
 
 var speed = 10;
 
-/* A MALI ESTREMI ESTREMI, ESTREMI RIMEDI
-console.log(canvas.width, img.width, canvas.height,img.height)
-var scale = Math.min(canvas.width/img.width, canvas.height/img.height);
-Width : 1920 pixels
-Height: 1080 pixels
-*/
 var scale = Math.min(canvas.width/1920, canvas.height/1080); ;
 var y = 0;
 
@@ -210,7 +198,7 @@ function drawPotato() {
   iStep = van - BAT; // da -12 a +12
   verticalStep = - (iStep +1 ) / nStep;
 
-  yp =  clearHp * verticalStep; //scaling factor by jacopo
+  yp =  clearHp * verticalStep; //scaling factor
 
   ctxP.clear(true);
   ctxM.clear(true);
@@ -218,11 +206,10 @@ function drawPotato() {
   ctxP.translate(x0,y0);
   ctxM.translate(x0,y0);
 
-  ctxP.beginPath(); //This line gave me a major headache.
+  ctxP.beginPath(); //This line is important
 
   ctxP.arc(xp, yp, radius, 0 , 2 * Math.PI);
 
-  //console.log('MODE:' + mdc[pol]);
 
   for (var i = 0; i < positions_x.length; i++) {
     ctxM.beginPath();
@@ -235,7 +222,6 @@ function drawPotato() {
   }
 
   storeLastPosition(yp,hueCtrl,radius);
-  //console.log(pol);
   hueCtrl = numPreset + pol -1;
   ctxP.fillStyle = 'hsl(' + myHue[hueCtrl] + ',60%, 80%)' //mdc[pol-1]
 

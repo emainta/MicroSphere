@@ -59,7 +59,7 @@ Languages used for coding are: **javascript**, **css** and **html**.
 Reference to the [bittysoftware](https://drive.google.com/uc?id=0B2Ud_NaMFsQSdm1BMVMtN3F4a3c&export=download) page.
 
 ### BLE Connection Routine
-The code for the routine is an adapted version of the Bluetooth Low Energy connection routine with no pairing required from this code. Based on client (PC)/ server (MB) model the PC asks for Micro:bit’s services data. A BLE antenna is already implemented in Micro:bit. The firmware activates the needed antenna services at the switch on of the microprocessor. The code triggers through the “search device” button the search for available BLE devices with a window.
+The code for the routine is an adapted version of the Bluetooth Low Energy connection routine with no pairing required from this code. Based on client (PC)/ server (MB) model the PC asks for Micro:bit’s services data. A BLE antenna is already implemented in Micro:bit. The firmware activates the needed antenna services at the switch on of the microprocessor. The code triggers through the `search device` button the search for available BLE devices with a window.
 
 ### Code division - Code Main Schema
 > [main.js](ACTAM_Project/Code_ACTAM/js/main.js )
@@ -88,7 +88,27 @@ Interface behaves related to and modifying the synthetiser and scales as in Inte
 [Nico]
 
 ### Melodic Contour Visualization
-Come funziona la visualizzazione, fullscreen
-Come funziona il widescreen
-Resize canvas
-animazioni
+
+The interface behavior is controlled by the two JS files [script.js](ACTAM_Project/Code_ACTAM/js/script.js ) and [vis.js](ACTAM_Project/Code_ACTAM/js/vis.js ).
+
+In [script.js](ACTAM_Project/Code_ACTAM/js/script.js) variables useful for the visualization are defined. They are present also the functions `openFullscreen` and `closeFullscreen` that manages the full screen feature.
+
+In [vis.js](ACTAM_Project/Code_ACTAM/js/vis.js ) is managed the melodic contour visualization.
+The widescreen is composed by the superposition of *four* 2D Canvas:
+1. The first Canvas is a **background Canvas**. It consists in a *space environment* surrounded by stars. The `draw` function is in charge of drawing the actual background. It consists in a sliding and looping [image](MicroSphere/ACTAM_Project/Code_ACTAM/img/stars.png).
+
+2. The second canvas is in charge of drawing the **glowing sphere**.
+The sphere's dimension varies according to the wrist position, which is given by the global variable `pol`. The sphere's position depends on note’s keyboard position, which is given by the global variable `van`. Its position follows the chromatic scale, even if certain notes are not played by the synthesizer. Higher notes will have higher positions on the screen. Sphere's color depends on selected scale and on the selected preset.
+Colors are given in the *hsl* representation. While *saturation* and *lightness* are fixed, *hue* is the value that changes according to the wrist position. The hue values are stored in the array `myHue`.
+
+3. The third canvas is in charge of drawing the **melodic contour**. The aesthetic behavior is similar to the previous canvas.
+The trail is drawn like a series of closely spaced little spheres. Their positions, their color and their radius are stored in three sliding arrays: `positions_y`, `positions_col`, `positions_rad`. The function `storeLastPosition` is in charge of *pushing in* the last position/color/radius at the beginning of the arrays using the method `unshift`. In the same function we use the method `pop` to get the last item at the end of the arrays.
+
+4. The last canvas is a service canvas. It is in charge of showing the initial text *Click here to start the visualization*.
+
+In [vis.js](ACTAM_Project/Code_ACTAM/js/vis.js ) are also managed the animations of all of the canvas, like *fading in* and *fading out*.
+
+###### The "Resize Canvas" function
+It turns out that changing the *Pixel Ratio* will make the canvas *blurry* in some devices.
+In [vis.js](ACTAM_Project/Code_ACTAM/js/vis.js ) is present a section where we make the all the canvas responsive, forcing the **1:1** pixel ratio. 
+This section is a modified version of [this code](https://stackoverflow.com/questions/42588501/how-do-i-fix-blurry-shape-edges-in-html5-canvas).
