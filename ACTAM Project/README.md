@@ -16,17 +16,13 @@
 ![Screen Img](https://raw.githubusercontent.com/emainta/MicroSphere/master/Other%20Stuff/Pictures%20readme/screen_app.png)
 
 ## Concept
-A fundamental need for a musician is to learn how to express himself and how to transmit to an audience what he’s feeling. There are several key skills to achieve and MICROSPHERE works on one of them:
-
-<p align="center" style="font-weight: bold;">
-GET USED TO HOW SCALES (AND NOTES) SOUND ON DIFFERENT CHORDS.
-</p>
-
-Microsphere playable scales are the **C dorian**, **C pentatonic major** and the **C pentatonic minor**. This choice follows from the fun and the “ready-to-use” expressivity of those two simple scales. Due to their huge popularity in pop music their sound is easy recognizable also by non-musician.
 A fundamental need for a musician is in fact to learn how to express himself and how to transmit to an audience what he’s feeling. Emotions related to scales and how notes sound “one after another” is a key skill to achieve. MICROSPHERE is a toy that works on this aspect.
+Microsphere playable scales are the **C dorian**, **C pentatonic major** and the **C pentatonic minor**. This choice follows from the fun and the “ready-to-use” expressivity of those two simple scales. Due to their huge popularity in pop music their sound is easy recognizable also by non-musician.
 
-##### Demo & Tutorial [Ita]
-[![Watch the DEMO](https://i.ytimg.com/vi/ZzDKcSeILFQ/hqdefault.jpg?sqp=-oaymwEZCPYBEIoBSFXyq4qpAwsIARUAAIhCGAFwAQ==&rs=AOn4CLDCezscFNG4dYwv9LLek15wdzduQw)](https://youtu.be/ZzDKcSeILFQ)
+
+##### VIDEO: Demo & Tutorial [Ita]
+[![Click to watch the DEMO](https://i.ytimg.com/vi/ZzDKcSeILFQ/hqdefault.jpg?sqp=-oaymwEZCPYBEIoBSFXyq4qpAwsIARUAAIhCGAFwAQ==&rs=AOn4CLDCezscFNG4dYwv9LLek15wdzduQw)](https://youtu.be/ZzDKcSeILFQ)
+Click to watch the DEMO.
 
 ## How to use MICROSPHERE
 
