@@ -21,7 +21,7 @@ Microsphere playable scales are the **C dorian**, **C pentatonic major** and the
 
 
 ##### VIDEO: Demo & Tutorial [Ita]
-[![Click to watch the DEMO](https://i.ytimg.com/vi/ZzDKcSeILFQ/hqdefault.jpg?sqp=-oaymwEZCPYBEIoBSFXyq4qpAwsIARUAAIhCGAFwAQ==&rs=AOn4CLDCezscFNG4dYwv9LLek15wdzduQw)](https://youtu.be/ZzDKcSeILFQ)
+[![Click to watch the DEMO](https://i.ytimg.com/vi/4pv89lmkq-o/hqdefault.jpg?sqp=-oaymwEZCNACELwBSFXyq4qpAwsIARUAAIhCGAFwAQ==&rs=AOn4CLB9voE0U2mEKiQ99f76RcLtM1u6vg)](https://youtu.be/4pv89lmkq-o)
 Click to watch the DEMO.
 
 ## How to use MICROSPHERE
