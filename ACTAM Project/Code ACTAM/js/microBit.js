@@ -101,7 +101,7 @@ class uBit {
 
     this.onBLENotifyCallback();
 
-    /* if (event.target.uuid == BTN_A_STATE) {
+  /*  if (event.target.uuid == BTN_A_STATE) {
       console.log("BTN_A_STATE"+ event.target.value.getInt8());
       this.buttonA = event.target.value.getInt8();
       if (this.buttonA){
@@ -113,8 +113,8 @@ class uBit {
       this.buttonB = event.target.value.getInt8();
       if (this.buttonB){
         this.onButtonB();
-      } */
-    }
+      }
+    } */
 
     //ACCELEROMETER CHARACTERISTIC
     if (event.target.uuid == ACCEL_DATA) {
