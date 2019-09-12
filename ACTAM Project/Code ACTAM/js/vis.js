@@ -20,6 +20,7 @@ var clearHp=0;
 var myHue = [0, 15, 45, 135, 180, 240, 300, 330];
 
 var hueCtrl = numPreset + pol -1;
+var tog = null;
 
 
 document.body.style.zoom = 0.9;
@@ -180,6 +181,7 @@ var positions_x = [];
 var positions_y = [];
 var positions_col = [];
 var positions_rad = [];
+var positions_on = [];
 
 function makeArr(startValue, stopValue, cardinality) {
   var arr = [];
@@ -197,6 +199,7 @@ function drawPotato() {
   radius = 17 + pol;
   iStep = van - BAT; // da -12 a +12
   verticalStep = - (iStep +1 ) / nStep;
+ tog = noteIsOnSCALES();
 
   yp =  clearHp * verticalStep; //scaling factor
 
@@ -210,18 +213,23 @@ function drawPotato() {
 
   ctxP.arc(xp, yp, radius, 0 , 2 * Math.PI);
 
-
+//draws the melodic contour
   for (var i = 0; i < positions_x.length; i++) {
     ctxM.beginPath();
-    ctxM.arc(positions_x[i], positions_y[i], 0.2*positions_rad[i], 0 , 2 * Math.PI);
+    ctxM.arc(positions_x[i], positions_y[i], 0.15*positions_rad[i], 0 , 2 * Math.PI);
 
-
+    if (positions_on[i]) {
     ctxM.fillStyle = 'hsl(' + myHue[positions_col[i]] + ',90%, 20%)'
-
-    ctxM.fill();
+  } else {
+    ctxM.fillStyle = 'hsl(' + myHue[positions_col[i]] + ',0%, 0%)'
   }
 
-  storeLastPosition(yp,hueCtrl,radius);
+  if (positions_on[i]) { //fill only if true
+    ctxM.fill();
+}
+  }
+
+  storeLastPosition(yp,hueCtrl,radius, tog);
   hueCtrl = numPreset + pol -1;
   ctxP.fillStyle = 'hsl(' + myHue[hueCtrl] + ',60%, 80%)' //mdc[pol-1]
 
@@ -233,11 +241,12 @@ function drawPotato() {
   requestAnimationFrame(drawPotato);
 }
 
-function storeLastPosition(yPos, polly,raggio) {
+function storeLastPosition(yPos, polly,raggio, nios) {
   // push an item
   positions_y.unshift(yPos);
   positions_col.unshift(polly);
   positions_rad.unshift(raggio);
+  positions_on.unshift(nios);
 
   //get rid of first item
 
@@ -245,6 +254,7 @@ function storeLastPosition(yPos, polly,raggio) {
     positions_y.pop();
     positions_col.pop();
     positions_rad.pop();
+    positions_on.pop();
   }
 }
 
@@ -284,3 +294,9 @@ CanvasRenderingContext2D.prototype.clear =
       this.restore();
     }
 };
+
+//return true if current note belong to the current scale
+function noteIsOnSCALES(){
+  if(currentScale.has(findNote(currentNote))){
+    return true;}
+}

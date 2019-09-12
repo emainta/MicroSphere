@@ -11,7 +11,7 @@ function initialValues(){
 
   //SCALES dei modi maggiori
   var dor = new Set([ 0, 2, 3, 5, 7, 9, 10 ]);
-  var pentaMinor = new Set([0,3,4,5,7,10,-1]);
+  var pentaMinor = new Set([0,3,5,7,10,-1]);
   var pentaMajor = new Set([0,2,4,7,9,-1,-1]);
 
 
